@@ -8,6 +8,13 @@
       "when": 1792888316015,
       "tag": "0000_extensions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792890472055,
+      "tag": "0001_auth_catalog_profiles",
+      "breakpoints": true
     }
   ]
 }

@@ -35,3 +35,22 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Combobox is custom (ARIA 1.2 APG)**, not Radix (which has none) and not cmdk. Filtering uses the same normalization as search: `nis` → Niš, `cacak` → Čačak, Cyrillic → Latin.
 - **Markdown** goes through remark → rehype → `rehype-sanitize` (allowlist) → React elements via `hast-util-to-jsx-runtime`. No raw HTML, no `dangerouslySetInnerHTML`. User headings are demoted (h1→h2) so pages keep a single h1.
 - **The `/dev/ui` demo content** (`demo-data.ts`) is not routed through i18n, since it's sample data for an internal, non-production page. All component and chrome strings are.
+
+## Phase 2 — Auth and onboarding
+
+- **Better Auth 1.7** with the Drizzle adapter, uuid v7 IDs (`advanced.database.generateId`), and plugins `username`, `twoFactor` (TOTP + backup codes), `magicLink`, `haveIBeenPwned`, `nextCookies`. Schema was checked against `npx auth@1.7.12 generate`.
+- **Mutating auth endpoints run as Server Actions, not public HTTP.** Sign-up, sign-in, magic link, reset, verification resend and TOTP go through our action pipeline: zod → Turnstile → Upstash rate limit → progressive lockout → `auth.api.*`. Their raw `/api/auth/*` routes are listed in `disabledPaths`, so the protections can't be bypassed. Only link callbacks (verify-email, magic-link verify, reset-password redirect), OAuth and get-session stay public. BA's built-in rate limiter is disabled in favour of ours.
+- **HIBP fails closed.** If the Pwned Passwords API is unreachable, sign-up and reset return an error instead of accepting an unchecked password. `HIBP_ENABLED=false` exists only for offline test runs.
+- **Turnstile fails closed** and is verified server-side with the client IP. Dev/CI use Cloudflare's documented always-pass test keys.
+- **Lockout:** 5 free failures per account, then 1 min doubling up to 1 h, keyed by an email hash in Redis. Plus an IP sliding window (10/10 min). Integration-tested.
+- **Sign-in allowed before email verification;** buying, selling and posting require it (`canParticipate`). This matches SPEC §4.1.2.
+- **Consents:** sign-up records `terms`, `privacy`, `age_15` and `marketing_email` with document versions and IP hash, append-only. A version bump or a Google/magic-link sign-up with no consent goes to `/prihvati-uslove` before the app area. Age confirmations are consent rows (`age_15`, and `age_18` for sellers). That enum extension of SPEC §3.2 is recorded here.
+- **No raw IPs with sessions** (`disableIpTracking`). Elsewhere IPs are salted SHA-256 (`IP_HASH_SALT`).
+- **Auth emails are sent inline, not via a job.** Verification and reset links must arrive now, and a queue adds a failure mode. Notification and digest emails go through Inngest (Phase 8).
+- **Dev outbox:** with no `RESEND_API_KEY` (local/test only; env validation requires it on preview/production), emails go to a Redis list, viewable at `/dev/outbox`, with JSON at `/api/dev/outbox` for e2e.
+- **Student email verification** needs a click on the confirmation page (a POST action), so mail-client link scanners can't consume the token. Domains match exactly or as subdomains of `universities.email_domains ∪ faculties.email_domains`.
+- **Onboarding** is resumable (`student_profiles.onboarding_step`) and every step is skippable. Course suggestions: the current year is pre-marked "Slušam" and earlier years "Položio", and the user corrects them.
+- **Catalog seed:** `catalog.sample.json` holds real universities/faculties/programs marked as samples. Demo courses and professors are in `demo.json` (named "(demo)") and are refused when `APP_ENV=production`.
+- **Integration tests** run against a real Postgres database `<db>_test`, recreated and migrated per run (vitest global setup), with test files run sequentially.
+- **Avatar initials use CSS generated content.** A button labelled "Meni naloga X" wrapping DOM text "TS" fails WCAG 2.5.3 (label in name). Generated content is decorative and outside the name computation.
+- **Local docker** adds Redis plus serverless-redis-http (Upstash REST protocol), SeaweedFS (S3/R2 stand-in, since MinIO's images are no longer publicly pullable) and the Inngest dev server.

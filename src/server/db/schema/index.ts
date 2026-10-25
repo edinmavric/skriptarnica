@@ -1,4 +1,4 @@
-/**
- * Drizzle schema barrel. Tables are added per domain from Phase 2 onwards (SPEC §3).
- */
-export {};
+/** Drizzle schema barrel (SPEC §3). */
+export * from './auth';
+export * from './catalog';
+export * from './profiles';

@@ -12,10 +12,32 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  APP_ENV: test
+  DATABASE_URL: postgres://skripta:skripta@localhost:5432/skripta
+  NEXT_PUBLIC_APP_URL: http://localhost:3000
+  # Cloudflare's documented always-pass Turnstile test keys.
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+  TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+  UPSTASH_REDIS_REST_URL: http://localhost:8079
+  UPSTASH_REDIS_REST_TOKEN: ci-redis-token
+  S3_ENDPOINT: http://localhost:8333
+  S3_ACCESS_KEY_ID: localdevaccess
+  S3_SECRET_ACCESS_KEY: localdevsecretkey-not-for-production
+  S3_PRIVATE_BUCKET: skripta-private
+  S3_PUBLIC_BUCKET: skripta-public
+  S3_FORCE_PATH_STYLE: 'true'
+  NEXT_PUBLIC_STORAGE_PUBLIC_URL: http://localhost:8333/skripta-public
+  NEXT_PUBLIC_STORAGE_UPLOAD_ORIGIN: http://localhost:8333
+  INNGEST_DEV: '1'
+  EMAIL_FROM: CI <noreply@localhost>
+  PAYMENT_PROVIDER: mock
+  PAYOUT_ENCRYPTION_ACTIVE_VERSION: v1
+
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     services:
       postgres:
         image: postgres:17-alpine
@@ -27,27 +49,56 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U skripta -d skripta"
           --health-interval 5s --health-timeout 3s --health-retries 10
-    env:
-      DATABASE_URL: postgres://skripta:skripta@localhost:5432/skripta
-      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+      redis-http:
+        image: hiett/serverless-redis-http:latest
+        env:
+          SRH_MODE: env
+          SRH_TOKEN: ci-redis-token
+          SRH_CONNECTION_STRING: redis://redis:6379
+        ports: ['8079:80']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Generate per-run secrets
+        run: |
+          echo "BETTER_AUTH_SECRET=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+          echo "MOCK_PAYMENT_WEBHOOK_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "PAYOUT_ENCRYPTION_KEYS=v1:$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+          echo "IP_HASH_SALT=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
       - run: npm ci
       - name: Lint
         run: npm run lint
       - name: Format
         run: npm run format:check
+      - name: i18n keys in sync
+        run: npm run i18n:check
       - name: Typecheck
         run: npm run typecheck
-      - name: Migrate test database
+      - name: Migrate
         run: npm run db:migrate
-      - name: Test
+      - name: Unit and integration tests
         run: npm test
       - name: Audit dependencies
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
       - name: Build
         run: npm run build
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Start storage and jobs for e2e
+        run: docker compose up -d storage inngest
+      - name: Seed demo data
+        run: npm run db:seed -- all
+      - name: E2E
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

@@ -127,7 +127,7 @@ export function FileDropzone({
             <div>
               <label
                 htmlFor={id}
-                className="cursor-pointer font-medium text-pen underline-offset-4 hover:underline"
+                className="cursor-pointer font-medium text-pen underline underline-offset-4"
               >
                 {label}
               </label>

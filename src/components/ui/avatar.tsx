@@ -49,17 +49,18 @@ export function Avatar({
       />
     );
   }
+  // Initials come from CSS generated content, not DOM text: decorative, and never part of an
+  // accessible name, so a labelled button wrapping the avatar meets WCAG 2.5.3 (label in name).
   return (
     <span
       aria-hidden="true"
+      data-initials={initials(name)}
       style={{ width: px, height: px, fontSize: px * 0.38 }}
       className={cn(
-        'inline-grid shrink-0 place-items-center rounded-full font-display font-semibold',
+        'inline-grid shrink-0 place-items-center rounded-full font-display font-semibold before:content-[attr(data-initials)]',
         toneFor(name),
         className,
       )}
-    >
-      {initials(name)}
-    </span>
+    />
   );
 }

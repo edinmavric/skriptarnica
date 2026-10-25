@@ -1,3 +1,4 @@
+# Local development services. None of these credentials are used outside a developer machine.
 services:
   db:
     image: postgres:17-alpine
@@ -16,5 +17,43 @@ services:
       timeout: 3s
       retries: 10
 
+  # Redis + serverless-redis-http: speaks the Upstash REST protocol locally.
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+  redis-http:
+    image: hiett/serverless-redis-http:latest
+    restart: unless-stopped
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: local-dev-redis-token
+      SRH_CONNECTION_STRING: redis://redis:6379
+    ports:
+      - '8079:80'
+    depends_on: [redis]
+
+  # S3-compatible object storage standing in for Cloudflare R2.
+  storage:
+    image: chrislusf/seaweedfs:latest
+    restart: unless-stopped
+    command: server -s3 -dir=/data -s3.config=/etc/seaweedfs/s3.json -s3.port=8333 -master.volumeSizeLimitMB=1024
+    ports:
+      - '8333:8333'
+    volumes:
+      - ./docker/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+      - storagedata:/data
+
+  # Inngest dev server (jobs). Calls the app on the host.
+  inngest:
+    image: inngest/inngest:latest
+    restart: unless-stopped
+    command: inngest dev -u http://host.docker.internal:3000/api/inngest --no-discovery
+    ports:
+      - '8288:8288'
+      - '8289:8289'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
 volumes:
   pgdata:
+  storagedata:

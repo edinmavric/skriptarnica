@@ -220,5 +220,291 @@
     "emptyTitle": "Još nisi označio predmete",
     "emptyDescription": "Označi predmete koje slušaš i preporučićemo ti skripte za njih.",
     "emptyAction": "Označi predmete"
+  },
+  "email": {
+    "common": {
+      "fallbackLink": "Ako dugme ne radi, otvori ovaj link:",
+      "footer": "Ovaj email je poslat jer je neko upotrebio ovu adresu na našem sajtu. Ako to nisi bio ti, slobodno ga ignoriši."
+    },
+    "verifyEmail": {
+      "subject": "Potvrdi email adresu",
+      "preview": "Još jedan klik i nalog je spreman.",
+      "heading": "Potvrdi svoju email adresu",
+      "body": "Klikni na dugme da potvrdiš adresu. Bez potvrde ne možeš da kupuješ, prodaješ i objavljuješ.",
+      "cta": "Potvrdi adresu",
+      "note": "Link važi 24 sata."
+    },
+    "magicLink": {
+      "subject": "Tvoj link za prijavu",
+      "preview": "Prijavi se jednim klikom.",
+      "heading": "Prijava bez lozinke",
+      "body": "Klikni na dugme i bićeš prijavljen. Link radi samo jednom.",
+      "cta": "Prijavi se",
+      "note": "Link važi 15 minuta. Ako nisi tražio prijavu, ignoriši ovaj email."
+    },
+    "resetPassword": {
+      "subject": "Promena lozinke",
+      "preview": "Postavi novu lozinku.",
+      "heading": "Postavi novu lozinku",
+      "body": "Neko je zatražio promenu lozinke za ovaj nalog. Ako si to bio ti, klikni na dugme.",
+      "cta": "Postavi novu lozinku",
+      "note": "Link važi 1 sat. Posle promene bićeš odjavljen sa svih uređaja."
+    },
+    "studentEmail": {
+      "subject": "Potvrdi studentski email",
+      "preview": "Dobij oznaku verifikovanog studenta.",
+      "heading": "Potvrdi studentski email",
+      "body": "Klikni na dugme da potvrdiš da studiraš na {university}. Na profilu ćeš dobiti oznaku verifikovanog studenta.",
+      "cta": "Potvrdi studentski email",
+      "note": "Link važi 24 sata."
+    },
+    "welcome": {
+      "subject": "Dobro došao",
+      "preview": "Nalog je potvrđen.",
+      "heading": "Nalog je spreman",
+      "body": "Označi predmete koje slušaš i položene predmete, pa ćemo ti preporučiti skripte za njih.",
+      "cta": "Nastavi",
+      "note": "Ako ti nešto ne radi, odgovori na ovaj email."
+    },
+    "changeEmail": {
+      "subject": "Potvrdi novu email adresu",
+      "preview": "Potvrdi promenu adrese.",
+      "heading": "Potvrdi novu adresu",
+      "body": "Klikni na dugme da potvrdiš novu email adresu za svoj nalog.",
+      "cta": "Potvrdi novu adresu",
+      "note": "Ako nisi tražio promenu, odmah promeni lozinku."
+    }
+  },
+  "auth": {
+    "captchaLabel": "Provera da nisi bot",
+    "signUp": {
+      "title": "Napravi nalog",
+      "intro": "Kupuj skripte za svoje predmete, prodaj svoje i pitaj starije kolege.",
+      "name": "Ime i prezime",
+      "username": "Korisničko ime",
+      "usernameHint": "3–30 znakova: mala slova, brojevi, tačka i donja crta. Vidi se na profilu.",
+      "email": "Email",
+      "password": "Lozinka",
+      "passwordHint": "Najmanje 10 znakova. Proveravamo da se lozinka ne nalazi na listama procurelih lozinki.",
+      "acceptTerms": "Prihvatam <terms>uslove korišćenja</terms> i <privacy>politiku privatnosti</privacy>",
+      "confirmAge": "Imam najmanje 15 godina",
+      "marketing": "Šalji mi povremeno vesti o novim funkcijama (možeš da se odjaviš kad god hoćeš)",
+      "submit": "Napravi nalog",
+      "haveAccount": "Već imaš nalog?",
+      "signInLink": "Prijavi se"
+    },
+    "signIn": {
+      "title": "Prijava",
+      "intro": "Dobro došao nazad.",
+      "email": "Email",
+      "password": "Lozinka",
+      "forgot": "Zaboravio si lozinku?",
+      "submit": "Prijavi se",
+      "google": "Nastavi sa Google nalogom",
+      "or": "ili",
+      "methods": "Način prijave",
+      "withPassword": "Lozinkom",
+      "withLink": "Linkom na email",
+      "magicHint": "Poslaćemo ti link za prijavu. Nije potrebna lozinka.",
+      "magicSubmit": "Pošalji link",
+      "magicSent": "Ako nalog sa tom adresom postoji, link za prijavu je poslat. Proveri inbox.",
+      "noAccount": "Nemaš nalog?",
+      "signUpLink": "Napravi nalog"
+    },
+    "twoFactor": {
+      "title": "Dvofaktorska potvrda",
+      "intro": "Unesi šestocifreni kod iz aplikacije za autentifikaciju ili jedan od rezervnih kodova.",
+      "code": "Kod",
+      "codeHint": "Šest cifara ili rezervni kod.",
+      "trustDevice": "Ne pitaj ponovo na ovom uređaju 30 dana",
+      "submit": "Potvrdi"
+    },
+    "forgot": {
+      "title": "Zaboravljena lozinka",
+      "intro": "Unesi email naloga i poslaćemo ti link za novu lozinku.",
+      "email": "Email",
+      "submit": "Pošalji link",
+      "sent": "Ako nalog postoji, poslali smo link za promenu lozinke. Link važi 1 sat."
+    },
+    "reset": {
+      "title": "Nova lozinka",
+      "password": "Nova lozinka",
+      "passwordHint": "Najmanje 10 znakova.",
+      "confirm": "Ponovi novu lozinku",
+      "submit": "Sačuvaj lozinku",
+      "done": "Lozinka je promenjena. Odjavljen si sa svih uređaja.",
+      "toSignIn": "Prijavi se",
+      "invalidLink": "Link za promenu lozinke je istekao ili je već iskorišćen.",
+      "requestNew": "Zatraži novi link"
+    },
+    "verifyPending": {
+      "title": "Proveri email",
+      "body": "Poslali smo link za potvrdu na <strong>{email}</strong>. Klikni na njega da potvrdiš nalog.",
+      "spam": "Ne vidiš email? Proveri folder za neželjenu poštu ili zatraži novi link.",
+      "resend": "Pošalji link ponovo",
+      "resent": "Novi link je poslat."
+    },
+    "acceptTerms": {
+      "title": "Ažurirali smo uslove",
+      "intro": "Pre nego što nastaviš, potvrdi da prihvataš trenutne uslove korišćenja i politiku privatnosti.",
+      "submit": "Prihvatam i nastavljam"
+    }
+  },
+  "validation": {
+    "emailRequired": "Unesi email adresu.",
+    "emailInvalid": "Email adresa nije ispravna. Proveri da li si dobro otkucao.",
+    "emailTaken": "Nalog sa ovim emailom već postoji. Prijavi se ili promeni lozinku.",
+    "passwordRequired": "Unesi lozinku.",
+    "passwordTooShort": "Lozinka mora imati najmanje 10 znakova.",
+    "passwordTooLong": "Lozinka može imati najviše 128 znakova.",
+    "passwordCompromised": "Ova lozinka se pojavila u procurelim bazama. Izaberi drugu.",
+    "passwordsDontMatch": "Lozinke se ne poklapaju.",
+    "usernameInvalid": "Korisničko ime: 3–30 znakova, samo mala slova, brojevi, tačka i donja crta.",
+    "usernameTaken": "Ovo korisničko ime je zauzeto. Probaj neko drugo.",
+    "nameTooShort": "Ime mora imati bar 2 slova.",
+    "nameTooLong": "Ime može imati najviše 60 znakova.",
+    "acceptTermsRequired": "Moraš da prihvatiš uslove da bi napravio nalog.",
+    "ageRequired": "Nalog mogu da imaju osobe od 15 i više godina.",
+    "captchaRequired": "Sačekaj da se provera završi, pa pokušaj ponovo.",
+    "captchaFailed": "Provera nije uspela. Osveži stranicu i pokušaj ponovo.",
+    "codeInvalid": "Unesi šestocifreni kod ili rezervni kod.",
+    "codeWrong": "Kod nije tačan. Proveri vreme na telefonu i pokušaj ponovo.",
+    "universityRequired": "Izaberi univerzitet.",
+    "facultyRequired": "Izaberi fakultet.",
+    "programRequired": "Izaberi smer.",
+    "yearRequired": "Izaberi godinu studija.",
+    "programMismatch": "Smer ne pripada izabranom fakultetu. Izaberi ga ponovo.",
+    "yearTooHigh": "Ovaj smer traje kraće. Izaberi nižu godinu.",
+    "studentEmailDomain": "Ovaj email nije sa domena tvog univerziteta ili fakulteta. Proveri adresu ili preskoči ovaj korak."
+  },
+  "errors": {
+    "validation": "Proveri označena polja.",
+    "internal": "Nešto nije u redu na našoj strani. Pokušaj ponovo za minut.",
+    "rateLimited": "Previše pokušaja. Sačekaj malo pa pokušaj ponovo.",
+    "unauthenticated": "Prijavi se da bi nastavio.",
+    "forbidden": "Nemaš dozvolu za ovu akciju.",
+    "emailNotVerified": "Prvo potvrdi email adresu. Link smo poslali kad si napravio nalog.",
+    "banned": "Nalog je suspendovan.",
+    "impersonating": "Pregled tuđeg naloga je samo za čitanje.",
+    "admin2faRequired": "Administratori moraju da uključe dvofaktorsku prijavu.",
+    "invalidCredentials": "Pogrešan email ili lozinka.",
+    "accountLocked": "Previše neuspelih pokušaja. Nalog je zaključan još {n, plural, one {# minut} few {# minuta} other {# minuta}}.",
+    "emailTaken": "Nalog sa ovim emailom već postoji.",
+    "usernameTaken": "Korisničko ime je zauzeto.",
+    "captchaFailed": "Provera nije uspela. Osveži stranicu i pokušaj ponovo.",
+    "resetTokenInvalid": "Link za promenu lozinke je istekao. Zatraži novi.",
+    "twoFactorExpired": "Sesija za potvrdu je istekla. Prijavi se ponovo.",
+    "policy": {
+      "unauthenticated": "Prijavi se da bi nastavio.",
+      "email_not_verified": "Prvo potvrdi email adresu.",
+      "banned": "Nalog je suspendovan.",
+      "not_admin": "Samo za administratore.",
+      "admin_2fa_required": "Uključi dvofaktorsku prijavu.",
+      "not_seller": "Prvo postani prodavac.",
+      "seller_suspended": "Prodavački nalog je suspendovan.",
+      "not_adult": "Prodaja je dozvoljena samo punoletnima.",
+      "not_owner": "Ovo nije tvoje.",
+      "not_entitled": "Nemaš pristup ovoj skripti.",
+      "not_member": "Prvo se pridruži zajednici.",
+      "not_moderator": "Samo moderatori mogu ovo.",
+      "faculty_only": "Ova zajednica je samo za studente tog fakulteta.",
+      "community_banned": "Zabranjeno ti je učešće u ovoj zajednici.",
+      "locked": "Objava je zaključana.",
+      "account_too_new": "Nalog mora biti stariji od 7 dana.",
+      "limit_reached": "Dostigao si ograničenje.",
+      "impersonating": "Pregled tuđeg naloga je samo za čitanje.",
+      "not_allowed": "Ova akcija nije dozvoljena."
+    },
+    "onboardingProgramFirst": "Prvo izaberi fakultet i smer.",
+    "courseBothStates": "Predmet ne može istovremeno da bude i slušan i položen.",
+    "studentTokenInvalid": "Link je istekao ili je već iskorišćen. Zatraži novi iz podešavanja profila."
+  },
+  "onboarding": {
+    "title": "Podesi profil",
+    "intro": "Na osnovu smera i godine preporučujemo skripte i zajednice. Možeš da preskočiš bilo koji korak i vratiš se kasnije.",
+    "skipStep": "Preskoči za sada",
+    "steps": {
+      "label": "Koraci",
+      "username": "Korisničko ime",
+      "program": "Smer i godina",
+      "courses": "Predmeti",
+      "verify": "Studentski email"
+    },
+    "titles": {
+      "username": "Izaberi korisničko ime",
+      "program": "Gde studiraš?",
+      "courses": "Koje predmete slušaš, a koje si položio?",
+      "verify": "Potvrdi da si student (opciono)"
+    },
+    "username": {
+      "label": "Korisničko ime",
+      "hint": "3–30 znakova: mala slova, brojevi, tačka i donja crta.",
+      "submit": "Sačuvaj"
+    },
+    "program": {
+      "university": "Univerzitet",
+      "universityPlaceholder": "Počni da kucaš, npr. „beograd“",
+      "faculty": "Fakultet",
+      "facultyPlaceholder": "Npr. „etf“ ili „elektro“",
+      "program": "Smer",
+      "programPlaceholder": "Izaberi smer",
+      "year": "Godina studija",
+      "yearOption": "{year}. godina",
+      "submit": "Nastavi"
+    },
+    "courses": {
+      "intro": "Na osnovu godine smo označili predmete — promeni šta ne odgovara. Ocena je opciona i vidi se samo uz tvoje skripte.",
+      "year": "{year}. godina",
+      "statusFor": "Status predmeta {course}",
+      "gradeFor": "Ocena iz predmeta {course}",
+      "gradeOptional": "Ocena (opciono)",
+      "marks": {
+        "none": "Ne",
+        "enrolled": "Slušam",
+        "passed": "Položio"
+      },
+      "submit": "Sačuvaj predmete",
+      "empty": "Za tvoj smer još nismo uneli predmete. Javi nam koji nedostaju, a u međuvremenu nastavi.",
+      "continue": "Nastavi"
+    },
+    "verify": {
+      "intro": "Ako imaš fakultetski email, potvrdi ga i dobićeš oznaku verifikovanog studenta.",
+      "email": "Studentski email",
+      "hint": "Npr. ime@student.etf.bg.ac.rs",
+      "send": "Pošalji link",
+      "sent": "Poslali smo link na studentski email. Klikni na njega kad stigne.",
+      "skip": "Preskoči i završi",
+      "finish": "Završi",
+      "verifiedBadge": "Verifikovan student",
+      "alreadyVerified": "Studentski email je već potvrđen.",
+      "confirmTitle": "Potvrda studentskog emaila",
+      "confirm": "Potvrdi studentski email",
+      "confirmed": "Studentski email je potvrđen. Na profilu sada imaš oznaku verifikovanog studenta.",
+      "missingToken": "Link nije potpun. Otvori ga ponovo iz emaila.",
+      "toHome": "Na početnu"
+    },
+    "catalogRequest": {
+      "trigger": "Ne vidiš svoj smer?",
+      "title": "Predloži šta nedostaje",
+      "description": "Administrator pregleda predlog i dodaje ga u katalog. Javićemo ti kad bude dodat.",
+      "type": "Šta nedostaje",
+      "types": {
+        "university": "Univerzitet",
+        "faculty": "Fakultet",
+        "program": "Smer",
+        "course": "Predmet",
+        "professor": "Profesor"
+      },
+      "name": "Pun naziv",
+      "note": "Napomena",
+      "noteHint": "Npr. godina i semestar predmeta ili link ka sajtu fakulteta.",
+      "submit": "Pošalji predlog",
+      "sent": "Hvala! Predlog je poslat administratoru."
+    }
+  },
+  "devOutbox": {
+    "title": "Dev outbox",
+    "intro": "Emailovi koji bi bili poslati (Resend nije podešen). Samo za razvoj.",
+    "empty": "Nema poslatih emailova."
   }
 }

@@ -1,0 +1,139 @@
+{
+  "_comment": "DEMO content for development and preview environments only. Courses and professors here are illustrative, not an official curriculum. The seed refuses to run when APP_ENV=production.",
+  "courses": [
+    {
+      "faculty": "etf-bg",
+      "name": "Osnovi elektrotehnike 1",
+      "code": "OET1",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 1],
+        ["softversko-inzenjerstvo", 1, 1]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Matematika 1",
+      "code": "MAT1",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 1],
+        ["softversko-inzenjerstvo", 1, 1]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Fizika 1",
+      "code": "FIZ1",
+      "programs": [["elektrotehnika-i-racunarstvo", 1, 1]]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Programiranje 1",
+      "code": "P1",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 1],
+        ["softversko-inzenjerstvo", 1, 1]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Osnovi elektrotehnike 2",
+      "code": "OET2",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 2],
+        ["softversko-inzenjerstvo", 1, 2]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Matematika 2",
+      "code": "MAT2",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 2],
+        ["softversko-inzenjerstvo", 1, 2]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Programiranje 2",
+      "code": "P2",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 1, 2],
+        ["softversko-inzenjerstvo", 1, 2]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Algoritmi i strukture podataka",
+      "code": "ASP",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 2, 1],
+        ["softversko-inzenjerstvo", 2, 1]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Električna kola",
+      "code": "EK",
+      "programs": [["elektrotehnika-i-racunarstvo", 2, 1]]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Verovatnoća i statistika",
+      "code": "VIS",
+      "programs": [
+        ["elektrotehnika-i-racunarstvo", 2, 2],
+        ["softversko-inzenjerstvo", 2, 2]
+      ]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Baze podataka",
+      "code": "BP",
+      "programs": [["softversko-inzenjerstvo", 3, 1]]
+    },
+    {
+      "faculty": "fon-bg",
+      "name": "Matematika 1",
+      "code": null,
+      "programs": [["informacioni-sistemi-i-tehnologije", 1, 1]]
+    },
+    {
+      "faculty": "fon-bg",
+      "name": "Principi programiranja",
+      "code": null,
+      "programs": [["informacioni-sistemi-i-tehnologije", 1, 1]]
+    },
+    {
+      "faculty": "ftn-cacak",
+      "name": "Osnovi računarstva",
+      "code": null,
+      "programs": [["informacione-tehnologije", 1, 1]]
+    },
+    {
+      "faculty": "elfak-ni",
+      "name": "Matematika 1",
+      "code": null,
+      "programs": [["elektrotehnika-i-racunarstvo", 1, 1]]
+    }
+  ],
+  "professors": [
+    {
+      "faculty": "etf-bg",
+      "name": "Petar Petrović (demo)",
+      "title": "prof. dr",
+      "courses": ["Osnovi elektrotehnike 1", "Osnovi elektrotehnike 2"]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Jelena Jovanović (demo)",
+      "title": "doc. dr",
+      "courses": ["Matematika 1", "Matematika 2"]
+    },
+    {
+      "faculty": "etf-bg",
+      "name": "Marko Marković (demo)",
+      "title": "prof. dr",
+      "courses": ["Programiranje 1", "Programiranje 2", "Algoritmi i strukture podataka"]
+    }
+  ]
+}

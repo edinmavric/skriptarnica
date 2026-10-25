@@ -16,7 +16,7 @@ export const buttonVariants = cva(
           'border border-field bg-paper-raised text-ink hover:border-ink hover:bg-paper-sunk',
         ghost: 'text-ink hover:bg-paper-sunk',
         danger: 'bg-danger text-danger-ink hover:opacity-90',
-        link: 'min-h-0 px-0 text-pen underline-offset-4 hover:underline',
+        link: 'min-h-0 px-0 text-pen underline underline-offset-4',
       },
       size: {
         sm: 'min-h-9 px-3 text-sm',

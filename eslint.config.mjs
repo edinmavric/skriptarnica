@@ -19,7 +19,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['scripts/**', 'tests/**'],
+    files: ['scripts/**', 'tests/**', 'src/server/db/seed/**'],
     rules: { 'no-console': 'off' },
   },
   globalIgnores(['.next/**', 'node_modules/**', 'coverage/**', 'drizzle/**', 'next-env.d.ts']),

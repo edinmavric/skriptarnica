@@ -1,0 +1,153 @@
+{
+  "_comment": "SAMPLE catalog: a few real Serbian universities and faculties with a few programs each, as an example. Names and email domains must be verified before launch; the real catalog is maintained in the admin panel and via catalog_requests (SPEC §3.1). Course lists are deliberately NOT included here.",
+  "universities": [
+    {
+      "name": "Univerzitet u Beogradu",
+      "shortName": "UB",
+      "city": "Beograd",
+      "slug": "univerzitet-u-beogradu",
+      "emailDomains": ["bg.ac.rs"],
+      "faculties": [
+        {
+          "name": "Elektrotehnički fakultet",
+          "shortName": "ETF",
+          "slug": "etf-bg",
+          "city": "Beograd",
+          "emailDomains": ["student.etf.bg.ac.rs", "etf.bg.ac.rs"],
+          "programs": [
+            {
+              "name": "Elektrotehnika i računarstvo",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "elektrotehnika-i-racunarstvo"
+            },
+            {
+              "name": "Softversko inženjerstvo",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "softversko-inzenjerstvo"
+            }
+          ]
+        },
+        {
+          "name": "Fakultet organizacionih nauka",
+          "shortName": "FON",
+          "slug": "fon-bg",
+          "city": "Beograd",
+          "emailDomains": [],
+          "programs": [
+            {
+              "name": "Informacioni sistemi i tehnologije",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "informacioni-sistemi-i-tehnologije"
+            },
+            {
+              "name": "Menadžment i organizacija",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "menadzment-i-organizacija"
+            }
+          ]
+        },
+        {
+          "name": "Matematički fakultet",
+          "shortName": "MATF",
+          "slug": "matf-bg",
+          "city": "Beograd",
+          "emailDomains": [],
+          "programs": [
+            { "name": "Informatika", "level": "oas", "durationYears": 4, "slug": "informatika" },
+            { "name": "Matematika", "level": "oas", "durationYears": 4, "slug": "matematika" }
+          ]
+        },
+        {
+          "name": "Pravni fakultet",
+          "shortName": "Pravni",
+          "slug": "pravni-bg",
+          "city": "Beograd",
+          "emailDomains": [],
+          "programs": [{ "name": "Pravo", "level": "oas", "durationYears": 4, "slug": "pravo" }]
+        }
+      ]
+    },
+    {
+      "name": "Univerzitet u Novom Sadu",
+      "shortName": "UNS",
+      "city": "Novi Sad",
+      "slug": "univerzitet-u-novom-sadu",
+      "emailDomains": ["uns.ac.rs"],
+      "faculties": [
+        {
+          "name": "Fakultet tehničkih nauka",
+          "shortName": "FTN",
+          "slug": "ftn-ns",
+          "city": "Novi Sad",
+          "emailDomains": [],
+          "programs": [
+            {
+              "name": "Računarstvo i automatika",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "racunarstvo-i-automatika"
+            },
+            {
+              "name": "Softversko inženjerstvo i informacione tehnologije",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "softversko-inzenjerstvo-i-informacione-tehnologije"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Univerzitet u Nišu",
+      "shortName": "UNI",
+      "city": "Niš",
+      "slug": "univerzitet-u-nisu",
+      "emailDomains": ["ni.ac.rs"],
+      "faculties": [
+        {
+          "name": "Elektronski fakultet",
+          "shortName": "Elfak",
+          "slug": "elfak-ni",
+          "city": "Niš",
+          "emailDomains": [],
+          "programs": [
+            {
+              "name": "Elektrotehnika i računarstvo",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "elektrotehnika-i-racunarstvo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Univerzitet u Kragujevcu",
+      "shortName": "UNIKG",
+      "city": "Kragujevac",
+      "slug": "univerzitet-u-kragujevcu",
+      "emailDomains": ["kg.ac.rs"],
+      "faculties": [
+        {
+          "name": "Fakultet tehničkih nauka u Čačku",
+          "shortName": "FTN Čačak",
+          "slug": "ftn-cacak",
+          "city": "Čačak",
+          "emailDomains": [],
+          "programs": [
+            {
+              "name": "Informacione tehnologije",
+              "level": "oas",
+              "durationYears": 4,
+              "slug": "informacione-tehnologije"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
