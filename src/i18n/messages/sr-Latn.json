@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "Skripte studenata koji su položili tvoje predmete, sa opisom kako su učili."
+    "description": "Skripte studenata koji su položili tvoje predmete, sa opisom kako su učili. Kupi, prodaj i pitaj u zajednicama svog fakulteta."
   },
   "home": {
     "title": "Skripte za tvoje predmete, od studenata koji su ih položili",
@@ -8,5 +8,217 @@
   },
   "a11y": {
     "skipToContent": "Preskoči na sadržaj"
+  },
+  "ui": {
+    "close": "Zatvori",
+    "notifications": "Obaveštenja",
+    "noResults": "Nema rezultata.",
+    "free": "Besplatno",
+    "loading": "Učitava se…",
+    "rating": {
+      "none": "Još nema ocena",
+      "label": "Ocena {value} od 5",
+      "count": "{count, plural, one {# ocena} few {# ocene} other {# ocena}}",
+      "starLabel": "{count, plural, one {# zvezdica} few {# zvezdice} other {# zvezdica}}"
+    },
+    "pagination": {
+      "label": "Stranice",
+      "previous": "Prethodna",
+      "next": "Sledeća",
+      "status": "Strana {page} od {pageCount}",
+      "loadMore": "Učitaj još"
+    },
+    "vote": {
+      "group": "Glasanje: {label}",
+      "up": "Glasaj za",
+      "down": "Glasaj protiv",
+      "score": "{score, plural, one {# poen} few {# poena} other {# poena}}"
+    },
+    "dropzone": {
+      "hint": "PDF, najviše {max} MB. Prevuci fajl ovde ili ga izaberi.",
+      "tooLarge": "Fajl je veći od {max} MB. Smanji ga ili podeli na dva dela.",
+      "notPdf": "Ovo nije PDF. Sačuvaj skriptu kao PDF i pokušaj ponovo.",
+      "progressLabel": "Otpremanje fajla",
+      "progress": "Otpremljeno {percent}%",
+      "cancel": "Otkaži otpremanje",
+      "done": "{name} je otpremljen."
+    }
+  },
+  "notes": {
+    "count": "{count, plural, one {# skripta} few {# skripte} other {# skripti}}",
+    "card": {
+      "by": "Autor: {name}",
+      "grade": "Položio sa {grade}",
+      "pages": "{count, plural, one {# strana} few {# strane} other {# strana}}",
+      "owned": "Kupljeno"
+    }
+  },
+  "forum": {
+    "post": {
+      "anonymous": "Anonimno",
+      "pinned": "Zakačeno",
+      "locked": "Zaključano",
+      "removedTitle": "[uklonjeno]",
+      "comments": "{count, plural, =0 {Bez komentara} one {# komentar} few {# komentara} other {# komentara}}"
+    },
+    "comment": {
+      "label": "Komentar korisnika {name}",
+      "anonymous": "Anonimno",
+      "deletedAuthor": "[obrisan korisnik]",
+      "op": "autor objave",
+      "edited": "izmenjeno",
+      "removed": "[uklonio moderator]",
+      "deleted": "[obrisano]",
+      "continueThread": "Nastavi diskusiju ({count, plural, one {# odgovor} few {# odgovora} other {# odgovora}})"
+    }
+  },
+  "layout": {
+    "mainNav": "Glavna navigacija",
+    "signIn": "Prijavi se",
+    "signUp": "Napravi nalog",
+    "notifications": "{count, plural, =0 {Obaveštenja} one {Obaveštenja, # nepročitano} few {Obaveštenja, # nepročitana} other {Obaveštenja, # nepročitanih}}",
+    "nav": {
+      "communities": "Zajednice",
+      "library": "Biblioteka",
+      "sell": "Prodaja",
+      "startSelling": "Prodaj skriptu"
+    },
+    "theme": {
+      "toggle": "Promeni temu (trenutno: {current})",
+      "system": "kao sistem",
+      "light": "svetla",
+      "dark": "tamna"
+    },
+    "userMenu": {
+      "open": "Meni naloga {name}",
+      "profile": "Moj profil",
+      "library": "Biblioteka",
+      "saved": "Sačuvano",
+      "sellerDashboard": "Moja prodaja",
+      "becomeSeller": "Postani prodavac",
+      "settings": "Podešavanja",
+      "admin": "Administracija",
+      "signOut": "Odjavi se"
+    },
+    "bottomNav": {
+      "label": "Navigacija",
+      "home": "Početna",
+      "search": "Pretraga",
+      "communities": "Zajednice",
+      "library": "Biblioteka",
+      "profile": "Profil"
+    },
+    "footer": {
+      "product": "Kako radi",
+      "howItWorks": "Kako funkcioniše",
+      "commission": "Provizija i isplate",
+      "faq": "Česta pitanja",
+      "contact": "Kontakt",
+      "rules": "Pravila",
+      "terms": "Uslovi korišćenja",
+      "communityGuidelines": "Pravila zajednice",
+      "sellerTerms": "Pravila za prodavce",
+      "refunds": "Povraćaj i reklamacije",
+      "privacy": "Privatnost",
+      "privacyPolicy": "Politika privatnosti",
+      "cookiePolicy": "Politika kolačića",
+      "copyright": "Prijava povrede autorskih prava",
+      "imprint": "Podaci o pružaocu usluge",
+      "copyrightLine": "© {year} {name}"
+    }
+  },
+  "devUi": {
+    "title": "Katalog komponenti",
+    "intro": "Interni pregled dizajn sistema u svetloj i tamnoj temi. Nije dostupno u produkciji.",
+    "theme": "Tema: {theme}",
+    "typography": "Tipografija",
+    "headlineMarked": "Skripte",
+    "headlineRest": "od studenata koji su položili",
+    "buttons": "Dugmad",
+    "primary": "Kupi skriptu",
+    "secondary": "Sačuvaj",
+    "ghost": "Otkaži",
+    "danger": "Obriši",
+    "link": "Pogledaj sve",
+    "loading": "Plaćanje…",
+    "disabled": "Nedostupno",
+    "small": "Dodaj",
+    "large": "Nastavi",
+    "save": "Sačuvaj",
+    "forms": "Forme",
+    "email": "Email",
+    "emailHint": "Fakultetski email ti daje oznaku verifikovanog studenta.",
+    "password": "Lozinka",
+    "passwordError": "Lozinka mora imati bar 10 znakova.",
+    "disabledInput": "Zaključano polje",
+    "disabledValue": "ETF Beograd",
+    "howStudied": "Kako si učio",
+    "howStudiedPlaceholder": "Koliko dana, kojim redom, šta je bilo na ispitu…",
+    "year": "Godina",
+    "yearOption": "{year}. godina",
+    "faculty": "Fakultet",
+    "facultyHint": "Probaj „nis“ ili „cacak“.",
+    "facultyPlaceholder": "Traži fakultet",
+    "missingProgram": "Ne vidiš svoj smer?",
+    "acceptTerms": "Prihvatam uslove korišćenja",
+    "checked": "Uključeno",
+    "checkboxHint": "Pomoćni tekst ispod opcije.",
+    "required": "Obavezno polje",
+    "requiredError": "Ovo moraš da potvrdiš da bi nastavio.",
+    "sort": "Sortiranje",
+    "sortRecommended": "Preporučeno",
+    "sortTop": "Najbolje ocenjene",
+    "sortTopHint": "Bajesov prosek, ne prost prosek.",
+    "sortNew": "Najnovije",
+    "emailNotifications": "Email obaveštenja",
+    "switchHint": "Kad neko kupi tvoju skriptu.",
+    "yourRating": "Tvoja ocena",
+    "overlays": "Dijalozi i meniji",
+    "openDialog": "Otvori dijalog",
+    "dialogTitle": "Obrisati objavu?",
+    "dialogDescription": "Komentari ostaju, a objava se prikazuje kao [obrisano].",
+    "dialogBody": "Ovo ne možeš da poništiš.",
+    "cancel": "Otkaži",
+    "confirm": "Obriši objavu",
+    "openSheet": "Filteri (sheet)",
+    "filters": "Filteri",
+    "openMenu": "Meni",
+    "edit": "Izmeni",
+    "report": "Prijavi",
+    "delete": "Obriši",
+    "tooltip": "Ocena je samoprijavljena.",
+    "hoverMe": "Tooltip",
+    "toastSuccess": "Toast: uspeh",
+    "toastSaved": "Sačuvano u biblioteci",
+    "toastError": "Toast: greška",
+    "toastErrorTitle": "Plaćanje nije uspelo",
+    "toastErrorBody": "Kartica je odbijena. Probaj drugu karticu.",
+    "tabs": "Kartice",
+    "tabNotes": "Skripte",
+    "tabPosts": "Objave",
+    "tabReviews": "Recenzije",
+    "tabNotesBody": "Lista skripti.",
+    "tabPostsBody": "Lista objava.",
+    "tabReviewsBody": "Lista recenzija.",
+    "badgesAvatars": "Oznake, avatari, cene",
+    "neutral": "Neutralno",
+    "verifiedStudent": "Verifikovan student",
+    "seller": "Prodavac",
+    "published": "Objavljeno",
+    "pendingReview": "Čeka pregled",
+    "rejected": "Odbijeno",
+    "pages": "64 strane",
+    "noteCards": "Kartice skripti",
+    "posts": "Objave i glasanje",
+    "demoComment": "komentar",
+    "comments": "Komentari",
+    "markdown": "Markdown (kako sam učio)",
+    "upload": "Otpremanje",
+    "choosePdf": "Izaberi PDF",
+    "uploadError": "Fajl je zaključan lozinkom. Ukloni zaštitu i otpremi ponovo.",
+    "emptyAndLoading": "Prazna stanja i učitavanje",
+    "emptyTitle": "Još nisi označio predmete",
+    "emptyDescription": "Označi predmete koje slušaš i preporučićemo ti skripte za njih.",
+    "emptyAction": "Označi predmete"
   }
 }

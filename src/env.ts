@@ -12,6 +12,11 @@ const optionalUrl = z.preprocess(emptyToUndefined, z.url().optional());
 
 export const serverSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  /**
+   * Deployment stage, independent of NODE_ENV (which is "production" for every build).
+   * Dev-only routes (/dev/*) and the mock payment provider are disabled when APP_ENV=production.
+   */
+  APP_ENV: z.enum(['development', 'test', 'preview', 'production']).default('development'),
   DATABASE_URL: z
     .url()
     .refine((value) => /^postgres(ql)?:\/\//.test(value), 'Must be a postgres:// connection URL'),
@@ -24,6 +29,12 @@ export const serverSchema = z.object({
 export const clientSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.url(),
   NEXT_PUBLIC_SENTRY_DSN: optionalUrl,
+  /** Public base URL of the public bucket/CDN (preview images, avatars). */
+  NEXT_PUBLIC_STORAGE_PUBLIC_URL: optionalUrl,
+  /** Origin the browser uploads to with presigned PUT (the S3/R2 endpoint). */
+  NEXT_PUBLIC_STORAGE_UPLOAD_ORIGIN: optionalUrl,
+  NEXT_PUBLIC_POSTHOG_KEY: optionalString,
+  NEXT_PUBLIC_POSTHOG_HOST: optionalUrl,
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
@@ -60,6 +71,7 @@ const skipValidation = process.env.SKIP_ENV_VALIDATION === 'true';
 // NEXT_PUBLIC_* values must be referenced statically so Next.js can inline them in the client bundle.
 const runtimeEnv: RawEnv = {
   NODE_ENV: process.env.NODE_ENV,
+  APP_ENV: process.env.APP_ENV,
   DATABASE_URL: process.env.DATABASE_URL,
   SENTRY_DSN: process.env.SENTRY_DSN,
   SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
@@ -67,6 +79,10 @@ const runtimeEnv: RawEnv = {
   SENTRY_PROJECT: process.env.SENTRY_PROJECT,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_STORAGE_PUBLIC_URL: process.env.NEXT_PUBLIC_STORAGE_PUBLIC_URL,
+  NEXT_PUBLIC_STORAGE_UPLOAD_ORIGIN: process.env.NEXT_PUBLIC_STORAGE_UPLOAD_ORIGIN,
+  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+  NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 };
 
 export const env: Env = skipValidation

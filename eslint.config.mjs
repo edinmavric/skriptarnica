@@ -18,5 +18,9 @@ export default defineConfig([
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
+  {
+    files: ['scripts/**', 'tests/**'],
+    rules: { 'no-console': 'off' },
+  },
   globalIgnores(['.next/**', 'node_modules/**', 'coverage/**', 'drizzle/**', 'next-env.d.ts']),
 ]);

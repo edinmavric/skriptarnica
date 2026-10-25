@@ -1,3 +1,401 @@
 @import 'tailwindcss';
 
-/* Design tokens (palette, type, spacing) arrive in Phase 1 with the design system (SPEC §6). */
+/*
+ * Design tokens — "Notebook and highlighter" (SPEC §6.1).
+ * Paper backgrounds, ink text, one highlighter accent, ballpoint-blue actions.
+ * Every text/background pair is checked for WCAG AA in tests/unit/contrast.test.ts.
+ * Light is the default; dark applies via [data-theme='dark'] or the system preference
+ * when no explicit choice is stored ([data-theme='system'] or no attribute).
+ */
+
+:root,
+[data-theme='light'] {
+  --paper: #fbfaf5;
+  --paper-sunk: #f2f0e8;
+  --paper-raised: #fffefa;
+  --ink: #1b1d22;
+  --ink-muted: #51565f;
+  --ink-faint: #62666f;
+  --rule: #d6dde7;
+  --rule-strong: #a3aebe;
+  --field: #7f8691;
+  --margin: #d98c86;
+  --pen: #1e3a9e;
+  --pen-hover: #142a78;
+  --pen-ink: #ffffff;
+  --pen-soft: #e6ebf8;
+  --marker: #e4f35a;
+  --marker-ink: #1b1d22;
+  --marker-soft: #f0f7bd;
+  --success: #2c6639;
+  --success-soft: #e3efe1;
+  --warning: #855600;
+  --warning-soft: #f7ecd3;
+  --danger: #a12f29;
+  --danger-soft: #f7e2df;
+  --danger-ink: #ffffff;
+  --shadow-paper: 0 1px 0 rgb(27 29 34 / 0.05), 0 6px 14px -8px rgb(42 38 26 / 0.28);
+  --shadow-lift: 0 18px 40px -18px rgb(42 38 26 / 0.45);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --paper: #1e1d1a;
+  --paper-sunk: #171614;
+  --paper-raised: #272622;
+  --ink: #ece8df;
+  --ink-muted: #b8b3a8;
+  --ink-faint: #9a958b;
+  --rule: #3a3934;
+  --rule-strong: #57554e;
+  --field: #85817a;
+  --margin: #8e4e49;
+  --pen: #a3b6ff;
+  --pen-hover: #c2cfff;
+  --pen-ink: #14161f;
+  --pen-soft: #2a2f45;
+  --marker: #d4e44a;
+  --marker-ink: #1e1d1a;
+  --marker-soft: #3b3f1f;
+  --success: #93cd9b;
+  --success-soft: #1f301f;
+  --warning: #e5bf6c;
+  --warning-soft: #372c15;
+  --danger: #f29a91;
+  --danger-soft: #3c1f1c;
+  --danger-ink: #1e1d1a;
+  --shadow-paper: 0 1px 0 rgb(0 0 0 / 0.35), 0 8px 18px -10px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 18px 40px -18px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='dark']) {
+    --paper: #1e1d1a;
+    --paper-sunk: #171614;
+    --paper-raised: #272622;
+    --ink: #ece8df;
+    --ink-muted: #b8b3a8;
+    --ink-faint: #9a958b;
+    --rule: #3a3934;
+    --rule-strong: #57554e;
+    --field: #85817a;
+    --margin: #8e4e49;
+    --pen: #a3b6ff;
+    --pen-hover: #c2cfff;
+    --pen-ink: #14161f;
+    --pen-soft: #2a2f45;
+    --marker: #d4e44a;
+    --marker-ink: #1e1d1a;
+    --marker-soft: #3b3f1f;
+    --success: #93cd9b;
+    --success-soft: #1f301f;
+    --warning: #e5bf6c;
+    --warning-soft: #372c15;
+    --danger: #f29a91;
+    --danger-soft: #3c1f1c;
+    --danger-ink: #1e1d1a;
+    --shadow-paper: 0 1px 0 rgb(0 0 0 / 0.35), 0 8px 18px -10px rgb(0 0 0 / 0.7);
+    --shadow-lift: 0 18px 40px -18px rgb(0 0 0 / 0.8);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-field: var(--field);
+  --color-margin: var(--margin);
+  --color-pen: var(--pen);
+  --color-pen-hover: var(--pen-hover);
+  --color-pen-ink: var(--pen-ink);
+  --color-pen-soft: var(--pen-soft);
+  --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
+  --color-marker-soft: var(--marker-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
+
+  --font-display: var(--font-piazzolla), 'Georgia', serif;
+  --font-sans: var(--font-golos), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --shadow-paper: var(--shadow-paper);
+  --shadow-lift: var(--shadow-lift);
+
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  /* Type scale: ~1.2 ratio for UI, larger steps for the serif display. */
+  --text-2xs: 0.75rem;
+  --text-2xs--line-height: 1.1rem;
+  --text-display-sm: 1.5rem;
+  --text-display-sm--line-height: 1.2;
+  --text-display: 2.125rem;
+  --text-display--line-height: 1.12;
+  --text-display-lg: 3rem;
+  --text-display-lg--line-height: 1.05;
+
+  --animate-sheet-in: sheet-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-pop-in: pop-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'kern', 'calt';
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background: var(--marker);
+    color: var(--marker-ink);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--pen);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  /* Highlighter stroke behind a phrase: slightly irregular, follows line breaks. */
+  .marker {
+    background-image:
+      linear-gradient(
+        101deg,
+        transparent 0.08em,
+        var(--marker) 0.3em,
+        color-mix(in oklab, var(--marker) 82%, transparent) 46%,
+        var(--marker) 78%,
+        color-mix(in oklab, var(--marker) 70%, transparent) 97%,
+        transparent 100%
+      ),
+      linear-gradient(
+        99deg,
+        transparent 0.4em,
+        color-mix(in oklab, var(--marker) 55%, transparent) 0.6em,
+        transparent 90%
+      );
+    background-repeat: no-repeat;
+    background-size:
+      100% 0.58em,
+      96% 0.18em;
+    background-position:
+      0 88%,
+      0.2em 54%;
+    border-radius: 0.6em 0.25em 0.5em 0.2em;
+    padding-inline: 0.1em;
+    margin-inline: -0.1em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    color: inherit;
+  }
+
+  /* Search hit highlight. */
+  mark,
+  .mark {
+    background: var(--marker-soft);
+    color: inherit;
+    border-radius: 2px;
+    padding-inline: 0.05em;
+  }
+
+  /* Notebook margin: a red margin line and pale ruled lines, used for "How I studied". */
+  .notebook {
+    --line: 1.75rem;
+    position: relative;
+    padding-left: 2.25rem;
+    line-height: var(--line);
+    background-image: linear-gradient(
+      to bottom,
+      transparent calc(var(--line) - 1px),
+      var(--rule) 0
+    );
+    background-size: 100% var(--line);
+    background-position: 0 0.35rem;
+  }
+  .notebook::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: 1.25rem;
+    width: 1.5px;
+    background: var(--margin);
+  }
+  /* Everything snaps to the ruled-line grid: no fractional margins, one line per row. */
+  .notebook > *,
+  .notebook > * + *,
+  .notebook li,
+  .notebook h2,
+  .notebook h3 {
+    margin-block: 0;
+    line-height: var(--line);
+  }
+  .notebook > * + * {
+    margin-top: var(--line);
+  }
+  .notebook h2,
+  .notebook h3 {
+    font-size: 1.1em;
+  }
+  .notebook blockquote {
+    border-left-width: 0;
+    padding-left: 0;
+    font-style: italic;
+  }
+
+  /* Paper sheet with a folded top-right corner. */
+  .paper-sheet {
+    position: relative;
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-paper);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  }
+  .paper-sheet::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(225deg, transparent 50%, var(--paper-sunk) 50%);
+    box-shadow: -1px 1px 2px rgb(0 0 0 / 0.08);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Rendered markdown (server-sanitized). */
+  .prose-notes {
+    line-height: 1.65;
+    max-width: 68ch;
+  }
+  .prose-notes > * + * {
+    margin-top: 0.85em;
+  }
+  .prose-notes h2,
+  .prose-notes h3 {
+    font-size: 1.15em;
+    margin-top: 1.4em;
+  }
+  .prose-notes ul {
+    list-style: disc;
+    padding-left: 1.25em;
+  }
+  .prose-notes ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+  .prose-notes a {
+    color: var(--pen);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-notes blockquote {
+    border-left: 3px solid var(--rule-strong);
+    padding-left: 0.9em;
+    color: var(--ink-muted);
+  }
+  .prose-notes code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--paper-sunk);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+  }
+  .prose-notes pre {
+    background: var(--paper-sunk);
+    padding: 0.8em 1em;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+  .prose-notes pre code {
+    background: none;
+    padding: 0;
+  }
+  .prose-notes table {
+    border-collapse: collapse;
+    font-size: 0.95em;
+  }
+  .prose-notes th,
+  .prose-notes td {
+    border: 1px solid var(--rule);
+    padding: 0.35em 0.6em;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
