@@ -12,7 +12,7 @@ export function toPostCardData(post: PostView): PostCardData {
     href: postHref(post),
     title: post.deleted ? '' : post.title,
     excerpt: post.excerpt,
-    communityName: `z/${post.communitySlug}`,
+    communityName: post.communityName,
     communityHref: routes.community(post.communitySlug),
     authorName: post.author.deleted ? null : post.author.name,
     authorHref: post.author.username ? routes.user(post.author.username) : null,

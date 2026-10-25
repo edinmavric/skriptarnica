@@ -6,6 +6,7 @@ import {
   courseProfessors,
   courses,
   faculties,
+  notes,
   professors,
   programCourses,
   studyPrograms,
@@ -107,6 +108,17 @@ export const getFacultyPage = unstable_cache(
   ['faculty-page'],
   { tags: [CATALOG_TAG], revalidate: 3600 },
 );
+
+/** Published notes per course of a faculty. Not cached: it changes with every publish. */
+export async function noteCountsForFaculty(facultyId: string): Promise<Map<string, number>> {
+  const rows = await db
+    .select({ courseId: notes.courseId, count: sql<number>`count(*)::int` })
+    .from(notes)
+    .innerJoin(courses, eq(courses.id, notes.courseId))
+    .where(and(eq(courses.facultyId, facultyId), eq(notes.status, 'published')))
+    .groupBy(notes.courseId);
+  return new Map(rows.flatMap((row) => (row.courseId ? [[row.courseId, row.count] as const] : [])));
+}
 
 export const getCoursePage = unstable_cache(
   async (facultySlug: string, courseSlug: string) => {

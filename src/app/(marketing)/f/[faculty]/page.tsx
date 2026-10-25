@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { EmptyState } from '@/components/ui/empty-state';
 import { routes } from '@/config/routes';
 import { pageMetadata } from '@/lib/seo/metadata';
-import { getFacultyPage } from '@/server/services/catalog-pages';
+import { getFacultyPage, noteCountsForFaculty } from '@/server/services/catalog-pages';
 import { communityForFaculty } from '@/server/services/communities';
 
 type Props = { params: Promise<{ faculty: string }> };
@@ -28,7 +28,10 @@ export default async function FacultyPage({ params }: Props) {
   if (!data) notFound();
   const t = await getTranslations('catalog.faculty');
   const { faculty, university } = data;
-  const community = await communityForFaculty(faculty.id);
+  const [community, noteCounts] = await Promise.all([
+    communityForFaculty(faculty.id),
+    noteCountsForFaculty(faculty.id),
+  ]);
   return (
     <div>
       <Breadcrumbs
@@ -48,17 +51,7 @@ export default async function FacultyPage({ params }: Props) {
             href={routes.community(community.slug)}
             className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
           >
-            {t('community', { name: `z/${community.slug}` })}
-          </Link>
-        </p>
-      ) : null}
-      {community ? (
-        <p className="mt-3">
-          <Link
-            href={routes.community(community.slug)}
-            className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
-          >
-            {t('community', { name: `z/${community.slug}` })}
+            {t('community', { name: community.name })}
           </Link>
         </p>
       ) : null}
@@ -97,12 +90,18 @@ export default async function FacultyPage({ params }: Props) {
                                 href={routes.course(faculty.slug, course.slug)}
                                 className="flex min-h-11 items-center justify-between gap-3 py-2 hover:bg-paper-sunk"
                               >
-                                <span>{course.name}</span>
-                                {course.code ? (
-                                  <span className="font-mono text-sm text-ink-muted">
-                                    {course.code}
-                                  </span>
-                                ) : null}
+                                <span className={noteCounts.get(course.id) ? '' : 'text-ink-muted'}>
+                                  {course.name}
+                                </span>
+                                <span
+                                  className={
+                                    noteCounts.get(course.id)
+                                      ? 'tabular shrink-0 text-sm font-medium'
+                                      : 'shrink-0 text-sm text-ink-muted'
+                                  }
+                                >
+                                  {t('courseNotes', { count: noteCounts.get(course.id) ?? 0 })}
+                                </span>
                               </Link>
                             </li>
                           ))}

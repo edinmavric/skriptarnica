@@ -28,7 +28,7 @@ export default async function NewPostPage({ params }: { params: Promise<{ slug: 
     const tErrors = await getTranslations('errors.policy');
     return (
       <div className="flex max-w-xl flex-col gap-4">
-        <h1 className="text-display font-bold">{t('title', { community: community.slug })}</h1>
+        <h1 className="text-display font-bold">{t('title', { community: community.name })}</h1>
         <FormAlert message={tErrors(check.reason as 'not_member')} />
         <Link href={routes.community(slug)} className="text-pen underline underline-offset-2">
           {t('backToCommunity')}
@@ -62,7 +62,7 @@ export default async function NewPostPage({ params }: { params: Promise<{ slug: 
   ]);
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-display font-bold">{t('title', { community: community.slug })}</h1>
+      <h1 className="text-display font-bold">{t('title', { community: community.name })}</h1>
       <PostComposer
         communityId={community.id}
         communitySlug={community.slug}

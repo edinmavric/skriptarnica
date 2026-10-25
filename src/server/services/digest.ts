@@ -51,9 +51,10 @@ export async function runDigests(now = new Date(), onlyUserId?: string): Promise
       title: string;
       slug: string;
       community: string;
+      community_name: string;
       comments: number;
     }>(sql`
-      SELECT p.id, p.title, p.slug, c.slug AS community, p.comment_count AS comments
+      SELECT p.id, p.title, p.slug, c.slug AS community, c.name AS community_name, p.comment_count AS comments
       FROM posts p
       JOIN communities c ON c.id = p.community_id
       JOIN community_members m ON m.community_id = p.community_id AND m.user_id = ${recipient.id}
@@ -70,7 +71,7 @@ export async function runDigests(now = new Date(), onlyUserId?: string): Promise
         unread: await unreadCount(recipient.id),
         items: rows.map((row) => ({
           title: row.title,
-          community: `z/${row.community}`,
+          community: row.community_name,
           comments: t('digest.comments', { count: Number(row.comments) }),
           url: `${env.NEXT_PUBLIC_APP_URL}${routes.post(row.community, row.id, row.slug)}`,
         })),

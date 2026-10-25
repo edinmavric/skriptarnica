@@ -134,7 +134,10 @@ export interface RenderedPreview {
   blurred: boolean;
 }
 
-/** Renders the first `count` pages to WebP (~1000 px wide); the last one is blurred. */
+/**
+ * Renders the first `count` pages to WebP (~1000 px wide). The last one is blurred as a teaser,
+ * unless it's the only one: a short note would otherwise show buyers nothing readable.
+ */
 export async function renderPreviews(
   buffer: Buffer,
   count: number,
@@ -155,7 +158,7 @@ export async function renderPreviews(
         false,
       );
       const png = Buffer.from(pixmap.asPNG());
-      const blurred = i === count - 1;
+      const blurred = count > 1 && i === count - 1;
       let pipeline = sharp(png);
       if (blurred) pipeline = pipeline.blur(14);
       const { data, info } = await pipeline

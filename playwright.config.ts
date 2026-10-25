@@ -1,6 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import { e2eDatabaseUrl } from './tests/e2e/prepare-db';
+
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
+
+// Locally and in CI, E2E uses its own database (prepared by the web server command below), never
+// the dev database. Set here so test workers and the CLI helpers they run use it too.
+if (!process.env.E2E_BASE_URL) process.env.DATABASE_URL = e2eDatabaseUrl();
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -24,11 +30,19 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: 'npm run start',
+        command: 'npx tsx tests/e2e/prepare-db.ts && npm run start',
         url: `${baseURL}/api/health`,
-        reuseExistingServer: true,
-        // The suite signs in and registers many times from one IP.
-        env: { RATE_LIMIT_MULTIPLIER: '50' },
-        timeout: 120_000,
+        // Never reuse a running server: a dev server on :3000 would use the dev database. Stop it
+        // first (the Inngest dev server calls back to :3000, so E2E can't move to another port).
+        reuseExistingServer: false,
+        // Server logs go into the test output, so a failure shows what the app logged.
+        stdout: 'pipe',
+        stderr: 'pipe',
+        env: {
+          DATABASE_URL: e2eDatabaseUrl(),
+          // The suite signs in and registers many times from one IP.
+          RATE_LIMIT_MULTIPLIER: '50',
+        },
+        timeout: 240_000,
       },
 });

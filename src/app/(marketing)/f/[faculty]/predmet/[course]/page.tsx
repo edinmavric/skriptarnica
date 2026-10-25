@@ -86,7 +86,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
             href={routes.community(community.slug)}
             className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
           >
-            {t('community', { name: `z/${community.slug}` })}
+            {t('community', { name: community.name })}
           </Link>
         </p>
       ) : null}

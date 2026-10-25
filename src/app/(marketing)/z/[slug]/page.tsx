@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!loaded) return {};
   return pageMetadata({
     image: null,
-    title: `z/${loaded.community.slug}: ${loaded.community.name}`,
+    title: loaded.community.name,
     description: loaded.community.description || loaded.community.name,
     path: routes.community(loaded.community.slug),
     noIndex: loaded.community.visibility === 'faculty_only',
@@ -62,12 +62,11 @@ export default async function CommunityPage({ params, searchParams }: Props) {
         items={[
           { label: t('home'), href: routes.home },
           { label: t('all'), href: routes.communities },
-          { label: `z/${community.slug}`, href: base },
+          { label: community.name, href: base },
         ]}
       />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-sm text-ink-muted">z/{community.slug}</p>
           <h1 className="text-display font-bold">{community.name}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-ink-muted">
             <Badge tone="outline">{t(`types.${community.type}`)}</Badge>

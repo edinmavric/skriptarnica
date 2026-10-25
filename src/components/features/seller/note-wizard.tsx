@@ -96,7 +96,7 @@ function Stepper({
 }) {
   const t = useTranslations('seller.wizard.steps');
   return (
-    <ol className="flex flex-wrap gap-x-4 gap-y-2" aria-label={t('label')}>
+    <ol className="flex flex-wrap gap-x-2 gap-y-2 sm:gap-x-4" aria-label={t('label')}>
       {STEPS.map((step, index) => {
         const number = index + 1;
         const reachable = noteId !== null && number <= reached;
@@ -112,7 +112,14 @@ function Stepper({
             >
               {number}
             </span>
-            <span className={cn(number === current ? 'font-semibold text-ink' : 'text-ink-muted')}>
+            {/* On phones only the current step is labelled, so all seven fit on one row. */}
+            <span
+              className={cn(
+                number === current
+                  ? 'font-semibold text-ink'
+                  : 'sr-only text-ink-muted sm:not-sr-only',
+              )}
+            >
               {t(step)}
             </span>
           </>

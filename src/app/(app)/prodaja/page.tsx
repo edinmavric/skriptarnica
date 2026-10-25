@@ -3,19 +3,19 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { ListingToggle } from '@/components/features/seller/listing-toggle';
+import { NoteActionsMenu } from '@/components/features/seller/listing-toggle';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PlusIcon } from '@/components/ui/icons';
 import { PriceTag } from '@/components/ui/price-tag';
 import { routes } from '@/config/routes';
-import { formatNumber, formatRelative } from '@/lib/format';
+import { formatPercent, formatRelative } from '@/lib/format';
 import { requireAppUser } from '@/server/auth/session';
 import { listSellerNotes } from '@/server/services/notes';
 import { getSellerProfile, isActiveSeller } from '@/server/services/sellers';
 
-import { SellerMoney } from './seller-money';
+import { SellerActivity, SellerBalances } from './seller-money';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('seller.dashboard');
@@ -51,7 +51,7 @@ export default async function SellerDashboardPage() {
         </Button>
       </div>
 
-      <SellerMoney userId={user.id} />
+      <SellerBalances userId={user.id} />
 
       <section aria-labelledby="my-notes">
         <h2 id="my-notes" className="mb-3 text-display-sm font-semibold">
@@ -70,10 +70,8 @@ export default async function SellerDashboardPage() {
         ) : (
           <ul className="divide-y divide-rule border-y border-rule">
             {notes.map((note) => {
-              const conversion =
-                note.viewCount > 0
-                  ? Math.round((note.salesCount / note.viewCount) * 1000) / 10
-                  : null;
+              const conversion = note.viewCount > 0 ? note.salesCount / note.viewCount : null;
+              const live = note.status === 'published' || note.status === 'unlisted';
               return (
                 <li
                   key={note.id}
@@ -81,7 +79,16 @@ export default async function SellerDashboardPage() {
                 >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium">{note.title || t('untitled')}</span>
+                      {live ? (
+                        <Link
+                          href={routes.note(note.slug)}
+                          className="font-medium underline-offset-2 hover:underline"
+                        >
+                          {note.title}
+                        </Link>
+                      ) : (
+                        <span className="font-medium">{note.title || t('untitled')}</span>
+                      )}
                       <Badge tone={statusTone[note.status]}>{t(`status.${note.status}`)}</Badge>
                     </div>
                     <p className="text-sm text-ink-muted">
@@ -104,31 +111,17 @@ export default async function SellerDashboardPage() {
                         {t('rejectedBecause', { reason: note.rejectionReason })}
                       </p>
                     ) : null}
-                    {note.status === 'published' || note.status === 'unlisted' ? (
+                    {live ? (
                       <p className="tabular mt-1 text-sm text-ink-muted">
-                        {t('stats', {
-                          views: formatNumber(note.viewCount),
-                          sales: formatNumber(note.salesCount),
-                        })}
-                        {conversion !== null ? `, ${t('conversion', { percent: conversion })}` : ''}
+                        {t('stats', { views: note.viewCount, sales: note.salesCount })}
+                        {conversion !== null
+                          ? `, ${t('conversion', { percent: formatPercent(conversion) })}`
+                          : ''}
                       </p>
                     ) : null}
                   </div>
                   <div className="flex flex-wrap items-center gap-1">
                     <PriceTag para={note.pricePara} size="sm" className="mr-2" />
-                    {note.status === 'published' || note.status === 'unlisted' ? (
-                      <>
-                        <Button asChild variant="ghost" size="sm">
-                          <Link href={routes.note(note.slug)}>{t('view')}</Link>
-                        </Button>
-                        <Button asChild variant="ghost" size="sm">
-                          <Link href={`/prodaja/skripta/${note.id}/nova-verzija`}>
-                            {t('newVersion')}
-                          </Link>
-                        </Button>
-                        <ListingToggle noteId={note.id} listed={note.status === 'published'} />
-                      </>
-                    ) : null}
                     <Button asChild variant="secondary" size="sm">
                       <Link
                         href={`/prodaja/skripta/${note.id}?korak=${note.status === 'draft' ? note.wizardStep : 4}`}
@@ -138,6 +131,13 @@ export default async function SellerDashboardPage() {
                           : t('edit')}
                       </Link>
                     </Button>
+                    {live ? (
+                      <NoteActionsMenu
+                        noteId={note.id}
+                        listed={note.status === 'published'}
+                        title={note.title}
+                      />
+                    ) : null}
                   </div>
                 </li>
               );
@@ -145,6 +145,8 @@ export default async function SellerDashboardPage() {
           </ul>
         )}
       </section>
+
+      <SellerActivity userId={user.id} />
     </div>
   );
 }

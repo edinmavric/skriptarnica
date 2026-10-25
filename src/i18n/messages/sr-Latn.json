@@ -105,7 +105,8 @@
         "pending": "Skripta čeka pregled i još nije javna.",
         "other": "Skripta nije javna."
       },
-      "zoomVerb": "Uvećaj:"
+      "zoomVerb": "Uvećaj:",
+      "purchaseBar": "Kupovina"
     },
     "reviews": {
       "title": "Ocene kupaca",
@@ -244,7 +245,7 @@
       "submit": "Napravi zajednicu"
     },
     "composer": {
-      "title": "Nova objava u z/{community}",
+      "title": "Nova objava: {community}",
       "backToCommunity": "Nazad na zajednicu",
       "typeLabel": "Vrsta objave",
       "types": {
@@ -1118,7 +1119,8 @@
       "emptyTitle": "Predmeti još nisu uneti",
       "emptyDescription": "Katalog popunjavamo uz pomoć studenata. Ako studiraš ovde, predloži predmete pri podešavanju profila.",
       "metaDescription": "Skripte, iskustva i zajednice studenata fakulteta {name} ({city}).",
-      "community": "Zajednica fakulteta: {name}"
+      "community": "Zajednica fakulteta: {name}",
+      "courseNotes": "{count, plural, =0 {još nema skripti} one {# skripta} few {# skripte} other {# skripti}}"
     },
     "course": {
       "home": "Početna",
@@ -1155,7 +1157,9 @@
       "clearFilters": "Poništi filtere",
       "noMatchTitle": "Nijedna skripta ne odgovara filterima",
       "noMatchDescription": "Probaj širi izbor ili poništi filtere.",
-      "community": "Zajednica predmeta: {name}"
+      "community": "Zajednica predmeta: {name}",
+      "filters": "Filteri",
+      "filtersActive": "Filteri ({count})"
     },
     "professor": {
       "home": "Početna",
@@ -1230,6 +1234,10 @@
     },
     "faculties": {
       "title": "Fakulteti"
+    },
+    "topNotes": {
+      "title": "Skripte koje studenti najviše preporučuju",
+      "all": "Pretraži sve skripte"
     }
   },
   "errorPages": {
@@ -1404,9 +1412,8 @@
       "untitled": "Bez naslova",
       "updated": "izmenjeno {when}",
       "rejectedBecause": "Razlog odbijanja: {reason}",
-      "stats": "{views} pregleda, {sales} prodaja",
-      "conversion": "konverzija {percent}%",
-      "view": "Pogledaj",
+      "stats": "{views, plural, one {# pregled} few {# pregleda} other {# pregleda}}, {sales, plural, one {# prodaja} few {# prodaje} other {# prodaja}}",
+      "conversion": "konverzija {percent}",
       "newVersion": "Nova verzija",
       "continue": "Nastavi",
       "edit": "Izmeni",
@@ -1424,7 +1431,9 @@
         "removed": "Uklonjeno"
       },
       "removedBecause": "Uklonjena iz prodaje: {reason}. Kupci zadržavaju pristup.",
-      "counterNotice": "Uloži prigovor"
+      "counterNotice": "Uloži prigovor",
+      "more": "Više",
+      "moreFor": "Još radnji za „{title}“"
     },
     "money": {
       "title": "Zarada",
@@ -1459,7 +1468,8 @@
           "paid": "Isplaćeno",
           "rejected": "Odbijeno"
         }
-      }
+      },
+      "activityTitle": "Prodaje i isplate"
     }
   },
   "reports": {
@@ -2237,7 +2247,7 @@
     "forYourCourses": "Za tvoje predmete",
     "noCoursesTitle": "Označi predmete koje slušaš",
     "noCoursesDescription": "Preporuke pravimo za predmete koje slušaš i one iz tvoje godine. Izaberi smer i godinu ili označi predmete.",
-    "noCoursesAction": "Označi predmete",
+    "noCoursesAction": "Označi predmete koje slušaš",
     "noNotesTitle": "Za tvoje predmete još nema skripti",
     "noNotesDescription": "Položio si neki od njih? Budi prvi koji postavlja skriptu.",
     "noNotesAction": "Postavi skriptu",
@@ -2248,7 +2258,10 @@
       "browse": "Pogledaj zajednice",
       "emptyTitle": "Tišina u tvojim zajednicama",
       "emptyDescription": "Postavi pitanje o roku ili podeli iskustvo."
-    }
+    },
+    "onlyPassedTitle": "Tvoji predmeti su već položeni",
+    "onlyPassedDescription": "Preporuke pravimo za predmete koje slušaš, a položene preskačemo. Označi predmete koje sada slušaš.",
+    "popularTitle": "Najbolje ocenjene skripte"
   },
   "myCourses": {
     "title": "Moji predmeti",

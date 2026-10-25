@@ -65,6 +65,11 @@ describe('previews', () => {
     expect(previews[0]?.webp.subarray(8, 12).toString()).toBe('WEBP');
     expect(previews[0]?.width).toBe(1000);
   });
+
+  it('does not blur a single preview page (short notes would show nothing readable)', async () => {
+    const previews = await renderPreviews(await makePdf({ pages: 10 }), 1);
+    expect(previews.map((p) => [p.pageNumber, p.blurred])).toEqual([[1, false]]);
+  });
 });
 
 describe('simhash', () => {

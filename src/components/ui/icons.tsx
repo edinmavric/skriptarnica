@@ -96,6 +96,11 @@ export const ChevronDownIcon = (p: IconProps) => (
     <path d="m6 9.3 6 6 6-6" />
   </Icon>
 );
+export const FilterIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 6h16M7 12h10M10 18h4" />
+  </Icon>
+);
 export const ChevronRightIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="m9.3 6 6 6-6 6" />

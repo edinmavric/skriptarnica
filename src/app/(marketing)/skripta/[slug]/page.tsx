@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { BookmarkButton } from '@/components/features/notes/bookmark-button';
 import { PreviewGallery } from '@/components/features/notes/preview-gallery';
-import { PurchasePanel } from '@/components/features/notes/purchase-panel';
+import { PurchaseBar, PurchasePanel } from '@/components/features/notes/purchase-panel';
 import { ReportDialog } from '@/components/features/report-dialog';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { JsonLd } from '@/components/seo/json-ld';
@@ -52,6 +52,13 @@ export default async function NotePage({ params }: Props) {
   if (note.status === 'published') await recordNoteView(note.id, viewer?.id ?? null, note.sellerId);
   const average = averageRating(note.ratingSum, note.reviewCount);
   const path = routes.note(note.slug);
+  const purchase = {
+    noteId: note.id,
+    pricePara: note.pricePara,
+    owned: data.viewer.owned,
+    isOwner: data.viewer.isOwner,
+    available: note.status === 'published' || note.status === 'unlisted',
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -201,16 +208,12 @@ export default async function NotePage({ params }: Props) {
           aria-label={t('sidebar')}
         >
           <div className="rounded-lg border border-rule bg-paper-raised p-4">
-            <PurchasePanel
-              noteId={note.id}
-              slug={note.slug}
-              pricePara={note.pricePara}
-              owned={data.viewer.owned}
-              isOwner={data.viewer.isOwner}
-              available={note.status === 'published' || note.status === 'unlisted'}
-            />
+            {/* Below desktop width the price and action live in the PurchaseBar instead. */}
+            <div className="hidden lg:block">
+              <PurchasePanel {...purchase} />
+            </div>
             {data.lastUpdated ? (
-              <p className="mt-3 text-sm text-ink-muted">
+              <p className="text-sm text-ink-muted lg:mt-3">
                 {t('lastUpdated', { date: formatDate(data.lastUpdated) })}
               </p>
             ) : null}
@@ -254,6 +257,7 @@ export default async function NotePage({ params }: Props) {
           </div>
         </aside>
       </div>
+      <PurchaseBar {...purchase} />
     </div>
   );
 }

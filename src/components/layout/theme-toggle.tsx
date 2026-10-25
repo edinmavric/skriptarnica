@@ -28,7 +28,7 @@ export function ThemeToggle({ initial }: { initial: Theme }) {
       }}
       className="grid size-11 place-items-center rounded-md text-ink-muted hover:bg-paper-sunk hover:text-ink"
       aria-label={t('toggle', { current: t(theme) })}
-      title={t(theme)}
+      title={t('toggle', { current: t(theme) })}
     >
       <Icon className="size-5" />
     </button>

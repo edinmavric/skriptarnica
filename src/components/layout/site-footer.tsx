@@ -45,7 +45,7 @@ export async function SiteFooter({
     },
   ] as const;
   return (
-    <footer className="mt-16 border-t border-rule bg-paper-sunk pb-24 md:pb-8">
+    <footer className="mt-16 border-t border-rule bg-paper-sunk pb-24 md:pb-8 [body:has([data-buy-bar])_&]:pb-40 md:[body:has([data-buy-bar])_&]:pb-24 lg:[body:has([data-buy-bar])_&]:pb-8">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6">
         {groups.map((group) => (
           <div key={group.title}>

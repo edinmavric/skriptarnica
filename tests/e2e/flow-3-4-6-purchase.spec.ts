@@ -44,6 +44,7 @@ test.describe('flow 3: purchase with the mock provider → library → watermark
     await signUpAndVerify(page, buyer);
     await page.goto(PAID_NOTE);
     await page.getByRole('link', { name: 'Kupi skriptu' }).click();
+    await expect(page).toHaveURL(/\/kupovina\//);
     await expect(page.getByText('800 RSD')).toBeVisible();
     await expectNoSeriousA11yViolations(page);
     // The withdrawal checkbox is required and not pre-checked.

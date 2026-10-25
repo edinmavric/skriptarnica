@@ -12,6 +12,7 @@ import { RatingStars } from './rating-stars';
 export interface NoteCardData {
   slug: string;
   title: string;
+  shortDescription?: string;
   courseName: string;
   facultyShortName: string;
   coverUrl: string | null;
@@ -89,6 +90,77 @@ export function NoteCard({
           ) : (
             <PriceTag para={note.pricePara} />
           )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/**
+ * A note as a list row: small cover, then what tells notes apart (who wrote it, the grade, the
+ * rating) with the price aligned on the right. For lists of notes of one course, where the
+ * course line on every card would only repeat the page heading.
+ */
+export function NoteRow({
+  note,
+  showCourse = false,
+  className,
+}: {
+  note: NoteCardData;
+  showCourse?: boolean;
+  className?: string;
+}) {
+  const t = useTranslations('notes.card');
+  return (
+    <article className={cn('group relative flex gap-4 py-4', className)}>
+      <div className="paper-sheet relative aspect-[3/4] w-16 shrink-0 self-start overflow-hidden rounded-sm sm:w-20">
+        {note.coverUrl ? (
+          <Image
+            src={note.coverUrl}
+            alt=""
+            fill
+            sizes="80px"
+            className="object-cover object-top"
+            loading="lazy"
+          />
+        ) : (
+          <div className="notebook h-full" />
+        )}
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-[1.1rem] leading-snug font-semibold">
+            <Link
+              href={`/skripta/${note.slug}`}
+              className="group-focus-within:underline group-hover:underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+            >
+              {note.title}
+            </Link>
+          </h3>
+          {note.owned ? (
+            <Badge tone="success" className="shrink-0">
+              {t('owned')}
+            </Badge>
+          ) : (
+            <PriceTag para={note.pricePara} className="shrink-0 font-display text-lg" />
+          )}
+        </div>
+        {note.shortDescription ? (
+          <p className="line-clamp-2 max-w-prose text-sm">{note.shortDescription}</p>
+        ) : null}
+        <p className="text-sm text-ink-muted">
+          {showCourse ? `${note.courseName}, ${note.facultyShortName}. ` : null}
+          {t('by', { name: note.sellerName })}
+        </p>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <RatingStars value={note.averageRating} count={note.reviewCount} compact />
+          {note.grade !== null ? (
+            <Badge tone={note.gradeVerifiedByCourseStatus ? 'marker' : 'neutral'}>
+              {note.gradeVerifiedByCourseStatus ? <CheckIcon /> : null}
+              {t('grade', { grade: note.grade })}
+            </Badge>
+          ) : null}
+          <span className="text-sm text-ink-muted">{t('pages', { count: note.pageCount })}</span>
         </div>
       </div>
     </article>

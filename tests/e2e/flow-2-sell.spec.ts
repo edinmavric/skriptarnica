@@ -95,7 +95,8 @@ test.describe('flow 2: become a seller → upload → processing → publish aft
     ).toBeVisible();
     await expect(guestPage.getByText('Položio sa 9')).toBeVisible();
     await expect(guestPage.getByRole('heading', { name: 'Kako sam učio' })).toBeVisible();
-    await expect(guestPage.getByText('800 RSD')).toBeVisible();
+    // The price is in the sidebar on desktop and in the bottom bar on phones.
+    await expect(guestPage.getByText('800 RSD').filter({ visible: true })).toBeVisible();
     await expectNoSeriousA11yViolations(guestPage);
     const jsonLd = await guestPage
       .locator('script[type="application/ld+json"]')

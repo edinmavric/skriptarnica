@@ -107,7 +107,7 @@ export async function PostPage({
       <Breadcrumbs
         items={[
           { label: t('communities'), href: routes.communities },
-          { label: `z/${slug}`, href: routes.community(slug) },
+          { label: data.community.community.name, href: routes.community(slug) },
           { label: post.title || t('removedTitle'), href: path },
         ]}
       />
@@ -123,7 +123,7 @@ export async function PostPage({
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
             <Link href={routes.community(slug)} className="font-medium text-ink hover:underline">
-              z/{slug}
+              {data.community.community.name}
             </Link>
             <span>
               {post.author.username && !post.author.deleted ? (

@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "rm -rf .next/dev && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -21,6 +22,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:reset": "tsx scripts/db-reset.ts",
     "test:e2e": "playwright test",
     "i18n:sync": "node scripts/sync-messages.mjs",
     "i18n:check": "node scripts/sync-messages.mjs --check",

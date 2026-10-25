@@ -7,6 +7,7 @@ import { HomeFeed } from '@/components/features/feed/home-feed';
 import { LandingSearch } from '@/components/features/landing/landing-search';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Button } from '@/components/ui/button';
+import { NoteCard } from '@/components/ui/note-card';
 import { defaults, PARA_PER_RSD } from '@/config/constants';
 import { routes } from '@/config/routes';
 import { siteConfig } from '@/config/site';
@@ -18,6 +19,7 @@ import { redirect } from 'next/navigation';
 
 import { getCurrentUser, hasCurrentConsents } from '@/server/auth/session';
 import { listFacultiesForPicker } from '@/server/services/catalog-pages';
+import { listTopNotes } from '@/server/services/note-pages';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('landing');
@@ -44,7 +46,7 @@ export default async function HomePage() {
 
 async function Landing() {
   const t = await getTranslations('landing');
-  const faculties = await listFacultiesForPicker();
+  const [faculties, topNotes] = await Promise.all([listFacultiesForPicker(), listTopNotes(8)]);
   const example = calculateCommission(EXAMPLE_PRICE_PARA, defaults.platformCommissionBasisPoints);
 
   return (
@@ -87,6 +89,45 @@ async function Landing() {
             <p>{t('example.line3')}</p>
           </div>
         </figure>
+      </section>
+
+      {topNotes.length > 0 ? (
+        <section aria-labelledby="top-notes-title">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 id="top-notes-title" className="text-display-sm font-semibold">
+              {t('topNotes.title')}
+            </h2>
+            <Link href={routes.search} className="text-sm text-pen underline underline-offset-2">
+              {t('topNotes.all')}
+            </Link>
+          </div>
+          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+            {topNotes.map((note) => (
+              <li key={note.id}>
+                <NoteCard note={note} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <section aria-labelledby="faculties-title">
+        <h2 id="faculties-title" className="text-display-sm font-semibold">
+          {t('faculties.title')}
+        </h2>
+        <ul className="mt-4 grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
+          {faculties.map((faculty) => (
+            <li key={faculty.slug}>
+              <Link
+                href={routes.faculty(faculty.slug)}
+                className="flex min-h-11 items-center justify-between gap-3 border-b border-rule py-2 hover:bg-paper-sunk"
+              >
+                <span>{faculty.name}</span>
+                <span className="text-sm whitespace-nowrap text-ink-muted">{faculty.city}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section
@@ -150,25 +191,6 @@ async function Landing() {
             <Link href={routes.commission}>{t('sell.more')}</Link>
           </Button>
         </div>
-      </section>
-
-      <section aria-labelledby="faculties-title">
-        <h2 id="faculties-title" className="text-display-sm font-semibold">
-          {t('faculties.title')}
-        </h2>
-        <ul className="mt-4 grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
-          {faculties.map((faculty) => (
-            <li key={faculty.slug}>
-              <Link
-                href={routes.faculty(faculty.slug)}
-                className="flex min-h-11 items-center justify-between gap-3 border-b border-rule py-2 hover:bg-paper-sunk"
-              >
-                <span>{faculty.name}</span>
-                <span className="text-sm whitespace-nowrap text-ink-muted">{faculty.city}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   );

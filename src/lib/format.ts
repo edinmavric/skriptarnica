@@ -28,6 +28,16 @@ export function formatNumber(value: number): string {
   return wholeNumber.format(value);
 }
 
+const percentFormat = new Intl.NumberFormat(INTL_LOCALE, {
+  style: 'percent',
+  maximumFractionDigits: 1,
+});
+
+/** 0.134 → "13,4 %" (Serbian decimal comma). */
+export function formatPercent(ratio: number): string {
+  return percentFormat.format(ratio);
+}
+
 const dateFormat = new Intl.DateTimeFormat(INTL_LOCALE, {
   day: 'numeric',
   month: 'short',

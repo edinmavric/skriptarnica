@@ -140,7 +140,7 @@ export default async function ProfilePage({ params }: Props) {
                       {post.title}
                     </Link>
                     <p className="text-sm text-ink-muted">
-                      z/{post.community},{' '}
+                      {post.communityName},{' '}
                       {t('postStats', { score: post.score, comments: post.commentCount })},{' '}
                       <time dateTime={post.createdAt.toISOString()} suppressHydrationWarning>
                         {formatRelative(post.createdAt)}

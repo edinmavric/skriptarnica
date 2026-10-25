@@ -142,6 +142,7 @@ export async function profileActivity(userId: string, viewer: CurrentUser | null
         commentCount: posts.commentCount,
         createdAt: posts.createdAt,
         community: communities.slug,
+        communityName: communities.name,
       })
       .from(posts)
       .innerJoin(communities, eq(communities.id, posts.communityId))

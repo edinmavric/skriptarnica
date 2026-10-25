@@ -8,6 +8,7 @@ import {
   isNotNull,
   isNull,
   lte,
+  ne,
   sql,
   type SQL,
 } from 'drizzle-orm';
@@ -83,6 +84,7 @@ export const noteCardColumns = {
   id: notes.id,
   slug: notes.slug,
   title: notes.title,
+  shortDescription: notes.shortDescription,
   sellerId: notes.sellerId,
   courseId: notes.courseId,
   currentVersionId: notes.currentVersionId,
@@ -102,6 +104,7 @@ export type NoteCardRow = {
   id: string;
   slug: string;
   title: string;
+  shortDescription?: string | null;
   sellerId: string;
   courseId: string | null;
   currentVersionId: string | null;
@@ -128,6 +131,7 @@ export async function toNoteCards(
     id: row.id,
     slug: row.slug,
     title: row.title,
+    shortDescription: row.shortDescription ?? '',
     courseName: row.courseName ?? '',
     facultyShortName: row.facultyShortName ?? '',
     coverUrl: row.currentVersionId ? (covers.get(row.currentVersionId) ?? null) : null,
@@ -159,6 +163,28 @@ const priceFilters: Record<string, SQL | undefined> = {
   do1000: lte(notes.pricePara, 100_000),
 };
 
+/** "Recommended" order: Bayesian rating, plus sales and freshness as smaller nudges. */
+const recommendedSql = sql`(${bayesianRatingSql} + 0.35 * ln(1 + ${notes.salesCount}) + 0.5 * exp(-extract(epoch from now() - ${notes.publishedAt}) / (86400 * 180)))`;
+
+/** The best notes across all courses, in recommended order; optionally not the viewer's own. */
+export const listTopNotes = unstable_cache(
+  async (limit: number, excludeSellerId: string | null = null) => {
+    const rows = await publishedNotesBase()
+      .where(
+        and(
+          eq(notes.status, 'published'),
+          isNull(notes.deletedAt),
+          excludeSellerId ? ne(notes.sellerId, excludeSellerId) : undefined,
+        ),
+      )
+      .orderBy(desc(recommendedSql), desc(notes.id))
+      .limit(limit);
+    return toNoteCards(rows);
+  },
+  ['top-notes'],
+  { tags: [NOTES_TAG], revalidate: 300 },
+);
+
 /** Course page listing (SPEC §4.3): filters and sorts over published notes. */
 export const listCourseNotes = unstable_cache(
   async (courseId: string, query: CourseNotesQuery) => {
@@ -178,9 +204,8 @@ export const listCourseNotes = unstable_cache(
     }
     if (query.godina) conditions.push(eq(notes.academicYear, query.godina));
 
-    const recommended = sql`(${bayesianRatingSql} + 0.35 * ln(1 + ${notes.salesCount}) + 0.5 * exp(-extract(epoch from now() - ${notes.publishedAt}) / (86400 * 180)))`;
     const order: SQL[] = {
-      preporuceno: [desc(recommended)],
+      preporuceno: [desc(recommendedSql)],
       ocena: [desc(bayesianRatingSql), desc(notes.reviewCount)],
       prodaja: [desc(notes.salesCount)],
       najnovije: [desc(notes.publishedAt)],

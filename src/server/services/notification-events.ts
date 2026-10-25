@@ -201,7 +201,7 @@ export async function onModerationDecision(
 ): Promise<void> {
   const [community] = data.communityId
     ? await db
-        .select({ slug: communities.slug })
+        .select({ slug: communities.slug, name: communities.name })
         .from(communities)
         .where(eq(communities.id, data.communityId))
     : [];
@@ -213,7 +213,7 @@ export async function onModerationDecision(
       href: community ? routes.community(community.slug) : routes.legal.community,
       target: data.targetType,
       action: data.action,
-      community: community ? `z/${community.slug}` : '',
+      community: community ? community.name : '',
       reason: data.reason ?? '—',
     },
   });

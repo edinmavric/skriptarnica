@@ -29,7 +29,7 @@ export async function searchCommunities(ctx: SearchContext): Promise<SearchResul
     type: 'community' as const,
     id: row.id,
     title: row.name,
-    subtitle: `z/${row.slug}`,
+    subtitle: null,
     href: `/z/${row.slug}`,
     score: Number(row.score),
   }));
@@ -42,9 +42,10 @@ export async function searchPosts(ctx: SearchContext): Promise<SearchResult[]> {
     title: string;
     slug: string;
     community_slug: string;
+    community_name: string;
     score: number;
   }>(sql`
-    SELECT p.id, p.title, p.slug, c.slug AS community_slug, ${m.score} AS score FROM posts p
+    SELECT p.id, p.title, p.slug, c.slug AS community_slug, c.name AS community_name, ${m.score} AS score FROM posts p
     JOIN communities c ON c.id = p.community_id
     LEFT JOIN faculties f ON f.id = c.faculty_id
     WHERE ${m.where} AND p.removed_at IS NULL AND p.deleted_at IS NULL AND ${visibleFor('c', ctx)} ${ctx.facultySlug ? sql`AND f.slug = ${ctx.facultySlug}` : sql``}
@@ -53,7 +54,7 @@ export async function searchPosts(ctx: SearchContext): Promise<SearchResult[]> {
     type: 'post' as const,
     id: row.id,
     title: row.title,
-    subtitle: `z/${row.community_slug}`,
+    subtitle: row.community_name,
     href: `/z/${row.community_slug}/p/${row.id}-${row.slug}`,
     score: Number(row.score),
   }));
