@@ -29,6 +29,7 @@
     "admin:grant": "tsx scripts/grant-admin.ts",
     "payout-keys:rotate": "tsx scripts/rotate-payout-keys.ts",
     "lighthouse": "node scripts/lighthouse.mjs",
+    "js:budget": "node scripts/js-budget.mjs",
     "preflight": "tsx scripts/preflight.ts"
   },
   "dependencies": {

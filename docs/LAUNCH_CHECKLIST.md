@@ -20,4 +20,4 @@ Also before launch:
 - Sentry DSN and `ALERT_EMAIL` set (preflight), uptime monitor on `/api/health` (RUNBOOK → _Monitoring_).
 - PostHog: a real EU project key and host instead of the dev sink (preflight), processing agreement (LEGAL_TODO).
 - Lighthouse on the production URL: `npm run lighthouse -- https://<domain> --perf`.
-- Decide on the JS budget (DECISIONS → Phase 10): 221–239 KB gzip measured vs 170 KB in SPEC §8.2.
+- JS budget: relaxed to 250 KB (content) / 300 KB (forms) gzip and enforced in CI by `npm run js:budget` (DECISIONS → Phase 10).

@@ -96,4 +96,4 @@ Email goes through Resend from `EMAIL_FROM` on our domain.
 - **Ops alerts:** `alertOps()` sends to `ALERT_EMAIL` for dead jobs, webhook failures and queue backlogs.
 - **Health:** `/api/health` checks the database. Point an uptime monitor at it (1-minute interval).
 - **Jobs:** the Inngest dashboard shows failed runs; replay after fixing (handlers are idempotent).
-- **Quality gates:** `npm run lighthouse -- http://localhost:3000 --perf` (median of 3 runs per page; performance ≥ 0.9, others ≥ 0.95) against a production build before a release with UI changes.
+- **Quality gates:** `npm run lighthouse -- http://localhost:3000 --perf` (median of 3 runs per page; performance ≥ 0.9, others ≥ 0.95) against a production build before a release with UI changes; `npm run js:budget` (CI runs it too) for JS per public page.

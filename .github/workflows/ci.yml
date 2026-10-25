@@ -103,6 +103,8 @@ jobs:
         run: npm run db:seed -- all
       - name: E2E
         run: npm run test:e2e
+      - name: JS budget per public page
+        run: npm run js:budget
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

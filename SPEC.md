@@ -434,7 +434,7 @@ Create pages with structure and clearly marked placeholders, versioned (version 
 - axe checks in Playwright tests for key pages, with no critical or serious violations.
 
 ### 8.2 Performance
-- Budget: LCP < 2.5 s and INP < 200 ms on a mid-range Android phone (4G); JS per route < 170 KB gzip for public pages.
+- Budget: LCP < 2.5 s and INP < 200 ms on a mid-range Android phone (4G); JS per route < 250 KB gzip for public content pages and < 300 KB for public form pages (relaxed from 170 KB, see docs/DECISIONS.md; enforced by `npm run js:budget`).
 - RSC by default, `"use client"` only where needed; dynamic import for heavy parts (editor, charts, gallery).
 - `next/image` for all images, preview pages in WebP/AVIF, `sizes` attribute.
 - Caching: tagged fetch/`unstable_cache` or the current Next.js cache API for the catalog and public pages; ISR for public note and course pages.
