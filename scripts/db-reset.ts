@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import { execFileSync } from 'node:child_process';
+import { rmSync } from 'node:fs';
 
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
@@ -34,7 +35,13 @@ async function main() {
     stdio: 'inherit',
     env: { ...process.env, HIBP_ENABLED: 'false' },
   });
+  // Next's data cache outlives the database, and recreated rows get new IDs: clear it so pages
+  // don't look up courses that no longer exist.
+  for (const dir of ['.next/cache/fetch-cache', '.next/dev/cache/fetch-cache']) {
+    rmSync(dir, { recursive: true, force: true });
+  }
   console.log(`db:reset: ${name} recreated, migrated and seeded`);
+  console.log('db:reset: restart `npm run dev` if it is running (it also caches data in memory)');
 }
 
 main().catch((error: unknown) => {

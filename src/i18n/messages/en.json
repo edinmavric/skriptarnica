@@ -1433,7 +1433,7 @@
       "removedBecause": "Uklonjena iz prodaje: {reason}. Kupci zadržavaju pristup.",
       "counterNotice": "Uloži prigovor",
       "more": "More",
-      "moreFor": "More actions for “{title}”"
+      "moreFor": "More for “{title}”"
     },
     "money": {
       "title": "Zarada",

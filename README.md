@@ -31,7 +31,7 @@ In development:
 - Inngest (background jobs) dashboard: http://localhost:8288.
 - Admin: `npm run admin:grant -- <email>` for an existing account; it must turn on 2FA before `/admin` opens.
 
-Reset the local database to a clean catalog plus demo content with `npm run db:reset` (development only; it drops the database). E2E tests run against their own `<db>_e2e` database, which `npm run test:e2e` recreates on each run, so they never write into your dev data. Stop `npm run dev` before running E2E: both use port 3000.
+Reset the local database to a clean catalog plus demo content with `npm run db:reset` (development only; it drops the database), then restart `npm run dev`. E2E tests run against their own `<db>_e2e` database, which `npm run test:e2e` recreates on each run, so they never write into your dev data. Stop `npm run dev` before running E2E: both use port 3000.
 
 If the dev server keeps reloading the page (the browser console shows "HMR hash mismatch"), Next's dev bundler got into a bad state. Restart `npm run dev`; if it persists, `npm run dev:clean` clears its cache in `.next/dev`.
 

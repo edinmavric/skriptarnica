@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import { execFileSync } from 'node:child_process';
+import { rmSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -36,6 +37,9 @@ async function prepare() {
   await migrate(drizzle(sql), { migrationsFolder: './drizzle' });
   await sql.end();
 
+  // Next's data cache (unstable_cache) lives on disk and outlives the database; recreated rows
+  // get new IDs, so a stale entry would point pages at courses that no longer exist.
+  rmSync('.next/cache/fetch-cache', { recursive: true, force: true });
   execFileSync('npx', ['tsx', 'src/server/db/seed/index.ts', 'all'], {
     stdio: 'inherit',
     // Demo accounts share a published password; checking it against HIBP only adds a network hop.
