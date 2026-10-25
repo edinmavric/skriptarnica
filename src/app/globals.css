@@ -27,6 +27,7 @@
   --marker: #e4f35a;
   --marker-ink: #1b1d22;
   --marker-soft: #f0f7bd;
+  --marker-stroke: #e4f35a;
   --success: #2c6639;
   --success-soft: #e3efe1;
   --warning: #855600;
@@ -57,6 +58,7 @@
   --marker: #d4e44a;
   --marker-ink: #1e1d1a;
   --marker-soft: #3b3f1f;
+  --marker-stroke: #5c6420;
   --success: #93cd9b;
   --success-soft: #1f301f;
   --warning: #e5bf6c;
@@ -88,6 +90,7 @@
     --marker: #d4e44a;
     --marker-ink: #1e1d1a;
     --marker-soft: #3b3f1f;
+    --marker-stroke: #5c6420;
     --success: #93cd9b;
     --success-soft: #1f301f;
     --warning: #e5bf6c;
@@ -119,6 +122,7 @@
   --color-marker: var(--marker);
   --color-marker-ink: var(--marker-ink);
   --color-marker-soft: var(--marker-soft);
+  --color-marker-stroke: var(--marker-stroke);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -227,16 +231,16 @@
       linear-gradient(
         101deg,
         transparent 0.08em,
-        var(--marker) 0.3em,
-        color-mix(in oklab, var(--marker) 82%, transparent) 46%,
-        var(--marker) 78%,
-        color-mix(in oklab, var(--marker) 70%, transparent) 97%,
+        var(--marker-stroke) 0.3em,
+        color-mix(in oklab, var(--marker-stroke) 82%, transparent) 46%,
+        var(--marker-stroke) 78%,
+        color-mix(in oklab, var(--marker-stroke) 70%, transparent) 97%,
         transparent 100%
       ),
       linear-gradient(
         99deg,
         transparent 0.4em,
-        color-mix(in oklab, var(--marker) 55%, transparent) 0.6em,
+        color-mix(in oklab, var(--marker-stroke) 55%, transparent) 0.6em,
         transparent 90%
       );
     background-repeat: no-repeat;

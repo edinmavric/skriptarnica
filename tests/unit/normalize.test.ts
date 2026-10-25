@@ -57,3 +57,19 @@ describe('slugify', () => {
     expect(slugify('a'.repeat(30) + ' ' + 'b'.repeat(60), 50)).toBe('a'.repeat(30));
   });
 });
+
+describe('highlightSegments', () => {
+  it('highlights words matching across scripts and diacritics', async () => {
+    const { highlightSegments } = await import('@/lib/search/highlight');
+    expect(highlightSegments('Fakultet tehničkih nauka u Čačku', 'cacak')).toEqual([
+      { text: 'Fakultet tehničkih nauka u ', match: false },
+      { text: 'Čačku', match: true },
+    ]);
+    expect(
+      highlightSegments('Osnovi elektrotehnike 1', 'osn elek')
+        .filter((s) => s.match)
+        .map((s) => s.text),
+    ).toEqual(['Osnovi', 'elektrotehnike']);
+    expect(highlightSegments('Fizika', '')).toEqual([{ text: 'Fizika', match: false }]);
+  });
+});

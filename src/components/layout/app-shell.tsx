@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';
 
+import { GlobalSearch } from '@/components/features/search/global-search';
 import { parseTheme, THEME_COOKIE } from '@/lib/theme';
 
 import { BottomNav } from './bottom-nav';
@@ -30,7 +31,12 @@ export async function AppShell({
   return (
     <>
       {banner}
-      <SiteHeader user={user} theme={theme} search={search} signOutAction={signOutAction} />
+      <SiteHeader
+        user={user}
+        theme={theme}
+        search={search ?? <GlobalSearch />}
+        signOutAction={signOutAction}
+      />
       <main
         id="main"
         tabIndex={-1}

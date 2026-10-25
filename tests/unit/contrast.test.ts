@@ -58,6 +58,7 @@ const pairs: [string, string, number][] = [
   ['danger-ink', 'danger', 4.5],
   ['marker-ink', 'marker', 7],
   ['ink', 'marker-soft', 7],
+  ['ink', 'marker-stroke', 4.5],
   ['success', 'success-soft', 4.5],
   ['warning', 'warning-soft', 4.5],
   ['danger', 'danger-soft', 4.5],

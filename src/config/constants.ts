@@ -6,6 +6,8 @@ export const PARA_PER_RSD = 100;
 
 export const defaults = {
   platformCommissionPercent: 20,
+  /** Same value in basis points (20% = 2000) for integer arithmetic. */
+  platformCommissionBasisPoints: 2000,
   fundsHoldDays: 14,
   minPayoutPara: 1_000 * PARA_PER_RSD,
   maxNotePricePara: 3_000 * PARA_PER_RSD,

@@ -125,7 +125,8 @@
       "copyright": "Prijava povrede autorskih prava",
       "imprint": "Podaci o pružaocu usluge",
       "copyrightLine": "© {year} {name}"
-    }
+    },
+    "breadcrumbs": "Putanja"
   },
   "devUi": {
     "title": "Katalog komponenti",
@@ -506,5 +507,125 @@
     "title": "Dev outbox",
     "intro": "Emailovi koji bi bili poslati (Resend nije podešen). Samo za razvoj.",
     "empty": "Nema poslatih emailova."
+  },
+  "catalog": {
+    "university": {
+      "home": "Početna",
+      "faculties": "Fakulteti",
+      "metaDescription": "{name}: {count, plural, one {# fakultet} few {# fakulteta} other {# fakulteta}} sa skriptama i zajednicama studenata."
+    },
+    "faculty": {
+      "home": "Početna",
+      "programs": "Smerovi i predmeti",
+      "professors": "Profesori",
+      "noPrograms": "Još nema unetih smerova.",
+      "noCourses": "Predmeti za ovaj smer još nisu uneti.",
+      "noProfessors": "Još nema unetih profesora.",
+      "year": "{year}. godina",
+      "programMeta": "{level}, {years, plural, one {# godina} few {# godine} other {# godina}}",
+      "levels": {
+        "oas": "Osnovne akademske studije",
+        "mas": "Master akademske studije",
+        "das": "Doktorske studije",
+        "oss": "Osnovne strukovne studije"
+      },
+      "emptyTitle": "Predmeti još nisu uneti",
+      "emptyDescription": "Katalog popunjavamo uz pomoć studenata. Ako studiraš ovde, predloži predmete pri podešavanju profila.",
+      "metaDescription": "Skripte, iskustva i zajednice studenata fakulteta {name} ({city})."
+    },
+    "course": {
+      "home": "Početna",
+      "professors": "Profesori",
+      "programYear": "{program}, {year}. godina, {semester}. semestar",
+      "notes": "Skripte",
+      "noNotesTitle": "Još nema skripti za ovaj predmet",
+      "noNotesDescription": "Položio si ga? Postavi svoju skriptu, napiši kako si učio i zaradi.",
+      "sellCta": "Prodaj svoju skriptu",
+      "metaDescription": "Skripte za predmet {course} ({faculty}) od studenata koji su ga položili: ocene, kako su učili, šta je bilo na ispitu."
+    },
+    "professor": {
+      "home": "Početna",
+      "courses": "Predmeti",
+      "noCourses": "Nema unetih predmeta.",
+      "publicInfoNote": "Prikazujemo samo javno dostupne podatke: ime, zvanje i fakultet.",
+      "metaDescription": "{name} ({faculty}): predmeti, skripte i iskustva studenata sa ispita."
+    }
+  },
+  "search": {
+    "label": "Pretraga",
+    "placeholder": "Predmet, skripta, profesor, zajednica…",
+    "trigger": "Pretraži",
+    "results": "Rezultati pretrage",
+    "noResults": "Nema rezultata.",
+    "resultsCount": "{count, plural, one {# rezultat} few {# rezultata} other {# rezultata}}",
+    "error": "Pretraga trenutno ne radi. Pokušaj ponovo.",
+    "allResults": "Svi rezultati za „{query}“",
+    "title": "Pretraga",
+    "titleFor": "Rezultati za „{query}“",
+    "hint": "Kucaj naziv predmeta, profesora ili fakulteta. Radi i bez kvačica: „cacak“ nalazi Čačak.",
+    "all": "Sve",
+    "filterTypes": "Vrsta rezultata",
+    "noResultsTitle": "Ništa nismo našli",
+    "noResultsDescription": "Probaj kraći upit ili deo naziva, npr. „oet“ umesto punog naziva predmeta.",
+    "types": {
+      "note": "Skripte",
+      "course": "Predmeti",
+      "professor": "Profesori",
+      "community": "Zajednice",
+      "post": "Objave",
+      "faculty": "Fakulteti",
+      "university": "Univerziteti"
+    }
+  },
+  "landing": {
+    "metaTitle": "Skripte od studenata koji su položili",
+    "metaDescription": "Nađi skriptu za svoj predmet: pregled prvih strana, ocene, kako je autor učio i šta je bilo na ispitu. Položio si? Prodaj svoju skriptu.",
+    "title": "Nađi skriptu za svoj predmet od nekog ko ga je <mark>već položio</mark>",
+    "lead": "Uz svaku skriptu piše kako je autor učio, sa kojom ocenom je položio i šta je bilo na roku. Prve strane vidiš pre kupovine.",
+    "facultyLabel": "Fakultet",
+    "allFaculties": "Svi fakulteti",
+    "searchLabel": "Nađi skriptu za svoj predmet",
+    "searchHint": "Možeš i bez kvačica: „oet“, „matematika 1“, „cacak“.",
+    "example": {
+      "caption": "Primer: kako izgleda jedna skripta",
+      "title": "OET 1 — teorija i rešeni zadaci",
+      "meta": "ETF Beograd, položio sa 9 (samoprijavljeno), 64 strane",
+      "line1": "Učio sam 12 dana, po 4–5 sati.",
+      "line2": "Prvo teorija, pa zadaci sa rokova od najnovijih ka starijim.",
+      "line3": "U januaru su bila dva zadatka sa kondenzatorima."
+    },
+    "paths": {
+      "title": "Kako radi",
+      "buyTitle": "Kupuješ",
+      "buy1": "Izabereš fakultet i predmet, ili samo ukucaš naziv.",
+      "buy2": "Pogledaš prve strane, ocene drugih kupaca i opis kako je autor učio.",
+      "buy3": "Platiš karticom na stranici banke. Podatke o kartici ne vidimo.",
+      "buy4": "Skripta je u tvojoj biblioteci, sa svim budućim izmenama autora.",
+      "sellTitle": "Prodaješ",
+      "sell1": "Postaviš PDF i izabereš predmet.",
+      "sell2": "Napišeš kako si učio, kojom ocenom si položio i šta je bilo na ispitu.",
+      "sell3": "Odrediš cenu. Pre objave vidiš koliko tačno dobijaš.",
+      "sell4": "Zarada ti stiže na račun kad zatražiš isplatu."
+    },
+    "sell": {
+      "title": "Položio si? Pomozi mlađima i zaradi.",
+      "math": "Prodaš skriptu za {price} → dobijaš <mark>{seller}</mark>",
+      "explain": "Platforma zadržava {percent}% ({commission} u ovom primeru) za plaćanje karticama, čuvanje fajlova i podršku. Novac postaje dostupan za isplatu {days} dana posle prodaje, zbog mogućih reklamacija.",
+      "cta": "Postavi prvu skriptu",
+      "more": "Detalji o proviziji"
+    },
+    "faculties": {
+      "title": "Fakulteti"
+    }
+  },
+  "errorPages": {
+    "notFoundTitle": "Ova stranica ne postoji",
+    "notFoundBody": "Možda je link pogrešan ili je sadržaj uklonjen. Probaj pretragu.",
+    "home": "Na početnu",
+    "search": "Pretraga",
+    "errorTitle": "Nešto nije u redu",
+    "errorBody": "Stranica nije mogla da se učita. Pokušaj ponovo, a ako se ponavlja, javi nam.",
+    "reference": "Oznaka greške: {digest}",
+    "retry": "Pokušaj ponovo"
   }
 }

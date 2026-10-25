@@ -48,17 +48,15 @@ async function recordConsents(
     value: boolean;
   }[],
 ) {
-  await db
-    .insert(consents)
-    .values(
-      entries.map((entry) => ({
-        userId,
-        ipHash,
-        type: entry.type,
-        documentVersion: entry.version,
-        value: entry.value,
-      })),
-    );
+  await db.insert(consents).values(
+    entries.map((entry) => ({
+      userId,
+      ipHash,
+      type: entry.type,
+      documentVersion: entry.version,
+      value: entry.value,
+    })),
+  );
 }
 
 export const signUpAction = createAction(
