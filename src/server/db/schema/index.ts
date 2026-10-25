@@ -6,3 +6,4 @@ export * from './marketplace';
 export * from './moderation';
 export * from './settings';
 export * from './money';
+export * from './exam-periods';

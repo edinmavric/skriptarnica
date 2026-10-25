@@ -42,6 +42,20 @@ test.describe('flow 1: sign-up → verification → onboarding', () => {
     await page.getByRole('button', { name: 'Preskoči i završi' }).click();
     await expect(page).toHaveURL(/\/$/);
 
+    // Home feed: recommendations for ETF year 1 and the upcoming exam period.
+    await expect(page.getByRole('heading', { level: 1, name: 'Zdravo, Test' })).toBeVisible();
+    const forYou = page.getByRole('region', { name: 'Za tvoje predmete' });
+    await expect(
+      forYou.getByRole('link', { name: 'OET 1 — teorija i rešeni zadaci' }),
+    ).toBeVisible();
+    await expect(
+      forYou.getByRole('link', { name: /Programiranje 1 — C od nule do ispita/ }),
+    ).toBeVisible();
+    // Matematika 1 was marked as passed, so its notes are not recommended.
+    await expect(forYou.getByRole('link', { name: /Matematika 1 — sve formule/ })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Ispitni rok se bliži' })).toBeVisible();
+    await expectNoSeriousA11yViolations(page);
+
     // Onboarding is done: visiting it again goes home.
     await page.goto('/pocetak');
     await expect(page).toHaveURL(/\/$/);

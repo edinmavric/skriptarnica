@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
+import { HomeFeed } from '@/components/features/feed/home-feed';
 import { LandingSearch } from '@/components/features/landing/landing-search';
 import { JsonLd } from '@/components/seo/json-ld';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,9 @@ import { env } from '@/env';
 import { formatPrice } from '@/lib/format';
 import { calculateCommission } from '@/lib/money';
 import { pageMetadata } from '@/lib/seo/metadata';
+import { redirect } from 'next/navigation';
+
+import { getCurrentUser, hasCurrentConsents } from '@/server/auth/session';
 import { listFacultiesForPicker } from '@/server/services/catalog-pages';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -28,7 +32,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const EXAMPLE_PRICE_PARA = 800 * PARA_PER_RSD;
 
-export default async function LandingPage() {
+export default async function HomePage() {
+  const user = await getCurrentUser();
+  if (user) {
+    if (!(await hasCurrentConsents(user.id))) redirect(`${routes.acceptTerms}?next=%2F`);
+    return <HomeFeed user={user} />;
+  }
+  return <Landing />;
+}
+
+async function Landing() {
   const t = await getTranslations('landing');
   const faculties = await listFacultiesForPicker();
   const example = calculateCommission(EXAMPLE_PRICE_PARA, defaults.platformCommissionBasisPoints);

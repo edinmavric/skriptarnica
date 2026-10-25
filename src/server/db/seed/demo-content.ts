@@ -12,6 +12,7 @@ import { legalVersions } from '@/config/legal';
 import {
   consents,
   courses,
+  examPeriods,
   faculties,
   notes,
   noteVersions,
@@ -191,16 +192,14 @@ export async function seedDemoContent(): Promise<void> {
       wizardStep: 7,
       searchText: normalizeForSearch(`${item.title} ${item.course} ${course.code ?? ''}`),
     });
-    await db
-      .insert(noteVersions)
-      .values({
-        id: versionId,
-        noteId,
-        versionNumber: 1,
-        fileKey,
-        sizeBytes: pdf.length,
-        status: 'uploaded',
-      });
+    await db.insert(noteVersions).values({
+      id: versionId,
+      noteId,
+      versionNumber: 1,
+      fileKey,
+      sizeBytes: pdf.length,
+      status: 'uploaded',
+    });
     const processed = await processVersion(versionId);
     if (processed.status !== 'ready')
       throw new Error(`demo note ${item.slug} failed: ${processed.errorKey}`);
@@ -211,6 +210,37 @@ export async function seedDemoContent(): Promise<void> {
       .set({ status: 'published', publishedAt: now, currentVersionId: versionId })
       .where(eq(notes.id, noteId));
     created += 1;
+  }
+  // Upcoming exam periods relative to today, so the feed's "exam period coming up" block shows.
+  const belgradeDate = (offsetDays: number) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Belgrade' }).format(
+      new Date(Date.now() + offsetDays * 86_400_000),
+    );
+  const now = new Date();
+  const startYear = now.getMonth() >= 9 ? now.getFullYear() : now.getFullYear() - 1;
+  const academicYear = `${startYear}/${String(startYear + 1).slice(-2)}`;
+  for (const [name, offset] of [
+    ['Osnovi elektrotehnike 1', 10],
+    ['Matematika 1', 14],
+    ['Programiranje 1', 40],
+  ] as const) {
+    const [course] = await db
+      .select()
+      .from(courses)
+      .where(and(eq(courses.facultyId, etf.id), eq(courses.name, name)));
+    if (!course) continue;
+    await db
+      .insert(examPeriods)
+      .values({
+        courseId: course.id,
+        academicYear,
+        period: 'oktobarski2',
+        startsOn: belgradeDate(offset),
+      })
+      .onConflictDoUpdate({
+        target: [examPeriods.courseId, examPeriods.academicYear, examPeriods.period],
+        set: { startsOn: belgradeDate(offset) },
+      });
   }
   console.log(
     `demo: ${created} notes created; demo sellers sign in with password "${DEMO_PASSWORD}"`,

@@ -86,14 +86,12 @@ export async function prepareDownload(
     logger.info({ userId, versionId: version.id }, 'watermarked copy generated');
   }
 
-  await db
-    .insert(downloadEvents)
-    .values({
-      userId,
-      noteVersionId: version.id,
-      ipHash: context.ipHash,
-      userAgent: context.userAgent?.slice(0, 300) ?? null,
-    });
+  await db.insert(downloadEvents).values({
+    userId,
+    noteVersionId: version.id,
+    ipHash: context.ipHash,
+    userAgent: context.userAgent?.slice(0, 300) ?? null,
+  });
   const filename = `${slugify(note.title) || 'skripta'}-v${version.versionNumber}.pdf`;
   return ok({ url: await presignDownload(cached.objectKey, filename, 60) });
 }

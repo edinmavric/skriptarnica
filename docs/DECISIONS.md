@@ -108,3 +108,15 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Chart:** a single series in `--chart-1`, a mid-lightness step of the pen hue checked with the dataviz validator: light `#4a67d0`, dark `#6a82e0`, ≥ 3:1 on all surfaces (contrast test). There's no legend (the heading names the series), a value label on the peak only, tooltips on hover and keyboard (arrow keys), and a table view.
 - **`InvoiceService` ⚖️** is a no-op behind the `invoicing` flag, with hooks after payment and after refund.
 - **Demo seed:** two demo sellers and four real notes (generated PDFs through the real pipeline), demo password `demo-skripta-2026`. Refused when `APP_ENV=production`.
+
+## Phase 6 — Recommendations and feed
+
+- **Scoring is a pure function** (`lib/recommendations.ts`) with weights in `config/recommendations.ts`: `3·relevance + 2·bayes/5 + 0.6·ln(1+sales30d) + 0.8·freshness + 1·sameProfessor`.
+  - Relevance: enrolled 1.0, the program's current year 0.7, next year 0.4. Passed courses are never candidates.
+  - Freshness has a 120-day half-life, measured from the current version's publication.
+  - Owned and own notes are excluded.
+  - Diversity: at most 2 notes per seller in the top 10; the overflow moves down rather than disappearing.
+- **Cache:** the ranked note IDs (not rendered cards) live in Redis for 15 minutes. Cards are hydrated per request, so a note unpublished in the meantime simply drops out. Saving the program step or course marks invalidates the cache.
+- **"Same professor"** needs to know the user's professor per course, so `user_course_status.professor_id` was added and can be set on `/moji-predmeti`.
+- **`exam_periods`** (SPEC §3.5) arrives here rather than in Phase 7 because the feed's "exam period coming up" block needs it. Dates are Belgrade calendar days, and the block shows the next 21 days for the user's candidate courses. Admin CRUD comes in Phase 9; the demo seed creates upcoming periods relative to the seed date.
+- **`/` serves two pages:** the landing for guests and the feed for signed-in users (after the consent gate). The community activity slot is filled in Phase 7.

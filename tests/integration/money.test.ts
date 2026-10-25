@@ -437,17 +437,15 @@ describe('ledger invariants', () => {
   it('the database rejects an unbalanced transaction and any edit', async () => {
     await expect(
       db.transaction(async (tx) => {
-        await tx
-          .insert(ledgerEntries)
-          .values({
-            transactionId: randomUUID(),
-            accountType: 'platform_revenue',
-            accountOwnerId: null,
-            amountPara: 100,
-            referenceType: 'adjustment',
-            referenceId: randomUUID(),
-            description: 'unbalanced',
-          });
+        await tx.insert(ledgerEntries).values({
+          transactionId: randomUUID(),
+          accountType: 'platform_revenue',
+          accountOwnerId: null,
+          amountPara: 100,
+          referenceType: 'adjustment',
+          referenceId: randomUUID(),
+          description: 'unbalanced',
+        });
       }),
     ).rejects.toSatisfy((error: unknown) =>
       /unbalanced/.test(String((error as Error & { cause?: unknown }).cause ?? error)),

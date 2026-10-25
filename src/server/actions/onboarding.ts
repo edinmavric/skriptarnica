@@ -85,3 +85,18 @@ export const listProgramsAction = createAction(
     return ok(await listProgramsForFaculty(input.facultyId));
   },
 );
+
+export const setCourseProfessorAction = createAction(
+  { schema: z.object({ courseId: z.uuid(), professorId: z.uuid().nullable() }), auth: 'user' },
+  async (input, { user }) => {
+    const { setCourseProfessor } = await import('../services/feed');
+    const updated = await setCourseProfessor(user.id, input.courseId, input.professorId);
+    if (!updated)
+      return {
+        ok: false as const,
+        error: { code: 'VALIDATION' as const, messageKey: 'errors.myCourses.markFirst' },
+      };
+    await invalidateRecommendations(user.id);
+    return ok(undefined);
+  },
+);

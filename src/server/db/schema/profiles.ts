@@ -13,7 +13,7 @@ import {
 
 import { citext, id, timestamps } from './_common';
 import { users } from './auth';
-import { courses, faculties, studyPrograms, universities } from './catalog';
+import { courses, faculties, professors, studyPrograms, universities } from './catalog';
 
 export const studentProfiles = pgTable(
   'student_profiles',
@@ -63,6 +63,8 @@ export const userCourseStatus = pgTable(
     grade: smallint(),
     /** e.g. "januarski 2026" */
     examPeriod: text(),
+    /** The user's professor for this course (recommendation signal, SPEC §4.5). */
+    professorId: uuid().references(() => professors.id, { onDelete: 'set null' }),
     ...timestamps(),
   },
   (t) => [

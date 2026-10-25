@@ -558,6 +558,9 @@
     },
     "download": {
       "noFile": "Fajl trenutno nije dostupan."
+    },
+    "myCourses": {
+      "markFirst": "Prvo označi predmet kao „Slušam“."
     }
   },
   "onboarding": {
@@ -1210,5 +1213,50 @@
     "success": "Uspešno plaćanje",
     "failure": "Kartica odbijena",
     "cancel": "Otkaži"
+  },
+  "feed": {
+    "greeting": "Zdravo, {name}",
+    "quickAccess": "Brzi pristup",
+    "myCourses": "Moji predmeti ({count})",
+    "saved": "Sačuvano ({count})",
+    "library": "Biblioteka ({count})",
+    "finishOnboarding": "Dovrši podešavanje profila da bismo preporučili skripte za tvoje predmete.",
+    "finishOnboardingCta": "Nastavi podešavanje",
+    "examsTitle": "Ispitni rok se bliži",
+    "startsOn": "počinje {date}",
+    "notesForCourse": "{count, plural, =0 {Skripte za predmet} one {# skripta za predmet} few {# skripte za predmet} other {# skripti za predmet}}",
+    "forYourCourses": "Za tvoje predmete",
+    "noCoursesTitle": "Još nisi označio predmete",
+    "noCoursesDescription": "Izaberi smer i godinu i označi predmete koje slušaš, pa ćemo ti preporučiti skripte.",
+    "noCoursesAction": "Označi predmete",
+    "noNotesTitle": "Za tvoje predmete još nema skripti",
+    "noNotesDescription": "Položio si neki od njih? Budi prvi koji postavlja skriptu.",
+    "noNotesAction": "Postavi skriptu"
+  },
+  "myCourses": {
+    "title": "Moji predmeti",
+    "intro": "Predmete koje slušaš koristimo za preporuke; položene predmete i ocene možeš da prikažeš uz svoje skripte.",
+    "year": "{year}. godina",
+    "statusFor": "Status predmeta {course}",
+    "gradeFor": "Ocena iz predmeta {course}",
+    "professorFor": "Profesor za predmet {course}",
+    "professorAny": "Profesor (opciono)",
+    "gradeOptional": "Ocena (opciono)",
+    "marks": {
+      "none": "Ne",
+      "enrolled": "Slušam",
+      "passed": "Položio"
+    },
+    "save": "Sačuvaj",
+    "saved": "Sačuvano. Preporuke su osvežene.",
+    "emptyTitle": "Nema predmeta",
+    "emptyDescription": "Prvo izaberi fakultet, smer i godinu.",
+    "emptyAction": "Izaberi smer"
+  },
+  "savedPage": {
+    "title": "Sačuvano",
+    "emptyTitle": "Još ništa nisi sačuvao",
+    "emptyDescription": "Na stranici skripte klikni „Sačuvaj“ da je nađeš ovde kasnije.",
+    "emptyAction": "Pogledaj preporuke"
   }
 }
