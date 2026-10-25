@@ -51,6 +51,61 @@
       "grade": "Položio sa {grade}",
       "pages": "{count, plural, one {# strana} few {# strane} other {# strana}}",
       "owned": "Kupljeno"
+    },
+    "problems": {
+      "course": "Izaberi predmet.",
+      "file": "Otpremi PDF.",
+      "fileFailed": "Fajl nije prošao proveru. Otpremi drugi.",
+      "processing": "Fajl se još obrađuje.",
+      "title": "Upiši naslov.",
+      "shortDescription": "Upiši kratak opis.",
+      "howIStudied": "Opiši kako si učio (bar 200 znakova).",
+      "declaration": "Potvrdi izjavu o autorstvu."
+    },
+    "processing": {
+      "not_pdf": "Ovo nije PDF. Sačuvaj skriptu kao PDF i otpremi ponovo.",
+      "encrypted": "PDF je zaključan lozinkom. Ukloni zaštitu (npr. „Sačuvaj kao PDF“ bez lozinke) i otpremi ponovo.",
+      "javascript": "PDF sadrži skripte ili automatske akcije koje ne dozvoljavamo. Sačuvaj ga ponovo kao običan PDF (npr. „Štampaj → Sačuvaj kao PDF“).",
+      "corrupt": "PDF je oštećen i ne može da se otvori. Napravi ga ponovo i otpremi.",
+      "empty": "PDF nema nijednu stranu.",
+      "too_large": "Fajl je veći od 50 MB. Smanji ga ili podeli na dva dela.",
+      "internal": "Obrada nije uspela zbog greške kod nas. Pokušaj ponovo za nekoliko minuta."
+    },
+    "page": {
+      "home": "Početna",
+      "professor": "profesor",
+      "grade": "Položio sa {grade}",
+      "gradeSelfReported": "Ocenu je naveo autor (samoprijavljeno).",
+      "gradeVerifiedNote": "Ocenu je naveo autor (samoprijavljeno), a predmet je označio kao položen na profilu.",
+      "pages": "{count, plural, one {# strana} few {# strane} other {# strana}}",
+      "examPeriod": "{period} {year}",
+      "howIStudied": "Kako sam učio",
+      "versions": "Verzije",
+      "version": "Verzija {number}",
+      "sidebar": "Kupovina i autor",
+      "lastUpdated": "Poslednja izmena: {date}",
+      "sellerStats": "{notes, plural, one {# skripta} few {# skripte} other {# skripti}}, {sales} prodaja",
+      "previewHeading": "Pregled strana",
+      "zoomPage": "Uvećaj stranu {page}",
+      "pageAlt": "Strana {page} skripte {title}",
+      "morePages": "Još {count, plural, one {# strana} few {# strane} other {# strana}} posle kupovine",
+      "previous": "Prethodna strana",
+      "next": "Sledeća strana",
+      "closeGallery": "Zatvori pregled",
+      "save": "Sačuvaj",
+      "saved": "Sačuvano",
+      "buy": "Kupi skriptu",
+      "getFree": "Uzmi besplatno",
+      "inLibrary": "U tvojoj biblioteci",
+      "editOwn": "Izmeni svoju skriptu",
+      "notAvailable": "Skripta trenutno nije u prodaji.",
+      "metaFallback": "Skripta za predmet {course}.",
+      "statusNotice": {
+        "unlisted": "Skripta je van prodaje i ne pojavljuje se u pretrazi.",
+        "pending": "Skripta čeka pregled i još nije javna.",
+        "other": "Skripta nije javna."
+      },
+      "zoomVerb": "Uvećaj:"
     }
   },
   "forum": {
@@ -376,7 +431,28 @@
     "yearRequired": "Izaberi godinu studija.",
     "programMismatch": "Smer ne pripada izabranom fakultetu. Izaberi ga ponovo.",
     "yearTooHigh": "Ovaj smer traje kraće. Izaberi nižu godinu.",
-    "studentEmailDomain": "Ovaj email nije sa domena tvog univerziteta ili fakulteta. Proveri adresu ili preskoči ovaj korak."
+    "studentEmailDomain": "Ovaj email nije sa domena tvog univerziteta ili fakulteta. Proveri adresu ili preskoči ovaj korak.",
+    "adultRequired": "Prodaja je dozvoljena samo punoletnima.",
+    "sellerTermsRequired": "Prihvati pravila za prodavce.",
+    "accountHolderRequired": "Upiši ime i prezime vlasnika računa.",
+    "bankAccountInvalid": "Broj računa nije ispravan. Proveri cifre i kontrolni broj na kraju.",
+    "courseRequired": "Izaberi predmet.",
+    "professorNotOnCourse": "Ovaj profesor nije vezan za izabrani predmet.",
+    "notPdf": "Dozvoljen je samo PDF.",
+    "titleTooShort": "Naslov mora imati bar 5 znakova.",
+    "titleTooLong": "Naslov može imati najviše 120 znakova.",
+    "shortDescriptionTooShort": "Kratak opis mora imati bar 20 znakova.",
+    "shortDescriptionTooLong": "Kratak opis može imati najviše 300 znakova.",
+    "howIStudiedTooShort": "Opis kako si učio mora imati bar 200 znakova.",
+    "howIStudiedTooLong": "Opis je predugačak.",
+    "academicYearInvalid": "Upiši godinu u obliku 2025/26.",
+    "priceInvalid": "Cena mora biti 0 ili više dinara.",
+    "priceWhole": "Cena mora biti u celim dinarima.",
+    "priceTooHigh": "Najviša dozvoljena cena je {n} RSD.",
+    "declarationRequired": "Potvrdi izjavu da bi objavio skriptu.",
+    "changelogRequired": "Napiši ukratko šta je novo u ovoj verziji.",
+    "passwordWrong": "Lozinka nije tačna.",
+    "reasonTooShort": "Razlog mora imati bar 10 znakova."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -418,7 +494,23 @@
     },
     "onboardingProgramFirst": "Prvo izaberi fakultet i smer.",
     "courseBothStates": "Predmet ne može istovremeno da bude i slušan i položen.",
-    "studentTokenInvalid": "Link je istekao ili je već iskorišćen. Zatraži novi iz podešavanja profila."
+    "studentTokenInvalid": "Link je istekao ili je već iskorišćen. Zatraži novi iz podešavanja profila.",
+    "notFound": "Ne postoji ili nemaš pristup.",
+    "notes": {
+      "tooLarge": "Fajl je veći od {n} MB. Smanji ga ili podeli na dva dela.",
+      "notPdf": "Ovo nije PDF. Sačuvaj skriptu kao PDF i otpremi ponovo.",
+      "uploadExpired": "Otpremanje je isteklo. Izaberi fajl ponovo.",
+      "uploadMissing": "Fajl nije stigao do skladišta. Pokušaj ponovo.",
+      "alreadySubmitted": "Skripta je već poslata ili objavljena.",
+      "notReady": "Skripta još nije spremna za objavu.",
+      "cannotList": "Skripta ne može da se vrati u prodaju.",
+      "cannotUnlist": "Samo objavljena skripta može da se skloni iz prodaje.",
+      "cannotDeletePublished": "Objavljena skripta se ne briše; skloni je iz prodaje."
+    },
+    "admin": {
+      "notPending": "Skripta više nije na pregledu.",
+      "noReadyVersion": "Skripta nema obrađen fajl."
+    }
   },
   "onboarding": {
     "title": "Podesi profil",
@@ -541,7 +633,33 @@
       "noNotesTitle": "Još nema skripti za ovaj predmet",
       "noNotesDescription": "Položio si ga? Postavi svoju skriptu, napiši kako si učio i zaradi.",
       "sellCta": "Prodaj svoju skriptu",
-      "metaDescription": "Skripte za predmet {course} ({faculty}) od studenata koji su ga položili: ocene, kako su učili, šta je bilo na ispitu."
+      "metaDescription": "Skripte za predmet {course} ({faculty}) od studenata koji su ga položili: ocene, kako su učili, šta je bilo na ispitu.",
+      "notesCount": "{count, plural, one {# skripta} few {# skripte} other {# skripti}}",
+      "filtersLabel": "Filteri i sortiranje",
+      "sort": "Sortiraj",
+      "sorts": {
+        "preporuceno": "Preporučeno",
+        "ocena": "Najbolje ocenjene",
+        "prodaja": "Najprodavanije",
+        "najnovije": "Najnovije",
+        "cena-rastuce": "Cena: od najniže",
+        "cena-opadajuce": "Cena: od najviše"
+      },
+      "professor": "Profesor",
+      "any": "Svi",
+      "price": "Cena",
+      "prices": {
+        "besplatne": "Besplatne",
+        "do500": "Do 500 RSD",
+        "do1000": "Do 1.000 RSD"
+      },
+      "rating": "Ocena",
+      "ratingAtLeast": "{value}+",
+      "yearPassed": "Godina polaganja",
+      "apply": "Primeni",
+      "clearFilters": "Poništi filtere",
+      "noMatchTitle": "Nijedna skripta ne odgovara filterima",
+      "noMatchDescription": "Probaj širi izbor ili poništi filtere."
     },
     "professor": {
       "home": "Početna",
@@ -627,5 +745,275 @@
     "errorBody": "Stranica nije mogla da se učita. Pokušaj ponovo, a ako se ponavlja, javi nam.",
     "reference": "Oznaka greške: {digest}",
     "retry": "Pokušaj ponovo"
+  },
+  "examPeriods": {
+    "januarski": "januarski rok",
+    "februarski": "februarski rok",
+    "aprilski": "aprilski rok",
+    "junski": "junski rok",
+    "julski": "julski rok",
+    "avgustovski": "avgustovski rok",
+    "septembarski": "septembarski rok",
+    "oktobarski": "oktobarski rok",
+    "oktobarski2": "oktobarski 2 rok",
+    "decembarski": "decembarski rok"
+  },
+  "seller": {
+    "become": {
+      "title": "Postani prodavac",
+      "intro": "Prodaješ skripte koje si sam napravio. Platforma zadržava {percent}% od cene, ostatak je tvoj. Novac postaje dostupan {days} dana posle prodaje, a isplata se traži od {min}. Prve {first} skripte pregledamo pre objave.",
+      "confirmAdult": "Imam najmanje 18 godina",
+      "payoutLegend": "Podaci za isplatu",
+      "payoutIntro": "Isplate idu na tekući račun u Srbiji. Podatke čuvamo šifrovane i vidi ih samo administrator kad obrađuje isplatu.",
+      "accountHolder": "Ime i prezime vlasnika računa",
+      "accountNumber": "Broj tekućeg računa",
+      "accountNumberHint": "Format: 160-0000000012345-67. Kratki oblik 160-12345-67 takođe radi.",
+      "acceptTerms": "Prihvatam <link>pravila za prodavce</link> i potvrđujem da prodajem samo svoje materijale",
+      "submit": "Postani prodavac",
+      "verifyFirst": "Pre prodaje potvrdi email adresu. Link smo poslali kad si napravio nalog.",
+      "verifyCta": "Pošalji link ponovo"
+    },
+    "wizard": {
+      "newTitle": "Nova skripta",
+      "editTitle": "Izmena skripte",
+      "backToDashboard": "Nazad na moju prodaju",
+      "steps": {
+        "label": "Koraci",
+        "course": "Predmet",
+        "upload": "Fajl",
+        "processing": "Obrada",
+        "description": "Opis",
+        "price": "Cena",
+        "declaration": "Izjava",
+        "review": "Objava"
+      },
+      "titles": {
+        "course": "Za koji predmet je skripta?",
+        "upload": "Otpremi PDF",
+        "processing": "Obrađujemo fajl",
+        "description": "Opiši skriptu i kako si učio",
+        "price": "Odredi cenu",
+        "declaration": "Izjava o autorstvu",
+        "review": "Pregled i objava"
+      },
+      "course": {
+        "course": "Predmet",
+        "courseHint": "Kucaj naziv ili šifru predmeta, npr. „oet“.",
+        "coursePlaceholder": "Traži predmet",
+        "professor": "Profesor (opciono)",
+        "professorHint": "Kod kog profesora si slušao predmet.",
+        "noProfessor": "Ne navodim",
+        "submit": "Sačuvaj i nastavi"
+      },
+      "upload": {
+        "intro": "Samo PDF, do 50 MB. Fajl ide direktno u privatno skladište; kupci dobijaju kopiju sa svojim vodenim žigom.",
+        "choose": "Izaberi PDF",
+        "failed": "Otpremanje nije uspelo. Proveri internet vezu i pokušaj ponovo.",
+        "changelog": "Šta je novo u ovoj verziji",
+        "changelogHint": "Kupci vide ovaj opis i dobijaju obaveštenje o novoj verziji."
+      },
+      "processing": {
+        "working": "Fajl se obrađuje. Ovo obično traje do minut.",
+        "checkFile": "Proveravamo da li je fajl ispravan PDF",
+        "renderPreviews": "Pravimo pregled prvih strana",
+        "checkDuplicates": "Proveravamo da li ista skripta već postoji",
+        "uploadAgain": "Otpremi drugi fajl",
+        "ready": "Fajl je spreman: {pages, plural, one {# strana} few {# strane} other {# strana}}.",
+        "previewNote": "Ovako će kupci videti prve strane. Poslednja strana pregleda je zamućena.",
+        "previewAlt": "Pregled strane {page}",
+        "continue": "Nastavi na opis"
+      },
+      "description": {
+        "title": "Naslov",
+        "shortDescription": "Kratak opis",
+        "shortDescriptionHint": "Jedna-dve rečenice: šta skripta pokriva.",
+        "howIStudied": "Kako sam učio",
+        "editorTabs": "Uređivač",
+        "write": "Piši",
+        "preview": "Pregled",
+        "howIStudiedPlaceholder": "Koliko dana si učio, kojim redom, šta je bilo na ispitu i šta bi uradio drugačije.",
+        "charactersLeft": "Još {count, plural, one {# znak} few {# znaka} other {# znakova}} do minimuma.",
+        "markdownHint": "Možeš da koristiš markdown: **podebljano**, *kurziv*, liste i naslove.",
+        "grade": "Ocena sa ispita",
+        "gradeHint": "Samoprijavljeno.",
+        "gradeNone": "Ne navodim",
+        "academicYear": "Školska godina",
+        "examPeriod": "Ispitni rok",
+        "examPeriodNone": "Ne navodim",
+        "language": "Jezik i pismo",
+        "languages": {
+          "sr_latn": "Srpski, latinica",
+          "sr_cyrl": "Srpski, ćirilica",
+          "en": "Engleski",
+          "other": "Drugo"
+        },
+        "tags": "Oznake",
+        "tagsHint": "Odvojene zarezom, najviše 8. Npr. teorija, zadaci.",
+        "submit": "Sačuvaj i nastavi",
+        "guide": {
+          "title": "Šta kupcima pomaže",
+          "time": "Koliko vremena ti je trebalo i koliko sati dnevno.",
+          "order": "Kojim redom si učio i šta je bilo najvažnije.",
+          "exam": "Šta je bilo na ispitu i u kom roku.",
+          "differently": "Šta bi danas uradio drugačije."
+        }
+      },
+      "price": {
+        "label": "Cena",
+        "hint": "U celim dinarima, od 0 (besplatno) do {max}.",
+        "suggested": "Medijana za ovaj predmet: {price}.",
+        "useSuggested": "Koristi",
+        "free": "Besplatna skripta: kupci je dobijaju odmah, bez plaćanja.",
+        "youGet": "Dobijaš <mark>{amount}</mark> po prodaji",
+        "commission": "Provizija platforme {percent}%: {amount}",
+        "enterPrice": "Unesi cenu da vidiš koliko dobijaš.",
+        "submit": "Sačuvaj i nastavi"
+      },
+      "declaration": {
+        "points": {
+          "own": "Skriptu sam napravio sam ili imam pravo da je delim.",
+          "noTextbooks": "Ne sadrži skenirane udžbenike niti tuđe beleške.",
+          "noPersonal": "Ne sadrži lične podatke drugih ljudi.",
+          "noExam": "Ne sadrži ispitne zadatke čije deljenje fakultet zabranjuje, niti rešenja domaćih i projekata koji se ocenjuju."
+        },
+        "confirm": "Potvrđujem sve navedeno i razumem da kršenje pravila vodi uklanjanju skripte i naloga",
+        "submit": "Potvrdi i nastavi"
+      },
+      "review": {
+        "course": "Predmet",
+        "title": "Naslov",
+        "price": "Cena",
+        "missing": "Pre objave nedostaje:",
+        "ready": "Sve je spremno.",
+        "wasRejected": "Prethodno odbijeno — proveri razlog na stranici prodaje",
+        "publish": "Objavi skriptu",
+        "published": "Skripta je objavljena.",
+        "pendingReview": "Skripta je poslata na pregled. Prve skripte svakog prodavca pregledamo pre objave; javićemo ti odluku.",
+        "view": "Pogledaj skriptu",
+        "toDashboard": "Na moju prodaju"
+      }
+    },
+    "newVersion": {
+      "title": "Nova verzija skripte",
+      "back": "Nazad na moju prodaju",
+      "intro": "Otpremi ispravljenu ili dopunjenu verziju skripte „{title}“. Svi dosadašnji kupci dobijaju pristup novoj verziji.",
+      "done": "Nova verzija je objavljena. Kupci su obavešteni."
+    },
+    "dashboard": {
+      "title": "Moja prodaja",
+      "newNote": "Nova skripta",
+      "notes": "Moje skripte",
+      "emptyTitle": "Još nemaš skripti",
+      "emptyDescription": "Postavi prvu skriptu: PDF, kratak opis i kako si učio.",
+      "untitled": "Bez naslova",
+      "updated": "izmenjeno {when}",
+      "rejectedBecause": "Razlog odbijanja: {reason}",
+      "stats": "{views} pregleda, {sales} prodaja",
+      "conversion": "konverzija {percent}%",
+      "view": "Pogledaj",
+      "newVersion": "Nova verzija",
+      "continue": "Nastavi",
+      "edit": "Izmeni",
+      "unlist": "Skloni iz prodaje",
+      "relist": "Vrati u prodaju",
+      "unlisted": "Skripta je sklonjena iz prodaje.",
+      "relisted": "Skripta je ponovo u prodaji.",
+      "status": {
+        "draft": "Nacrt",
+        "processing": "Obrada",
+        "pending_review": "Na pregledu",
+        "published": "Objavljeno",
+        "rejected": "Odbijeno",
+        "unlisted": "Van prodaje",
+        "removed": "Uklonjeno"
+      }
+    }
+  },
+  "reports": {
+    "trigger": "Prijavi",
+    "title": "Prijavi sadržaj",
+    "description": "Prijava ide moderatorima. Ime prijavioca ne vidi autor sadržaja.",
+    "reasonLegend": "Razlog",
+    "reasons": {
+      "spam": "Spam ili reklama",
+      "abuse": "Uvrede ili napad",
+      "plagiarism": "Tuđi materijal ili kršenje autorskih prava",
+      "exam_material": "Ispitni zadaci koje je zabranjeno deliti",
+      "personal_data": "Lični podaci",
+      "other": "Drugo"
+    },
+    "details": "Detalji (opciono)",
+    "copyrightHint": "Ako si autor ili nosilac prava, koristi i formular za prijavu povrede autorskih prava (link u podnožju).",
+    "submit": "Pošalji prijavu",
+    "sent": "Hvala, prijava je poslata."
+  },
+  "settings": {
+    "security": {
+      "title": "Bezbednost",
+      "twoFactor": "Dvofaktorska prijava",
+      "twoFactorIntro": "Pored lozinke, pri prijavi unosiš šestocifreni kod iz aplikacije (npr. Google Authenticator, Aegis, 1Password).",
+      "status": "Status:",
+      "on": "Uključena",
+      "off": "Isključena",
+      "password": "Trenutna lozinka",
+      "enableHint": "Za uključivanje potvrdi lozinku.",
+      "disableHint": "Za isključivanje potvrdi lozinku.",
+      "enable": "Uključi dvofaktorsku prijavu",
+      "disable": "Isključi dvofaktorsku prijavu",
+      "scan": "Skeniraj QR kod aplikacijom za autentifikaciju, pa unesi kod koji prikaže.",
+      "manual": "Ili unesi ključ ručno:",
+      "code": "Šestocifreni kod",
+      "confirm": "Potvrdi i uključi",
+      "enabledNow": "Dvofaktorska prijava je uključena.",
+      "backupCodes": "Rezervni kodovi",
+      "backupCodesHint": "Sačuvaj ih na sigurnom mestu. Svaki kod radi jednom, ako izgubiš telefon.",
+      "adminRequired": "Administratori moraju da uključe dvofaktorsku prijavu pre pristupa administraciji.",
+      "adminCannotDisable": "Administratori ne mogu da isključe dvofaktorsku prijavu.",
+      "needsPassword": "Nalog nema lozinku (prijava preko Google-a ili linka). Postavi lozinku preko „Zaboravljena lozinka“, pa uključi dvofaktorsku prijavu."
+    }
+  },
+  "admin": {
+    "nav": {
+      "title": "Administracija",
+      "backToSite": "Na sajt",
+      "label": "Administracija",
+      "dashboard": "Pregled",
+      "notes": "Skripte na pregledu"
+    },
+    "dashboard": {
+      "title": "Pregled",
+      "reviewQueue": "Skripte čekaju pregled"
+    },
+    "notes": {
+      "title": "Skripte na pregledu",
+      "emptyTitle": "Nema skripti na čekanju",
+      "emptyDescription": "Nove skripte stižu ovde dok prodavac ima manje od 3 odobrene ili kad je fajl možda duplikat.",
+      "note": "Skripta",
+      "seller": "Prodavac",
+      "flags": "Oznake",
+      "waiting": "Čeka od",
+      "duplicate": "Mogući duplikat",
+      "firstNotes": "Prve skripte",
+      "sellerFlagged": "Označen prodavac"
+    },
+    "review": {
+      "title": "Pregled skripte",
+      "subject": "Skripta",
+      "matched": "Slična postojeća skripta",
+      "duplicate": "Mogući duplikat",
+      "sameHash": "Identičan fajl već postoji kod drugog prodavca.",
+      "similarText": "Tekst je skoro isti kao kod drugog prodavca (razlika {distance} bita).",
+      "by": "autor {name}",
+      "pages": "{count, plural, one {# strana} few {# strane} other {# strana}}",
+      "pageAlt": "Strana {page}",
+      "howIStudied": "Kako sam učio",
+      "approve": "Odobri i objavi",
+      "reject": "Odbij",
+      "reason": "Razlog odbijanja",
+      "reasonHint": "Prodavac vidi ovaj tekst. Napiši šta treba da ispravi.",
+      "approved": "Skripta je objavljena.",
+      "rejected": "Skripta je odbijena.",
+      "alreadyDecided": "Odluka je doneta (status: {status})."
+    }
   }
 }

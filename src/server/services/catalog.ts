@@ -234,3 +234,26 @@ export async function coursesExistForFaculty(
     .where(and(inArray(courses.id, courseIds), eq(courses.facultyId, facultyId)));
   return (row?.count ?? 0) === courseIds.length;
 }
+
+export async function listCourseProfessors(courseId: string) {
+  return db
+    .select({ id: professors.id, name: professors.name, title: professors.title })
+    .from(courseProfessors)
+    .innerJoin(professors, eq(professors.id, courseProfessors.professorId))
+    .where(eq(courseProfessors.courseId, courseId))
+    .orderBy(asc(professors.name));
+}
+
+export async function getCourseLabel(courseId: string) {
+  const [row] = await db
+    .select({
+      id: courses.id,
+      name: courses.name,
+      code: courses.code,
+      facultyShortName: faculties.shortName,
+    })
+    .from(courses)
+    .innerJoin(faculties, eq(faculties.id, courses.facultyId))
+    .where(eq(courses.id, courseId));
+  return row ?? null;
+}

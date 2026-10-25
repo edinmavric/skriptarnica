@@ -43,16 +43,13 @@ services:
       - ./docker/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
       - storagedata:/data
 
-  # Inngest dev server (jobs). Calls the app on the host.
+  # Inngest dev server (jobs). Host networking so "localhost:3000" means the app in both
+  # directions (Linux; on macOS/Windows use -u http://host.docker.internal:3000/api/inngest).
   inngest:
     image: inngest/inngest:latest
     restart: unless-stopped
-    command: inngest dev -u http://host.docker.internal:3000/api/inngest --no-discovery
-    ports:
-      - '8288:8288'
-      - '8289:8289'
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    command: inngest dev -u http://localhost:3000/api/inngest --no-discovery
+    network_mode: host
 
 volumes:
   pgdata:

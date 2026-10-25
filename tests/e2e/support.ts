@@ -99,3 +99,65 @@ export async function signIn(
   await page.getByLabel(/^Lozinka( \*)?$/).fill(user.password);
   await page.getByRole('button', { name: 'Prijavi se', exact: true }).click();
 }
+
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import * as OTPAuth from 'otpauth';
+
+export function writeTempFile(name: string, data: Buffer): string {
+  const dir = mkdtempSync(path.join(tmpdir(), 'skripta-e2e-'));
+  const file = path.join(dir, name);
+  writeFileSync(file, data);
+  return file;
+}
+
+/** Grants admin via the ops CLI (same path production uses). */
+export function grantAdmin(email: string): void {
+  execFileSync('npx', ['tsx', 'scripts/grant-admin.ts', email], { stdio: 'pipe' });
+}
+
+export function totp(secret: string): string {
+  return new OTPAuth.TOTP({
+    secret: OTPAuth.Secret.fromBase32(secret.replace(/\s+/g, '')),
+    digits: 6,
+    period: 30,
+    algorithm: 'SHA1',
+  }).generate();
+}
+
+/** Turns on 2FA through the settings UI and returns the TOTP secret. */
+export async function enableTwoFactor(page: Page, password: string): Promise<string> {
+  await page.goto('/podesavanja/bezbednost');
+  await page.getByLabel('Trenutna lozinka').fill(password);
+  await page.getByRole('button', { name: 'Uključi dvofaktorsku prijavu' }).click();
+  const secret = (await page.getByTestId('totp-secret').textContent())?.trim() ?? '';
+  await page.getByLabel('Šestocifreni kod').fill(totp(secret));
+  await page.getByRole('button', { name: 'Potvrdi i uključi' }).click();
+  await expect(page.getByText('Dvofaktorska prijava je uključena.')).toBeVisible();
+  return secret;
+}
+
+export const PAYOUT_ACCOUNT =
+  '160-0000000012345-' + String(98n - (BigInt('160000000001234500') % 97n)).padStart(2, '0');
+
+/** Fills the become-seller form for the signed-in user. */
+export async function becomeSeller(page: Page): Promise<void> {
+  await page.goto('/prodaja/postani-prodavac');
+  await page.getByRole('checkbox', { name: /najmanje 18 godina/ }).click();
+  await page.getByLabel(/Ime i prezime vlasnika računa/).fill('Test Prodavac');
+  await page.getByLabel(/Broj tekućeg računa/).fill(PAYOUT_ACCOUNT);
+  await page.getByRole('checkbox', { name: /pravila za prodavce/ }).click();
+  await page.getByRole('button', { name: 'Postani prodavac' }).click();
+  await expect(page).toHaveURL(/\/prodaja\/nova/);
+}
+
+/** Wizard step 1: pick a course by search. */
+export async function chooseCourse(page: Page, query: string, option: RegExp): Promise<void> {
+  await page.getByRole('combobox', { name: 'Predmet' }).fill(query);
+  await page.getByRole('option', { name: option }).first().click();
+  await page.getByRole('button', { name: 'Sačuvaj i nastavi' }).click();
+  await expect(page.getByRole('heading', { name: 'Otpremi PDF' })).toBeVisible();
+}

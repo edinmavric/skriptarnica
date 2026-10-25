@@ -16,9 +16,26 @@ const securityHeaders = [
   },
 ];
 
+const storage = new URL(env.NEXT_PUBLIC_STORAGE_PUBLIC_URL);
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Native/WASM packages used by background jobs; loaded from node_modules at runtime.
+  serverExternalPackages: ['mupdf', 'sharp', 'pdf-lib'],
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: storage.protocol.replace(':', '') as 'http' | 'https',
+        hostname: storage.hostname,
+        ...(storage.port ? { port: storage.port } : {}),
+        pathname: `${storage.pathname.replace(/\/$/, '')}/**`,
+      },
+    ],
+    // Local storage runs on localhost (a private IP); allowed only outside production.
+    dangerouslyAllowLocalIP: env.APP_ENV !== 'production',
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

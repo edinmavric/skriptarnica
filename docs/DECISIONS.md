@@ -64,3 +64,22 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Commission math lives in `lib/money.ts`:** integer basis points, commission floored to whole dinars (seller's favor), property-tested with fast-check. The landing page computes its "800 RSD → 640 RSD" example from the configured commission rather than hardcoding it.
 - **Dark-mode highlighter:** the bright lime is unreadable under light text, so `.marker` uses `--marker-stroke`, a muted olive in dark mode (contrast-tested against `--ink`).
 - **Lighthouse** (`scripts/lighthouse.mjs`, mobile emulation): SEO = 100 and Accessibility = 100 on `/`, faculty, course and university pages. Best practices is 92, held back only by 404s for the favicon and for legal pages that arrive in Phase 10. Performance is 85–89 locally over HTTP and is the Phase 10 target.
+
+## Phase 4 — Notes: upload and processing
+
+- **Uploads:** the browser PUTs directly to the private bucket with a presigned URL that signs `Content-Type` and `Content-Length`. A different size or type is refused by storage (integration-tested). Each upload is an `uploads` row binding key, user, note, size and a 15-minute expiry. Confirmation checks ownership, the object's size and the first 5 bytes (`%PDF-`). Non-PDFs are deleted immediately.
+- **Processing** runs as an Inngest function (`process-note-version`) with retry-safe steps: analyze+render → duplicate check → finalize. The logic lives in `services/note-processing.ts`, so integration tests drive it without Inngest.
+  - Encrypted files, files with JavaScript/Launch/ImportData actions, and corrupt or empty PDFs are **rejected and deleted, not sanitized**. Stripping actions safely is harder than asking the seller to re-save, and the error message says how.
+  - Failures after retries mark the version failed and email `ALERT_EMAIL`.
+- **Previews:** `max(1, min(3, ⌊15% × pages⌋))` pages at about 1000 px wide, WebP via sharp. The last one is blurred, and they are stored in the public bucket under immutable keys. A `note_previews` table holds them instead of the `previewPageKeys[]` array from SPEC §3.3; one source of truth.
+- **Duplicates:** SHA-256 equality or a 64-bit SimHash of 3-word shingles within Hamming distance ≤ 6 (`bit_count` in Postgres) against **earlier** uploads by **other** sellers. The original author is never flagged by a later copy, and re-uploading one's own file isn't flagged. A flagged draft goes to `pending_review`; a flagged new version of a published note sends the note back to review.
+- **Pre-moderation:** the first 3 approved notes (setting), flagged sellers and possible duplicates go to `pending_review`.
+- **Slugs** are assigned at first publication from the title and never change afterwards (drafts use `nacrt-<id>`).
+- **Bayesian rating** for sorting: (Σ + 5·4.0)/(n + 5). Notes store `ratingSum`/`reviewCount` integers, never float averages.
+- **Listing cache:** marketplace writes call `revalidateTag('notes', { expire: 0 })`, not `'max'`. Next 16's `'max'` serves stale data first, which could show an unlisted note or an old price. Found by the flow-2 e2e.
+- **Payout details:** AES-256-GCM with versioned keys and AAD `userId:field`, so ciphertexts can't be swapped between users or fields. Only the last 4 digits are stored in clear. Bank accounts are validated with the Serbian MOD 97-10 control number.
+- **`audit_log` is append-only at the DB level** (a trigger rejects UPDATE/DELETE). Users are never hard-deleted, so `actor_id` FKs never need an update.
+- **Admin access** requires `role=admin` and 2FA: non-admins get 404, and admins without 2FA are redirected to enable it. Admins are created with `npm run admin:grant -- <email>` (audited). Admins can't disable 2FA.
+- **Settings** live in `app_settings` (JSON, validated with zod on read, cached in Redis for 5 minutes), with defaults from `config/constants.ts`. The tax and invoicing flags default to off ⚖️.
+- **Reports** are a generic table plus a dialog. Community-scoped targets are routed by registered resolvers (Phase 7).
+- **Local Inngest uses host networking** so `localhost:3000` means the app in both directions.

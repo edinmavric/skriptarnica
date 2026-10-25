@@ -3,9 +3,16 @@
     {
       "name": "local-dev",
       "credentials": [
-        { "accessKey": "localdevaccess", "secretKey": "localdevsecretkey-not-for-production" }
+        {
+          "accessKey": "localdevaccess",
+          "secretKey": "localdevsecretkey-not-for-production"
+        }
       ],
       "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    },
+    {
+      "name": "anonymous",
+      "actions": ["Read:skripta-public"]
     }
   ]
 }

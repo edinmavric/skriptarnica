@@ -2,3 +2,6 @@
 export * from './auth';
 export * from './catalog';
 export * from './profiles';
+export * from './marketplace';
+export * from './moderation';
+export * from './settings';

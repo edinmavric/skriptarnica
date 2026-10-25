@@ -4,6 +4,8 @@ import { normalizeForSearch, toPrefixTsQuery } from '@/lib/search/normalize';
 
 import { db } from '../db/client';
 
+import { searchNotes } from './search-notes';
+
 /**
  * Global search (SPEC §4.6): Postgres FTS with the `simple` config over app-normalized text
  * (no diacritics, Cyrillic→Latin) + pg_trgm for fuzzy/prefix matches. Each entity type is a
@@ -142,6 +144,7 @@ const universityProvider: Provider = async (ctx) => {
 };
 
 const providers = new Map<SearchResultType, Provider>([
+  ['note', (ctx) => searchNotes(ctx)],
   ['course', courseProvider],
   ['professor', professorProvider],
   ['faculty', facultyProvider],

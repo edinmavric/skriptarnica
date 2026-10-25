@@ -1,6 +1,18 @@
-/** Per-user counters for the header. Seller status and notifications are added by later phases. */
+import { eq } from 'drizzle-orm';
+
+import { db } from '../db/client';
+import { sellerProfiles } from '../db/schema';
+
+/** Per-user counters for the header. Notifications are added with the notifications phase. */
 export async function getLayoutCounters(
-  _userId: string,
+  userId: string,
 ): Promise<{ isSeller: boolean; unreadNotifications: number }> {
-  return { isSeller: false, unreadNotifications: 0 };
+  const [seller] = await db
+    .select({ status: sellerProfiles.status })
+    .from(sellerProfiles)
+    .where(eq(sellerProfiles.userId, userId));
+  return {
+    isSeller: seller?.status === 'active' || seller?.status === 'suspended',
+    unreadNotifications: 0,
+  };
 }

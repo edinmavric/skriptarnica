@@ -15,6 +15,20 @@
       "when": 1792890472055,
       "tag": "0001_auth_catalog_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792893104915,
+      "tag": "0002_marketplace",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792893351364,
+      "tag": "0003_settings",
+      "breakpoints": true
     }
   ]
 }

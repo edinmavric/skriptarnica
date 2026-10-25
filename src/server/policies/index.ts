@@ -52,3 +52,36 @@ export function isAdmin(user: CurrentUser | null): PolicyResult {
   if (!user.twoFactorEnabled) return deny('admin_2fa_required');
   return allow;
 }
+
+/** Minimal shapes the note policies need. */
+export interface NoteForPolicy {
+  sellerId: string;
+  status:
+    'draft' | 'processing' | 'pending_review' | 'published' | 'rejected' | 'unlisted' | 'removed';
+  deletedAt: Date | null;
+}
+
+export function canSell(user: CurrentUser | null, seller: { status: string } | null): PolicyResult {
+  const base = canParticipate(user);
+  if (!base.allowed) return base;
+  if (!seller || seller.status === 'none' || seller.status === 'pending') return deny('not_seller');
+  if (seller.status === 'suspended') return deny('seller_suspended');
+  return allow;
+}
+
+/** Only the author edits a note; removed notes are frozen. */
+export function canEditNote(user: CurrentUser | null, note: NoteForPolicy): PolicyResult {
+  const base = canMutate(user);
+  if (!base.allowed) return base;
+  if (user?.id !== note.sellerId) return deny('not_owner');
+  if (note.status === 'removed' || note.deletedAt) return deny('not_allowed');
+  return allow;
+}
+
+/** Published and unlisted notes are viewable by link; everything else only by owner/admin. */
+export function canViewNote(user: CurrentUser | null, note: NoteForPolicy): PolicyResult {
+  if (note.deletedAt) return user?.role === 'admin' ? allow : deny('not_allowed');
+  if (note.status === 'published' || note.status === 'unlisted') return allow;
+  if (user && (user.id === note.sellerId || user.role === 'admin')) return allow;
+  return deny('not_allowed');
+}
