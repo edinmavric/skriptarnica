@@ -4,13 +4,30 @@ import { appError, err, ok, type Result } from '@/lib/result';
 import type { ReportInput } from '@/lib/validation/reports';
 
 import { db } from '../db/client';
-import { reports } from '../db/schema';
+import { comments, posts, reports } from '../db/schema';
 
-/** Resolves the community a reported target belongs to, so community moderators see it. */
-type CommunityResolver = (targetType: string, targetId: string) => Promise<string | null>;
-const resolvers: CommunityResolver[] = [];
-export function registerReportCommunityResolver(resolver: CommunityResolver): void {
-  resolvers.push(resolver);
+/** The community a reported target belongs to, so its moderators see the report. */
+async function communityOf(
+  targetType: ReportInput['targetType'],
+  targetId: string,
+): Promise<string | null> {
+  if (targetType === 'community') return targetId;
+  if (targetType === 'post') {
+    const [row] = await db
+      .select({ communityId: posts.communityId })
+      .from(posts)
+      .where(eq(posts.id, targetId));
+    return row?.communityId ?? null;
+  }
+  if (targetType === 'comment') {
+    const [row] = await db
+      .select({ communityId: posts.communityId })
+      .from(comments)
+      .innerJoin(posts, eq(posts.id, comments.postId))
+      .where(eq(comments.id, targetId));
+    return row?.communityId ?? null;
+  }
+  return null;
 }
 
 /** One open report per reporter and target; repeats are accepted silently. */
@@ -30,11 +47,7 @@ export async function createReport(
       ),
     );
   if (existing) return ok({ id: existing.id });
-  let communityId: string | null = null;
-  for (const resolve of resolvers) {
-    communityId = await resolve(input.targetType, input.targetId);
-    if (communityId) break;
-  }
+  const communityId = await communityOf(input.targetType, input.targetId);
   const [row] = await db
     .insert(reports)
     .values({

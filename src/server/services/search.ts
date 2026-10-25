@@ -4,6 +4,7 @@ import { normalizeForSearch, toPrefixTsQuery } from '@/lib/search/normalize';
 
 import { db } from '../db/client';
 
+import { searchCommunities, searchPosts } from './search-forum';
 import { searchNotes } from './search-notes';
 
 /**
@@ -145,6 +146,8 @@ const universityProvider: Provider = async (ctx) => {
 
 const providers = new Map<SearchResultType, Provider>([
   ['note', (ctx) => searchNotes(ctx)],
+  ['community', (ctx) => searchCommunities(ctx)],
+  ['post', (ctx) => searchPosts(ctx)],
   ['course', courseProvider],
   ['professor', professorProvider],
   ['faculty', facultyProvider],

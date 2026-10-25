@@ -73,6 +73,9 @@ export async function upsertFaculty(tx: DbOrTx, input: FacultyInput) {
     .onConflictDoUpdate({ target: faculties.slug, set: values })
     .returning();
   if (!row) throw new Error('faculty upsert failed');
+  // Every faculty gets its community automatically (SPEC §4.7).
+  const { ensureFacultyCommunity } = await import('./communities');
+  await ensureFacultyCommunity(tx, row);
   return row;
 }
 
@@ -118,6 +121,12 @@ export async function upsertCourse(tx: DbOrTx, input: CourseInput) {
     .onConflictDoUpdate({ target: [courses.facultyId, courses.slug], set: values })
     .returning();
   if (!row) throw new Error('course upsert failed');
+  // Every course gets its community automatically (SPEC §4.7).
+  const [faculty] = await tx.select().from(faculties).where(eq(faculties.id, row.facultyId));
+  if (faculty) {
+    const { ensureCourseCommunity } = await import('./communities');
+    await ensureCourseCommunity(tx, row, faculty);
+  }
   return row;
 }
 

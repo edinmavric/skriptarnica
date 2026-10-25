@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { routes } from '@/config/routes';
 import { pageMetadata } from '@/lib/seo/metadata';
 import { getFacultyPage } from '@/server/services/catalog-pages';
+import { communityForFaculty } from '@/server/services/communities';
 
 type Props = { params: Promise<{ faculty: string }> };
 
@@ -27,6 +28,7 @@ export default async function FacultyPage({ params }: Props) {
   if (!data) notFound();
   const t = await getTranslations('catalog.faculty');
   const { faculty, university } = data;
+  const community = await communityForFaculty(faculty.id);
   return (
     <div>
       <Breadcrumbs
@@ -40,6 +42,26 @@ export default async function FacultyPage({ params }: Props) {
       <p className="mt-1 text-ink-muted">
         {university.name}, {faculty.city}
       </p>
+      {community ? (
+        <p className="mt-3">
+          <Link
+            href={routes.community(community.slug)}
+            className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
+          >
+            {t('community', { name: `z/${community.slug}` })}
+          </Link>
+        </p>
+      ) : null}
+      {community ? (
+        <p className="mt-3">
+          <Link
+            href={routes.community(community.slug)}
+            className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
+          >
+            {t('community', { name: `z/${community.slug}` })}
+          </Link>
+        </p>
+      ) : null}
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_18rem]">
         <section aria-labelledby="programs-heading">

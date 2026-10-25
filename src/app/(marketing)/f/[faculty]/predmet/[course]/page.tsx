@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { routes } from '@/config/routes';
 import { pageMetadata } from '@/lib/seo/metadata';
 import { getCoursePage } from '@/server/services/catalog-pages';
+import { communityForCourse } from '@/server/services/communities';
 
 import { CourseNotes } from './course-notes';
 
@@ -33,6 +34,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
   const data = await getCoursePage(faculty, course);
   if (!data) notFound();
   const t = await getTranslations('catalog.course');
+  const community = await communityForCourse(data.course.id);
   return (
     <div>
       <Breadcrumbs
@@ -75,6 +77,16 @@ export default async function CoursePage({ params, searchParams }: Props) {
               </Link>
             </span>
           ))}
+        </p>
+      ) : null}
+      {community ? (
+        <p className="mt-4">
+          <Link
+            href={routes.community(community.slug)}
+            className="inline-flex min-h-11 items-center rounded-md border border-field px-3 text-sm hover:border-ink"
+          >
+            {t('community', { name: `z/${community.slug}` })}
+          </Link>
         </p>
       ) : null}
       <CourseNotes

@@ -50,7 +50,8 @@ test.describe('public catalog pages and search (Phase 3)', () => {
   for (const query of ['cacak', 'Čačak', 'Чачак']) {
     test(`search "${query}" finds FTN Čačak`, async ({ page }) => {
       await page.goto(`/pretraga?q=${encodeURIComponent(query)}`);
-      const result = page.getByRole('link', { name: /Fakultet tehničkih nauka u Čačku/ });
+      // The faculty's community matches too; check the faculty result itself.
+      const result = page.locator('a[href="/f/ftn-cacak"]');
       await expect(result).toBeVisible();
       await expect(result.locator('mark')).toHaveText('Čačku');
     });

@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useOptimistic, useTransition } from 'react';
+import { useOptimistic, useState, useTransition } from 'react';
 
 import { cn } from '@/lib/cn';
 import { formatNumber } from '@/lib/format';
@@ -38,8 +38,19 @@ export function VoteControl({
 }) {
   const t = useTranslations('ui.vote');
   const [pending, startTransition] = useTransition();
+  // Server-confirmed state; reset when the props change (e.g. after router.refresh()).
+  const [confirmed, setConfirmed] = useState<VoteState & { from: VoteState }>({
+    score,
+    userVote,
+    from: { score, userVote },
+  });
+  let base = confirmed;
+  if (confirmed.from.score !== score || confirmed.from.userVote !== userVote) {
+    base = { score, userVote, from: { score, userVote } };
+    setConfirmed(base);
+  }
   const [optimistic, setOptimistic] = useOptimistic<VoteState, VoteValue>(
-    { score, userVote },
+    { score: base.score, userVote: base.userVote },
     (state, next) => ({ score: state.score - state.userVote + next, userVote: next }),
   );
 
@@ -47,7 +58,8 @@ export function VoteControl({
     const next: VoteValue = optimistic.userVote === direction ? 0 : direction;
     startTransition(async () => {
       setOptimistic(next);
-      await onVote(next);
+      const result = await onVote(next);
+      if (result.ok) setConfirmed((current) => ({ ...result.value, from: current.from }));
     });
   }
 
@@ -55,6 +67,7 @@ export function VoteControl({
     <div
       role="group"
       aria-label={t('group', { label })}
+      aria-busy={pending}
       className={cn(
         'inline-flex items-center gap-0.5 text-ink-muted',
         orientation === 'vertical' ? 'flex-col' : 'flex-row',

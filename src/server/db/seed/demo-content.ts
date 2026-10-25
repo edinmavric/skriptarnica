@@ -22,6 +22,7 @@ import {
   users,
 } from '../schema';
 
+import { seedDemoForum } from './demo-forum';
 import { demoPdf } from './demo-pdf';
 
 /**
@@ -245,4 +246,5 @@ export async function seedDemoContent(): Promise<void> {
   console.log(
     `demo: ${created} notes created; demo sellers sign in with password "${DEMO_PASSWORD}"`,
   );
+  await seedDemoForum();
 }

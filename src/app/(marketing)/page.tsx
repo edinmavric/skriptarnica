@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
+import { CommunityActivity } from '@/components/features/feed/community-activity';
 import { HomeFeed } from '@/components/features/feed/home-feed';
 import { LandingSearch } from '@/components/features/landing/landing-search';
 import { JsonLd } from '@/components/seo/json-ld';
@@ -36,7 +37,7 @@ export default async function HomePage() {
   const user = await getCurrentUser();
   if (user) {
     if (!(await hasCurrentConsents(user.id))) redirect(`${routes.acceptTerms}?next=%2F`);
-    return <HomeFeed user={user} />;
+    return <HomeFeed user={user} communityActivity={<CommunityActivity user={user} />} />;
   }
   return <Landing />;
 }

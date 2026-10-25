@@ -127,7 +127,28 @@
       "pinned": "Zakačeno",
       "locked": "Zaključano",
       "removedTitle": "[uklonjeno]",
-      "comments": "{count, plural, =0 {Bez komentara} one {# komentar} few {# komentara} other {# komentara}}"
+      "comments": "{count, plural, =0 {Bez komentara} one {# komentar} few {# komentara} other {# komentara}}",
+      "communities": "Zajednice",
+      "deletedAuthor": "[obrisan korisnik]",
+      "anonymousForOthers": "drugima anonimno",
+      "edited": "izmenjeno",
+      "deletedTitle": "[obrisano]",
+      "removedNotice": "Moderator je uklonio ovu objavu.",
+      "removedWithReason": "Uklonjeno: {reason}",
+      "lockedNotice": "Objava je zaključana; novi komentari nisu mogući.",
+      "joinToComment": "Pridruži se zajednici da bi komentarisao.",
+      "signInToComment": "Prijavi se da bi komentarisao",
+      "noComments": "Još nema komentara.",
+      "backToThread": "Nazad na celu diskusiju",
+      "emptyTitle": "Još nema objava",
+      "emptyMember": "Budi prvi: postavi pitanje ili podeli iskustvo sa roka.",
+      "emptyJoin": "Pridruži se zajednici i započni diskusiju.",
+      "edit": "Izmeni",
+      "editTitle": "Izmena objave",
+      "saveEdit": "Sačuvaj",
+      "titleLabel": "Naslov",
+      "bodyLabel": "Tekst",
+      "delete": "Obriši"
     },
     "comment": {
       "label": "Komentar korisnika {name}",
@@ -137,7 +158,233 @@
       "edited": "izmenjeno",
       "removed": "[uklonio moderator]",
       "deleted": "[obrisano]",
-      "continueThread": "Nastavi diskusiju ({count, plural, one {# odgovor} few {# odgovora} other {# odgovora}})"
+      "continueThread": "Nastavi diskusiju ({count, plural, one {# odgovor} few {# odgovora} other {# odgovora}})",
+      "newLabel": "Tvoj komentar",
+      "replyLabel": "Odgovor",
+      "send": "Komentariši",
+      "sendReply": "Odgovori",
+      "cancel": "Otkaži",
+      "reply": "Odgovori",
+      "quote": "Citiraj",
+      "edit": "Izmeni",
+      "saveEdit": "Sačuvaj izmenu",
+      "delete": "Obriši",
+      "restore": "Vrati",
+      "remove": "Ukloni",
+      "removeReason": "Razlog uklanjanja",
+      "confirmRemove": "Ukloni komentar",
+      "removedToast": "Komentar je uklonjen.",
+      "voteLabel": "komentar"
+    },
+    "list": {
+      "title": "Zajednice",
+      "metaDescription": "Zajednice studenata po fakultetima, predmetima i profesorima: pitanja, rokovi, iskustva i materijali.",
+      "intro": "Svaki fakultet i predmet ima svoju zajednicu. Pitaj šta je bilo na roku, podeli iskustvo ili materijal.",
+      "create": "Napravi zajednicu",
+      "mine": "Moje zajednice",
+      "suggested": "Sa tvog fakulteta",
+      "popular": "Najaktivnije"
+    },
+    "community": {
+      "home": "Početna",
+      "all": "Zajednice",
+      "types": {
+        "faculty": "Fakultet",
+        "course": "Predmet",
+        "professor": "Profesor",
+        "exam": "Ispit",
+        "general": "Opšta"
+      },
+      "roles": {
+        "moderator": "Moderator",
+        "owner": "Osnivač"
+      },
+      "facultyOnly": "Samo za fakultet",
+      "stats": "{members} članova, {posts} objava",
+      "join": "Pridruži se",
+      "joined": "Član si",
+      "newPost": "Nova objava",
+      "moderation": "Moderacija",
+      "about": "O zajednici",
+      "rules": "Pravila",
+      "moderators": "Moderatori",
+      "systemCommunity": "Zajednicu je napravio sistem; moderatore postavlja administrator.",
+      "closedTitle": "Zajednica je samo za studente fakulteta",
+      "closedSignIn": "Prijavi se da vidiš da li imaš pristup.",
+      "closedFaculty": "Pristup imaju samo studenti ovog fakulteta. Fakultet podešavaš na profilu.",
+      "bannedNotice": "Zabranjeno ti je učešće u ovoj zajednici."
+    },
+    "create": {
+      "title": "Nova zajednica",
+      "intro": "Zajednicu može da napravi nalog stariji od {days} dana, a svako može da osnuje najviše {max}. Osnivač je i prvi moderator.",
+      "type": "Vrsta",
+      "types": {
+        "general": "Opšta",
+        "professor": "Profesor",
+        "exam": "Ispit"
+      },
+      "typeHints": {
+        "general": "Bilo koja tema: smer, praksa, smeštaj, programiranje…",
+        "professor": "Iskustva sa predavanjima i načinom ispitivanja kod jednog profesora.",
+        "exam": "Pripreme za jedan ispit ili rok."
+      },
+      "professor": "Profesor",
+      "professorHint": "Ako ga nema u listi, predloži ga pri podešavanju profila.",
+      "professorNone": "Izaberi profesora",
+      "name": "Naziv",
+      "description": "Opis",
+      "rules": "Pravila",
+      "rulesHint": "Kratka pravila ponašanja. Markdown je dozvoljen.",
+      "visibility": "Ko vidi zajednicu",
+      "public": "Svi",
+      "publicHint": "Čitaju svi, objavljuju članovi.",
+      "facultyOnly": "Samo moj fakultet",
+      "facultyOnlyHint": "Čitaju i objavljuju samo studenti tvog fakulteta.",
+      "facultyOnlyNeedsFaculty": "Prvo izaberi fakultet na profilu.",
+      "submit": "Napravi zajednicu"
+    },
+    "composer": {
+      "title": "Nova objava u z/{community}",
+      "backToCommunity": "Nazad na zajednicu",
+      "typeLabel": "Vrsta objave",
+      "types": {
+        "text": "Tekst",
+        "link": "Link",
+        "note_share": "Skripta",
+        "poll": "Anketa"
+      },
+      "url": "Link",
+      "urlHint": "Pregled stranice pravimo automatski.",
+      "note": "Tvoja skripta",
+      "noteHint": "Podeli jednu od svojih objavljenih skripti.",
+      "noteHintEmpty": "Nemaš objavljenih skripti.",
+      "notePlaceholder": "Izaberi skriptu",
+      "pollOptions": "Odgovori (2–6)",
+      "pollOption": "Odgovor {number}",
+      "addOption": "Dodaj odgovor",
+      "body": "Tekst",
+      "bodyOptional": "Tekst (opciono)",
+      "editorTabs": "Uređivač",
+      "write": "Piši",
+      "preview": "Pregled",
+      "markdownHint": "Markdown: **podebljano**, *kurziv*, liste, > citat.",
+      "flair": "Oznaka",
+      "noFlair": "Bez oznake",
+      "examPeriod": "Ispitni rok",
+      "noExamPeriod": "Nije vezano za rok",
+      "anonymous": "Objavi anonimno",
+      "anonymousHint": "Drugi korisnici ne vide ko je autor; moderatori vide.",
+      "submit": "Objavi",
+      "cancel": "Otkaži",
+      "rulesTitle": "Pre prve objave o profesoru",
+      "rulesDescription": "Iskustva i mišljenja o predmetu i načinu ispitivanja su dobrodošla. Neka budu fer.",
+      "rulesPoints": {
+        "allowed": "Piši o nastavi, ispitu i literaturi, iz svog iskustva.",
+        "noInsults": "Bez uvreda i ličnih napada.",
+        "noPrivate": "Bez privatnog života i ličnih podataka.",
+        "noFalse": "Bez neproverenih tvrdnji predstavljenih kao činjenice."
+      },
+      "rulesCheckbox": "Razumem i pridržavaću se ovih pravila",
+      "rulesAccept": "Prihvatam i objavljujem",
+      "titleField": "Naslov"
+    },
+    "poll": {
+      "legend": "{count, plural, one {# glas} few {# glasa} other {# glasova}}",
+      "result": "{percent}% ({votes})"
+    },
+    "moderation": {
+      "title": "Moderacija",
+      "menu": "Moderacija",
+      "pin": "Zakači",
+      "unpin": "Otkači",
+      "lock": "Zaključaj",
+      "unlock": "Dozvoli komentare",
+      "remove": "Ukloni",
+      "restore": "Vrati",
+      "removeTitle": "Ukloni objavu",
+      "removeDescription": "Autor dobija obaveštenje sa razlogom. Ostali vide da je objava uklonjena.",
+      "reason": "Razlog",
+      "confirmRemove": "Ukloni",
+      "done": {
+        "remove": "Objava je uklonjena.",
+        "restore": "Objava je vraćena.",
+        "lock": "Objava je zaključana.",
+        "unlock": "Komentari su ponovo dozvoljeni.",
+        "pin": "Objava je zakačena.",
+        "unpin": "Objava je otkačena."
+      },
+      "reports": "Prijave ({count})",
+      "noReports": "Nema otvorenih prijava.",
+      "resolution": {
+        "resolved": "Rešeno",
+        "dismissed": "Odbaci"
+      },
+      "bans": "Zabrane",
+      "username": "Korisničko ime",
+      "duration": "Trajanje",
+      "durations": {
+        "day": "24 sata",
+        "week": "7 dana",
+        "month": "30 dana",
+        "permanent": "Trajno"
+      },
+      "ban": "Zabrani",
+      "unban": "Ukini zabranu",
+      "banned": "Korisniku je zabranjeno učešće.",
+      "unbanned": "Zabrana je ukinuta.",
+      "until": "do {date}",
+      "moderators": "Moderatori",
+      "addModerator": "Postavi za moderatora",
+      "removeModerator": "Ukloni moderatora",
+      "saved": "Sačuvano.",
+      "log": "Dnevnik moderacije",
+      "noLog": "Još nema akcija.",
+      "when": "Kada",
+      "who": "Ko",
+      "what": "Šta",
+      "actions": {
+        "remove_post": "Uklonjena objava",
+        "restore_post": "Vraćena objava",
+        "remove_comment": "Uklonjen komentar",
+        "restore_comment": "Vraćen komentar",
+        "lock_post": "Zaključana objava",
+        "unlock_post": "Ponovo dozvoljeni komentari",
+        "pin_post": "Zakačena objava",
+        "unpin_post": "Otkačena objava",
+        "ban_member": "Zabrana članu",
+        "unban_member": "Ukinuta zabrana",
+        "add_moderator": "Novi moderator",
+        "remove_moderator": "Uklonjen moderator",
+        "resolve_report": "Rešena prijava",
+        "dismiss_report": "Odbačena prijava",
+        "remove_review": "Uklonjena ocena",
+        "ban_user": "Blokiran nalog",
+        "unban_user": "Odblokiran nalog",
+        "remove_note": "Uklonjena skripta"
+      }
+    },
+    "sort": {
+      "posts": {
+        "label": "Sortiranje objava",
+        "hot": "Popularno",
+        "new": "Novo",
+        "top": "Najbolje",
+        "controversial": "Sporno"
+      },
+      "comments": {
+        "label": "Sortiranje komentara",
+        "best": "Najbolji",
+        "new": "Najnoviji",
+        "top": "Najviše glasova"
+      },
+      "window": {
+        "label": "Period",
+        "dan": "Danas",
+        "nedelja": "Nedelja",
+        "mesec": "Mesec",
+        "godina": "Godina",
+        "sve": "Sve vreme"
+      }
     }
   },
   "layout": {
@@ -471,7 +718,19 @@
     "reviewTooShort": "Napiši bar 10 znakova.",
     "replyTooShort": "Odgovor je prekratak.",
     "refundTextTooShort": "Opiši problem u bar 10 znakova.",
-    "bankReferenceRequired": "Upiši broj naloga."
+    "bankReferenceRequired": "Upiši broj naloga.",
+    "communityNameTooShort": "Naziv mora imati bar 3 znaka.",
+    "communityNameTooLong": "Naziv može imati najviše 60 znakova.",
+    "communityDescriptionTooShort": "Opis mora imati bar 10 znakova.",
+    "postTitleTooShort": "Naslov mora imati bar 5 znakova.",
+    "postTitleTooLong": "Naslov može imati najviše 200 znakova.",
+    "postBodyRequired": "Napiši tekst objave.",
+    "urlRequired": "Unesi link koji počinje sa http:// ili https://.",
+    "urlNotAllowed": "Ovaj link nije dozvoljen (lokalne i privatne adrese se ne mogu deliti).",
+    "noteRequired": "Izaberi objavljenu skriptu.",
+    "pollOptions": "Anketa mora imati od 2 do 6 različitih odgovora.",
+    "commentRequired": "Napiši komentar.",
+    "commentTooLong": "Komentar je predugačak."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -561,6 +820,15 @@
     },
     "myCourses": {
       "markFirst": "Prvo označi predmet kao „Slušam“."
+    },
+    "forum": {
+      "ownerCannotLeave": "Osnivač ne može da napusti zajednicu.",
+      "facultyRequired": "Za zajednicu samo za fakultet prvo izaberi fakultet na profilu.",
+      "rulesAckRequired": "Potvrdi pravila pre prve objave o profesoru.",
+      "pinLimit": "Najviše 2 objave mogu biti zakačene.",
+      "userNotFound": "Korisnik ne postoji.",
+      "cannotBanSelf": "Ne možeš zabraniti sebe.",
+      "cannotBanModerator": "Moderatora može da zabrani samo administrator."
     }
   },
   "onboarding": {
@@ -674,7 +942,8 @@
       },
       "emptyTitle": "Predmeti još nisu uneti",
       "emptyDescription": "Katalog popunjavamo uz pomoć studenata. Ako studiraš ovde, predloži predmete pri podešavanju profila.",
-      "metaDescription": "Skripte, iskustva i zajednice studenata fakulteta {name} ({city})."
+      "metaDescription": "Skripte, iskustva i zajednice studenata fakulteta {name} ({city}).",
+      "community": "Zajednica fakulteta: {name}"
     },
     "course": {
       "home": "Početna",
@@ -710,7 +979,8 @@
       "apply": "Primeni",
       "clearFilters": "Poništi filtere",
       "noMatchTitle": "Nijedna skripta ne odgovara filterima",
-      "noMatchDescription": "Probaj širi izbor ili poništi filtere."
+      "noMatchDescription": "Probaj širi izbor ili poništi filtere.",
+      "community": "Zajednica predmeta: {name}"
     },
     "professor": {
       "home": "Početna",
@@ -1231,7 +1501,15 @@
     "noCoursesAction": "Označi predmete",
     "noNotesTitle": "Za tvoje predmete još nema skripti",
     "noNotesDescription": "Položio si neki od njih? Budi prvi koji postavlja skriptu.",
-    "noNotesAction": "Postavi skriptu"
+    "noNotesAction": "Postavi skriptu",
+    "communities": {
+      "title": "Iz tvojih zajednica",
+      "all": "Sve zajednice",
+      "suggest": "Pridruži se zajednicama svog fakulteta i predmeta da vidiš pitanja i iskustva sa rokova.",
+      "browse": "Pogledaj zajednice",
+      "emptyTitle": "Tišina u tvojim zajednicama",
+      "emptyDescription": "Postavi pitanje o roku ili podeli iskustvo."
+    }
   },
   "myCourses": {
     "title": "Moji predmeti",

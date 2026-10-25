@@ -83,7 +83,7 @@ test.describe('flow 2: become a seller → upload → processing → publish aft
     await adminPage.getByRole('link', { name: title }).click();
     await expect(adminPage.getByText('Prve skripte')).toHaveCount(0);
     await adminPage.getByRole('button', { name: 'Odobri i objavi' }).click();
-    await expect(adminPage.getByText('Skripta je objavljena.')).toBeVisible();
+    await expect(adminPage.getByText('Skripta je objavljena.', { exact: true })).toBeVisible();
     await expect(adminPage).toHaveURL(/\/admin\/skripte$/);
 
     // Public now: course listing → note page with previews, grade and "how I studied".

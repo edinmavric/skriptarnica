@@ -56,9 +56,9 @@ export interface TestUser {
   password: string;
 }
 
-export function newTestUser(prefix = 'student'): TestUser {
+export function newTestUser(prefix = 'student', name = 'Test Student'): TestUser {
   return {
-    name: 'Test Student',
+    name,
     username: uniqueUsername(prefix),
     email: uniqueEmail(prefix),
     password: strongPassword(),
@@ -136,7 +136,7 @@ export async function enableTwoFactor(page: Page, password: string): Promise<str
   const secret = (await page.getByTestId('totp-secret').textContent())?.trim() ?? '';
   await page.getByLabel('Šestocifreni kod').fill(totp(secret));
   await page.getByRole('button', { name: 'Potvrdi i uključi' }).click();
-  await expect(page.getByText('Dvofaktorska prijava je uključena.')).toBeVisible();
+  await expect(page.getByText('Dvofaktorska prijava je uključena.', { exact: true })).toBeVisible();
   return secret;
 }
 
