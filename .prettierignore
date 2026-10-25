@@ -1,0 +1,6 @@
+node_modules
+.next
+coverage
+drizzle/meta
+package-lock.json
+SPEC.md

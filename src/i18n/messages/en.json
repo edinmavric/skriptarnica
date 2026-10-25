@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "description": "Study notes from students who passed your courses, with how they studied."
+  },
+  "home": {
+    "title": "Study notes for your courses, from students who passed them",
+    "status": "The app is under construction."
+  },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  }
+}

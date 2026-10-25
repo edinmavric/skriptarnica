@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "description": "Skripte studenata koji su položili tvoje predmete, sa opisom kako su učili."
+  },
+  "home": {
+    "title": "Skripte za tvoje predmete, od studenata koji su ih položili",
+    "status": "Aplikacija je u izradi."
+  },
+  "a11y": {
+    "skipToContent": "Preskoči na sadržaj"
+  }
+}
