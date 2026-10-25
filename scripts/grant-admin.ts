@@ -18,14 +18,12 @@ async function main() {
     .where(eq(users.email, email))
     .returning({ id: users.id });
   if (!user) throw new Error(`no user with email ${email}`);
-  await db
-    .insert(auditLog)
-    .values({
-      actorId: null,
-      action: 'admin.role_granted_via_cli',
-      targetType: 'user',
-      targetId: user.id,
-    });
+  await db.insert(auditLog).values({
+    actorId: null,
+    action: 'admin.role_granted_via_cli',
+    targetType: 'user',
+    targetId: user.id,
+  });
   console.log(`granted admin to ${user.id}`);
 }
 

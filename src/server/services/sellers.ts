@@ -84,15 +84,13 @@ export async function becomeSeller(
       .update(studentProfiles)
       .set({ isAdult: true })
       .where(eq(studentProfiles.userId, userId));
-    await tx
-      .insert(auditLog)
-      .values({
-        actorId: userId,
-        action: 'seller.activated',
-        targetType: 'user',
-        targetId: userId,
-        ipHash,
-      });
+    await tx.insert(auditLog).values({
+      actorId: userId,
+      action: 'seller.activated',
+      targetType: 'user',
+      targetId: userId,
+      ipHash,
+    });
     return row as SellerProfile;
   });
   return ok(profile);
@@ -112,15 +110,13 @@ export async function updatePayoutDetails(
       .set(encryptPayout(userId, input.accountHolder, input.accountNumber))
       .where(eq(sellerProfiles.userId, userId));
     // Payout detail changes are sensitive (SPEC §3.6).
-    await tx
-      .insert(auditLog)
-      .values({
-        actorId: userId,
-        action: 'seller.payout_details_changed',
-        targetType: 'user',
-        targetId: userId,
-        ipHash,
-      });
+    await tx.insert(auditLog).values({
+      actorId: userId,
+      action: 'seller.payout_details_changed',
+      targetType: 'user',
+      targetId: userId,
+      ipHash,
+    });
   });
   return ok(undefined);
 }

@@ -21,6 +21,7 @@ import { db } from '../db/client';
 import {
   bookmarks,
   courses,
+  entitlements,
   faculties,
   notePreviews,
   notes,
@@ -338,9 +339,19 @@ export async function getNotePage(
   };
 }
 
-/** Whether the user has an active entitlement for the note (purchases arrive in Phase 5). */
-export async function viewerOwnsNote(_userId: string, _noteId: string): Promise<boolean> {
-  return false;
+/** Whether the user has an active entitlement for the note. */
+export async function viewerOwnsNote(userId: string, noteId: string): Promise<boolean> {
+  const [row] = await db
+    .select({ id: entitlements.id })
+    .from(entitlements)
+    .where(
+      and(
+        eq(entitlements.userId, userId),
+        eq(entitlements.noteId, noteId),
+        isNull(entitlements.revokedAt),
+      ),
+    );
+  return Boolean(row);
 }
 
 /** View counter for conversion stats (sellers don't count their own views). */
@@ -350,10 +361,8 @@ export async function recordNoteView(
   sellerId: string,
 ): Promise<void> {
   if (viewerId === sellerId) return;
-  await db
-    .update(notes)
-    .set({ viewCount: sql`${notes.viewCount} + 1` })
-    .where(eq(notes.id, noteId));
+  // Raw SQL so counters don't bump updated_at (which means "content changed").
+  await db.execute(sql`UPDATE notes SET view_count = view_count + 1 WHERE id = ${noteId}`);
 }
 
 /**

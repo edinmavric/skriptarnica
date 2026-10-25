@@ -11,7 +11,7 @@ function tokensOf(selectorRegex: RegExp): Record<string, string> {
   const match = selectorRegex.exec(css);
   if (!match?.[1]) throw new Error(`Token block not found: ${String(selectorRegex)}`);
   const tokens: Record<string, string> = {};
-  for (const [, name, value] of match[1].matchAll(/--([a-z-]+):\s*(#[0-9a-f]{6});/gi)) {
+  for (const [, name, value] of match[1].matchAll(/--([a-z0-9-]+):\s*(#[0-9a-f]{6});/gi)) {
     if (name && value) tokens[name] = value.toLowerCase();
   }
   return tokens;
@@ -50,6 +50,7 @@ const pairs: [string, string, number][] = [
     ['danger', s, 4.5],
     ['rule-strong', s, 1.7],
     ['field', s, 3],
+    ['chart-1', s, 3],
   ]),
   ['pen-ink', 'pen', 4.5],
   ['pen-ink', 'pen-hover', 4.5],

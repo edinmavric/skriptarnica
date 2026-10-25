@@ -9,6 +9,8 @@ import { Wordmark } from './wordmark';
 export const adminNav = [
   { href: '/admin', key: 'dashboard' },
   { href: '/admin/skripte', key: 'notes' },
+  { href: '/admin/povracaji', key: 'refunds' },
+  { href: '/admin/isplate', key: 'payouts' },
 ] as const;
 
 /** Admin chrome: same design system, denser layout, no marketing elements (SPEC §4.10). */

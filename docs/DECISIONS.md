@@ -83,3 +83,28 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Settings** live in `app_settings` (JSON, validated with zod on read, cached in Redis for 5 minutes), with defaults from `config/constants.ts`. The tax and invoicing flags default to off ⚖️.
 - **Reports** are a generic table plus a dialog. Community-scoped targets are routed by registered resolvers (Phase 7).
 - **Local Inngest uses host networking** so `localhost:3000` means the app in both directions.
+
+## Phase 5 — Payments, library, wallet
+
+- **The ledger is enforced by the database.** A deferred constraint trigger rejects any transaction whose entries don't sum to zero at COMMIT, and entries are immutable (UPDATE/DELETE blocked), so corrections are new transactions. The app checks the sum before inserting too. Balances are always `SUM()` over entries, never stored.
+- **Ledger postings:**
+  - Sale: `provider_clearing −P / seller_pending +S / platform_revenue +C`.
+  - Release: `seller_pending −S / seller_available +S`.
+  - Refund: `seller_pending|seller_available −S / platform_revenue −C / refunds +P`. The seller account is `seller_available` when the funds were already released, which may go negative (SPEC §5.4); later releases cover it first.
+  - Payout request: `seller_available −A / seller_paid_out +A` (reserved immediately); a rejection reverses it.
+- **Orders:**
+  - The idempotency key is unique per buyer: a retried submit resumes the same order, and the provider checkout is idempotent on the order ID.
+  - Fulfilment locks the order row (`FOR UPDATE`), so webhook and reconciliation can't double-fulfil.
+  - Amount mismatches throw and alert ops.
+  - Free notes go through the same order/entitlement/ledger path with zero amounts.
+- **Webhooks:** a `processed_webhook_events (provider, event_id)` row is inserted in the same transaction as the state change, so duplicates are no-ops. Statuses: 400 for bad signatures, 422 for amount mismatches, 500 (provider retries) for our failures.
+- **Mock provider:** HMAC-SHA256 `t=…,v1=…` signatures with a 5-minute tolerance and Redis-backed sessions. Its hosted page is `/dev/mock-checkout`. A failed webhook delivery is logged, not thrown, because that is exactly the case reconciliation handles (integration-tested).
+- **Reconciliation** runs every 15 minutes (Inngest cron, Europe/Belgrade), and **funds release** daily at 03:00. Each release is its own transaction, guarded by `order_items.released_at`.
+- **Commission and hold days are snapshotted per order item;** `seller_profiles.payout_hold_days` overrides the default hold.
+- **Watermark:** a footer on every page plus a faint diagonal mark, transliterated to ASCII (standard PDF fonts lack č/ć/đ/š/ž; embedding a font per download would bloat files). Copies are cached per (user, version) in the private bucket. Downloads redirect to a 60-second presigned URL and are logged in `download_events`, with no rate limit or daily cap (SPEC §4.3). PDFs pdf-lib can't parse are repaired with mupdf first.
+- **Refunds:** buyers request within the window (7 days, a setting); an admin approves (the provider refund comes first, then one DB transaction) or rejects. Refunded entitlements are revoked; buyers who keep a file after a refund are traceable through the watermark.
+- **Payouts:** the minimum is enforced, one open request per seller (advisory lock), and requested → approved → paid needs a bank reference. Admins see decrypted account details only on an explicit click, and every view is audited.
+- **Counters don't bump `updated_at`.** View, sales and rating counters use raw SQL so `updated_at` keeps meaning "content changed" (seller list, sitemap `lastmod`). Found in the dashboard screenshot.
+- **Chart:** a single series in `--chart-1`, a mid-lightness step of the pen hue checked with the dataviz validator: light `#4a67d0`, dark `#6a82e0`, ≥ 3:1 on all surfaces (contrast test). There's no legend (the heading names the series), a value label on the peak only, tooltips on hover and keyboard (arrow keys), and a table view.
+- **`InvoiceService` ⚖️** is a no-op behind the `invoicing` flag, with hooks after payment and after refund.
+- **Demo seed:** two demo sellers and four real notes (generated PDFs through the real pipeline), demo password `demo-skripta-2026`. Refused when `APP_ENV=production`.

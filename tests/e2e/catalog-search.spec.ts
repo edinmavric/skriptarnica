@@ -65,10 +65,18 @@ test.describe('public catalog pages and search (Phase 3)', () => {
     await page.keyboard.press('Control+k');
     const box = page.getByRole('dialog').getByRole('combobox');
     await box.fill('oet');
-    await expect(page.getByRole('option', { name: /Osnovi elektrotehnike 1/ })).toBeVisible();
+    // Keyboard first (the pointer hasn't touched the list): ArrowDown selects the first option.
+    await expect(page.getByRole('option').first()).toBeVisible();
     await box.press('ArrowDown');
+    await expect(page.getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+    await box.press('ArrowDown');
+    await expect(page.getByRole('option').nth(1)).toHaveAttribute('aria-selected', 'true');
+    await box.press('ArrowUp');
+    // Results are grouped (notes first, then courses); the course is in its own group.
+    const courses = page.getByRole('group', { name: 'Predmeti' });
+    await expect(courses.getByRole('option', { name: /^Osnovi elektrotehnike 1/ })).toBeVisible();
     await box.press('Enter');
-    await expect(page).toHaveURL(/\/predmet\//);
+    await expect(page).toHaveURL(/\/(skripta|predmet)\//);
   });
 
   test('sitemap index lists segments and robots.txt points to it', async ({ request }) => {

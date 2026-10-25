@@ -192,7 +192,7 @@ export default async function NotePage({ params }: Props) {
             </section>
           ) : null}
 
-          <NoteReviews noteId={note.id} />
+          <NoteReviews noteId={note.id} isOwner={data.viewer.isOwner} signedIn={Boolean(viewer)} />
         </div>
 
         <aside

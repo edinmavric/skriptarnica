@@ -106,6 +106,19 @@
         "other": "Skripta nije javna."
       },
       "zoomVerb": "Uvećaj:"
+    },
+    "reviews": {
+      "title": "Ocene kupaca",
+      "empty": "Još nema ocena. Ocenu mogu da ostave samo kupci.",
+      "label": "Ocena korisnika {name}",
+      "deletedUser": "[obrisan korisnik]",
+      "passedWith": "Položio sa {grade}",
+      "verifiedPurchase": "Kupac",
+      "sellerReply": "Odgovor autora",
+      "reply": "Odgovori",
+      "replyLabel": "Tvoj odgovor",
+      "replyHint": "Odgovor je javan i može se dati samo jednom.",
+      "sendReply": "Objavi odgovor"
     }
   },
   "forum": {
@@ -452,7 +465,13 @@
     "declarationRequired": "Potvrdi izjavu da bi objavio skriptu.",
     "changelogRequired": "Napiši ukratko šta je novo u ovoj verziji.",
     "passwordWrong": "Lozinka nije tačna.",
-    "reasonTooShort": "Razlog mora imati bar 10 znakova."
+    "reasonTooShort": "Razlog mora imati bar 10 znakova.",
+    "withdrawalWaiverRequired": "Potvrdi da tražiš da skripta bude dostupna odmah.",
+    "ratingRequired": "Izaberi ocenu od 1 do 5.",
+    "reviewTooShort": "Napiši bar 10 znakova.",
+    "replyTooShort": "Odgovor je prekratak.",
+    "refundTextTooShort": "Opiši problem u bar 10 znakova.",
+    "bankReferenceRequired": "Upiši broj naloga."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -510,6 +529,35 @@
     "admin": {
       "notPending": "Skripta više nije na pregledu.",
       "noReadyVersion": "Skripta nema obrađen fajl."
+    },
+    "purchase": {
+      "unavailable": "Skripta nije dostupna za kupovinu.",
+      "ownNote": "Ne možeš kupiti svoju skriptu.",
+      "alreadyOwned": "Ova skripta je već u tvojoj biblioteci.",
+      "orderClosed": "Ova porudžbina je zatvorena. Pokreni novu kupovinu."
+    },
+    "refund": {
+      "notEligible": "Za ovu porudžbinu povraćaj nije moguć.",
+      "windowClosed": "Rok za prijavu problema je istekao.",
+      "alreadyRequested": "Problem je već prijavljen.",
+      "notPending": "Zahtev je već obrađen.",
+      "providerFailed": "Obrađivač plaćanja nije izvršio povraćaj. Pokušaj ponovo."
+    },
+    "payout": {
+      "invalidAmount": "Unesi iznos u celim dinarima.",
+      "belowMinimum": "Iznos je ispod minimalne isplate.",
+      "noDetails": "Dopuni podatke za isplatu.",
+      "alreadyOpen": "Već imaš isplatu u obradi.",
+      "insufficient": "Nemaš toliko dostupnih sredstava.",
+      "wrongState": "Isplata nije u odgovarajućem stanju."
+    },
+    "review": {
+      "notBuyer": "Ocenu mogu da ostave samo kupci.",
+      "alreadyReviewed": "Već si ocenio ovu kupovinu.",
+      "alreadyReplied": "Na ovu ocenu je već odgovoreno."
+    },
+    "download": {
+      "noFile": "Fajl trenutno nije dostupan."
     }
   },
   "onboarding": {
@@ -927,6 +975,41 @@
         "unlisted": "Van prodaje",
         "removed": "Uklonjeno"
       }
+    },
+    "money": {
+      "title": "Zarada",
+      "pending": "Na čekanju",
+      "available": "Dostupno za isplatu",
+      "paidOut": "Isplaćeno",
+      "pendingHint": "Postaje dostupno {days} dana posle prodaje.",
+      "availableHint": "Možeš da zatražiš isplatu.",
+      "negativeHint": "Dug zbog povraćaja; sledeće prodaje ga prvo pokrivaju.",
+      "paidOutHint": "Zatražene i izvršene isplate.",
+      "chart": {
+        "title": "Prodaje po danima (poslednjih 30 dana)",
+        "summary": "Ukupno {total} prodaja za {days} dana.",
+        "keyboardHint": "Grafikon prodaja. Strelicama levo i desno biraš dan.",
+        "tooltip": "{date}: {count, plural, one {# prodaja} few {# prodaje} other {# prodaja}}, zarada {amount}",
+        "table": "Prikaži kao tabelu",
+        "day": "Dan",
+        "sales": "Prodaje",
+        "earned": "Zarada"
+      },
+      "payout": {
+        "title": "Isplata",
+        "amount": "Iznos (RSD)",
+        "hint": "Najmanje {min}. Račun koji se završava na {last4}.",
+        "submit": "Zatraži isplatu",
+        "requested": "Isplata je zatražena. Javljamo kad bude uplaćena.",
+        "belowMinimum": "Isplata je moguća od {min}. Trenutno dostupno: {available}.",
+        "status": {
+          "requested": "Zatraženo",
+          "approved": "Odobreno",
+          "processing": "U obradi",
+          "paid": "Isplaćeno",
+          "rejected": "Odbijeno"
+        }
+      }
     }
   },
   "reports": {
@@ -978,7 +1061,9 @@
       "backToSite": "Na sajt",
       "label": "Administracija",
       "dashboard": "Pregled",
-      "notes": "Skripte na pregledu"
+      "notes": "Skripte na pregledu",
+      "refunds": "Povraćaji",
+      "payouts": "Isplate"
     },
     "dashboard": {
       "title": "Pregled",
@@ -1014,6 +1099,116 @@
       "approved": "Skripta je objavljena.",
       "rejected": "Skripta je odbijena.",
       "alreadyDecided": "Odluka je doneta (status: {status})."
+    },
+    "refunds": {
+      "title": "Povraćaji",
+      "emptyTitle": "Nema zahteva za povraćaj",
+      "emptyDescription": "Prijave problema od kupaca stižu ovde.",
+      "note": "Napomena",
+      "approve": "Odobri povraćaj",
+      "reject": "Odbij",
+      "approved": "Povraćaj je izvršen.",
+      "rejected": "Zahtev je odbijen."
+    },
+    "payouts": {
+      "title": "Isplate",
+      "emptyTitle": "Nema isplata na čekanju",
+      "emptyDescription": "Zahtevi prodavaca za isplatu stižu ovde.",
+      "last4": "račun …{last4}",
+      "reveal": "Prikaži podatke za uplatu",
+      "approve": "Odobri",
+      "approved": "Isplata je odobrena.",
+      "reference": "Broj naloga",
+      "markPaid": "Označi kao isplaćeno",
+      "paid": "Isplata je označena kao izvršena.",
+      "reason": "Razlog odbijanja",
+      "reject": "Odbij",
+      "rejected": "Isplata je odbijena; iznos je vraćen prodavcu."
     }
+  },
+  "purchase": {
+    "review": {
+      "title": "Pregled kupovine",
+      "included": "Dobijaš PDF sa svojim vodenim žigom i sve buduće verzije ove skripte.",
+      "waiver": "Tražim da mi skripta bude dostupna odmah i razumem da posle preuzimanja nemam pravo na odustanak, osim u slučajevima iz <link>pravila o povraćaju</link>",
+      "pay": "Plati karticom",
+      "getFree": "Dodaj u biblioteku",
+      "redirectNote": "Bićeš preusmeren na stranicu za plaćanje. Podatke o kartici unosiš kod obrađivača plaćanja, ne kod nas.",
+      "cancelled": "Plaćanje je otkazano. Možeš pokušati ponovo.",
+      "ownNote": "Ovo je tvoja skripta.",
+      "verifyEmail": "Pre kupovine potvrdi email adresu."
+    },
+    "status": {
+      "title": "Status plaćanja",
+      "processing": "Plaćanje se obrađuje…",
+      "wait": "Čekamo potvrdu od banke. Obično traje nekoliko sekundi.",
+      "slow": "Potvrda kasni. Stranica se sama osvežava; skripta će se pojaviti u biblioteci čim stigne potvrda.",
+      "paid": "Plaćanje je uspelo. Skripta je u tvojoj biblioteci.",
+      "download": "Preuzmi PDF",
+      "toLibrary": "Idi u biblioteku",
+      "failed": "Plaćanje nije uspelo ili je otkazano. Novac nije skinut.",
+      "retry": "Pokušaj ponovo",
+      "backToNote": "Nazad na skriptu"
+    }
+  },
+  "library": {
+    "title": "Biblioteka",
+    "download": "Preuzmi",
+    "reviewed": "Ocenjeno",
+    "bought": "kupljeno {date}",
+    "newVersion": "Nova verzija {number}",
+    "added": "Skripta je dodata u biblioteku.",
+    "watermarkNote": "Svaki PDF nosi tvoje ime i broj porudžbine. Deljenje kupljenih skripti je zabranjeno.",
+    "emptyTitle": "Biblioteka je prazna",
+    "emptyDescription": "Kupljene i besplatne skripte se čuvaju ovde, sa svim budućim verzijama.",
+    "emptyAction": "Nađi skriptu",
+    "errors": {
+      "access": "Nemaš pristup ovoj skripti.",
+      "file": "Fajl trenutno nije dostupan. Pokušaj ponovo za minut."
+    },
+    "refundStatus": {
+      "requested": "Prijava problema u obradi",
+      "approved": "Povraćaj odobren",
+      "completed": "Novac vraćen",
+      "rejected": "Prijava odbijena",
+      "failed": "Povraćaj u obradi"
+    },
+    "review": {
+      "trigger": "Oceni",
+      "title": "Oceni skriptu",
+      "rating": "Ocena",
+      "text": "Utisak",
+      "textHint": "Šta ti je pomoglo, šta nedostaje. Najmanje 10 znakova.",
+      "passed": "Položio sam uz ovu skriptu (opciono)",
+      "passedHint": "Ocena sa ispita, ako si već polagao.",
+      "passedNone": "Ne navodim",
+      "submit": "Objavi ocenu"
+    },
+    "refund": {
+      "trigger": "Prijavi problem",
+      "title": "Prijavi problem sa skriptom",
+      "description": "U roku od {days} dana od kupovine možeš da zatražiš povraćaj novca ako fajl ne odgovara opisu, oštećen je, prazan ili je plagijat. Odluku donosi administrator.",
+      "reason": "Problem",
+      "reasons": {
+        "not_as_described": "Ne odgovara opisu",
+        "corrupted": "Fajl je oštećen",
+        "empty": "Fajl je prazan",
+        "plagiarism": "Plagijat",
+        "other": "Drugo"
+      },
+      "details": "Opiši problem",
+      "submit": "Pošalji prijavu"
+    }
+  },
+  "devCheckout": {
+    "banner": "Ovo je testna stranica za plaćanje (samo razvoj). Kartica se ne unosi.",
+    "title": "Testno plaćanje",
+    "description": "Opis",
+    "amount": "Iznos",
+    "status": "Status",
+    "unknown": "Sesija plaćanja ne postoji ili je istekla.",
+    "success": "Uspešno plaćanje",
+    "failure": "Kartica odbijena",
+    "cancel": "Otkaži"
   }
 }

@@ -63,15 +63,13 @@ export const confirmTwoFactorAction = createAction(
   async (input, { user, ipHash }): Promise<Result<void>> => {
     try {
       await auth.api.verifyTOTP({ body: { code: input.code }, headers: await headers() });
-      await db
-        .insert(auditLog)
-        .values({
-          actorId: user.id,
-          action: 'security.2fa_enabled',
-          targetType: 'user',
-          targetId: user.id,
-          ipHash,
-        });
+      await db.insert(auditLog).values({
+        actorId: user.id,
+        action: 'security.2fa_enabled',
+        targetType: 'user',
+        targetId: user.id,
+        ipHash,
+      });
       return ok(undefined);
     } catch (error) {
       if (code(error) === 'INVALID_CODE')
@@ -90,15 +88,13 @@ export const disableTwoFactorAction = createAction(
         body: { password: input.password },
         headers: await headers(),
       });
-      await db
-        .insert(auditLog)
-        .values({
-          actorId: user.id,
-          action: 'security.2fa_disabled',
-          targetType: 'user',
-          targetId: user.id,
-          ipHash,
-        });
+      await db.insert(auditLog).values({
+        actorId: user.id,
+        action: 'security.2fa_disabled',
+        targetType: 'user',
+        targetId: user.id,
+        ipHash,
+      });
       return ok(undefined);
     } catch (error) {
       if (code(error) === 'INVALID_PASSWORD')

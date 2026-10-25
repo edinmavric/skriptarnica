@@ -80,8 +80,14 @@ jobs:
         run: npm run i18n:check
       - name: Typecheck
         run: npm run typecheck
+      - name: Start storage and jobs (SeaweedFS for R2, Inngest dev server)
+        run: docker compose up -d storage inngest
       - name: Migrate
         run: npm run db:migrate
+      - name: Prepare storage buckets
+        run: |
+          for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:8333 && break; sleep 2; done
+          npm run storage:setup
       - name: Unit and integration tests
         run: npm test
       - name: Audit dependencies
@@ -90,8 +96,6 @@ jobs:
         run: npm run build
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Start storage and jobs for e2e
-        run: docker compose up -d storage inngest
       - name: Seed demo data
         run: npm run db:seed -- all
       - name: E2E

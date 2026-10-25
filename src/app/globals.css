@@ -24,6 +24,8 @@
   --pen-hover: #142a78;
   --pen-ink: #ffffff;
   --pen-soft: #e6ebf8;
+  /* Single-series chart mark: mid-lightness step of the pen hue (validated by the dataviz checks). */
+  --chart-1: #4a67d0;
   --marker: #e4f35a;
   --marker-ink: #1b1d22;
   --marker-soft: #f0f7bd;
@@ -55,6 +57,7 @@
   --pen-hover: #c2cfff;
   --pen-ink: #14161f;
   --pen-soft: #2a2f45;
+  --chart-1: #6a82e0;
   --marker: #d4e44a;
   --marker-ink: #1e1d1a;
   --marker-soft: #3b3f1f;
@@ -87,6 +90,7 @@
     --pen-hover: #c2cfff;
     --pen-ink: #14161f;
     --pen-soft: #2a2f45;
+    --chart-1: #6a82e0;
     --marker: #d4e44a;
     --marker-ink: #1e1d1a;
     --marker-soft: #3b3f1f;
@@ -119,6 +123,7 @@
   --color-pen-hover: var(--pen-hover);
   --color-pen-ink: var(--pen-ink);
   --color-pen-soft: var(--pen-soft);
+  --color-chart-1: var(--chart-1);
   --color-marker: var(--marker);
   --color-marker-ink: var(--marker-ink);
   --color-marker-soft: var(--marker-soft);
