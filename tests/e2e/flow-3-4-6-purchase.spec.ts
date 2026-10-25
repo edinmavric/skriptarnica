@@ -137,7 +137,9 @@ test.describe('flow 6: refund through admin', () => {
     await page.goto('/biblioteka');
     await page.getByRole('button', { name: 'Prijavi problem' }).click();
     await page.getByRole('radio', { name: 'Fajl je oštećen' }).check();
-    await page.getByLabel('Opiši problem').fill('Strane od 5 do 10 se ne otvaraju u čitaču.');
+    // Unique per run, so leftovers from earlier runs can't match the admin row below.
+    const problem = `Strane od 5 do 10 se ne otvaraju u čitaču (${Date.now().toString(36)}).`;
+    await page.getByLabel('Opiši problem').fill(problem);
     await page.getByRole('button', { name: 'Pošalji prijavu' }).click();
     await expect(page.getByText('Prijava problema u obradi')).toBeVisible();
 
@@ -148,7 +150,7 @@ test.describe('flow 6: refund through admin', () => {
     grantAdmin(admin.email);
     await enableTwoFactor(adminPage, admin.password);
     await adminPage.goto('/admin/povracaji');
-    const row = adminPage.getByRole('listitem').filter({ hasText: 'Strane od 5 do 10' });
+    const row = adminPage.getByRole('listitem').filter({ hasText: problem });
     await row.getByRole('button', { name: 'Odobri povraćaj' }).click();
     await expect(adminPage.getByText('Povraćaj je izvršen.').first()).toBeVisible();
 

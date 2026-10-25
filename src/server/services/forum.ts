@@ -935,7 +935,13 @@ export async function moderatePost(
   if (action === 'remove') {
     await trySendEvent(
       'moderation/decision',
-      { userId: post.authorId, targetType: 'post', action: 'removed', reason },
+      {
+        userId: post.authorId,
+        targetType: 'post',
+        action: 'removed',
+        reason,
+        communityId: post.communityId,
+      },
       `mod-post-${postId}-${now.getTime()}`,
     );
   }
@@ -982,7 +988,13 @@ export async function moderateComment(
   if (action === 'remove') {
     await trySendEvent(
       'moderation/decision',
-      { userId: row.comment.authorId, targetType: 'comment', action: 'removed', reason },
+      {
+        userId: row.comment.authorId,
+        targetType: 'comment',
+        action: 'removed',
+        reason,
+        communityId: row.communityId,
+      },
       `mod-comment-${commentId}-${now.getTime()}`,
     );
   }
@@ -1040,7 +1052,7 @@ export async function setMemberBan(
   if (!lift)
     await trySendEvent(
       'moderation/decision',
-      { userId: target.id, targetType: 'community', action: 'banned', reason },
+      { userId: target.id, targetType: 'community', action: 'banned', reason, communityId },
       `ban-${communityId}-${target.id}-${Date.now()}`,
     );
   return ok(undefined);

@@ -8,3 +8,4 @@ export * from './settings';
 export * from './money';
 export * from './exam-periods';
 export * from './forum';
+export * from './notifications';

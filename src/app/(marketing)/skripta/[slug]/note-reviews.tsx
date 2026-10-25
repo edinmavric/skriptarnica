@@ -20,7 +20,7 @@ export async function NoteReviews({
   const t = await getTranslations('notes.reviews');
   const items = await listNoteReviews(noteId);
   return (
-    <section aria-labelledby="reviews-heading">
+    <section id="ocene" aria-labelledby="reviews-heading" className="scroll-mt-20">
       <h2 id="reviews-heading" className="mb-3 text-display-sm font-semibold">
         {t('title')}
       </h2>

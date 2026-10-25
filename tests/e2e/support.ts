@@ -131,8 +131,10 @@ export function totp(secret: string): string {
 /** Turns on 2FA through the settings UI and returns the TOTP secret. */
 export async function enableTwoFactor(page: Page, password: string): Promise<string> {
   await page.goto('/podesavanja/bezbednost');
-  await page.getByLabel('Trenutna lozinka').fill(password);
-  await page.getByRole('button', { name: 'Uključi dvofaktorsku prijavu' }).click();
+  // The page also has the password-change form; stay inside the 2FA section.
+  const section = page.getByRole('region', { name: 'Dvofaktorska prijava' });
+  await section.getByLabel('Trenutna lozinka').fill(password);
+  await section.getByRole('button', { name: 'Uključi dvofaktorsku prijavu' }).click();
   const secret = (await page.getByTestId('totp-secret').textContent())?.trim() ?? '';
   await page.getByLabel('Šestocifreni kod').fill(totp(secret));
   await page.getByRole('button', { name: 'Potvrdi i uključi' }).click();

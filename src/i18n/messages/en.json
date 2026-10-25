@@ -540,7 +540,9 @@
   "email": {
     "common": {
       "fallbackLink": "Ako dugme ne radi, otvori ovaj link:",
-      "footer": "Ovaj email je poslat jer je neko upotrebio ovu adresu na našem sajtu. Ako to nisi bio ti, slobodno ga ignoriši."
+      "footer": "Ovaj email je poslat jer je neko upotrebio ovu adresu na našem sajtu. Ako to nisi bio ti, slobodno ga ignoriši.",
+      "unsubscribeType": "Ne želiš ovakve emailove? Isključi ih ovde: {url}",
+      "anonymousActor": "Anonimni korisnik"
     },
     "verifyEmail": {
       "subject": "Potvrdi email adresu",
@@ -589,6 +591,123 @@
       "body": "Klikni na dugme da potvrdiš novu email adresu za svoj nalog.",
       "cta": "Potvrdi novu adresu",
       "note": "Ako nisi tražio promenu, odmah promeni lozinku."
+    },
+    "purchase": {
+      "subject": "Kupovina je uspela: {title}",
+      "preview": "Skripta je u tvojoj biblioteci.",
+      "heading": "Skripta je tvoja",
+      "body": "Platio si {amount} za „{title}”. Skripta je u tvojoj biblioteci, odakle je možeš preuzeti kad god hoćeš.",
+      "cta": "Otvori biblioteku",
+      "note": "Ako sa fajlom nešto nije u redu, prijavi problem iz biblioteke u roku od {days} dana."
+    },
+    "exportReady": {
+      "subject": "Tvoji podaci su spremni",
+      "preview": "Izvoz podataka je spreman za preuzimanje.",
+      "heading": "Izvoz podataka je spreman",
+      "body": "Napravili smo arhivu sa svim podacima koje čuvamo o tvom nalogu. Preuzimanje radi samo kad si prijavljen.",
+      "cta": "Preuzmi podatke",
+      "note": "Link važi {days} dana."
+    },
+    "deletionScheduled": {
+      "subject": "Nalog će biti obrisan {date}",
+      "preview": "Brisanje možeš otkazati do {date}.",
+      "heading": "Zatražio si brisanje naloga",
+      "body": "Nalog će biti obrisan {date}. Do tada se možeš prijaviti i otkazati brisanje u podešavanjima.",
+      "cta": "Otkaži brisanje",
+      "note": "Ako nisi ti zatražio brisanje, odmah promeni lozinku."
+    },
+    "deletionCancelled": {
+      "subject": "Brisanje naloga je otkazano",
+      "preview": "Nalog ostaje aktivan.",
+      "heading": "Nalog ostaje",
+      "body": "Otkazao si brisanje naloga. Sve je ostalo kako je bilo.",
+      "cta": "Otvori Skriptarnicu",
+      "note": "Ako nisi ti otkazao brisanje, promeni lozinku."
+    },
+    "notification": {
+      "sale": {
+        "subject": "Nova prodaja: {noteTitle}",
+        "heading": "Prodao si skriptu",
+        "body": "Neko je kupio „{noteTitle}”. Tvoj deo je {amount} i biće dostupan za isplatu posle perioda čekanja.",
+        "cta": "Pogledaj prodaje"
+      },
+      "review_new": {
+        "subject": "Nova ocena za „{noteTitle}”",
+        "heading": "Skripta je dobila ocenu",
+        "body": "Kupac je ocenio „{noteTitle}” ocenom {rating} od 5. Možeš jednom odgovoriti na ocenu.",
+        "cta": "Pogledaj ocenu"
+      },
+      "review_reply": {
+        "subject": "Prodavac je odgovorio na tvoju ocenu",
+        "heading": "Odgovor na tvoju ocenu",
+        "body": "Prodavac skripte „{noteTitle}” je odgovorio na tvoju ocenu.",
+        "cta": "Pročitaj odgovor"
+      },
+      "note_version": {
+        "subject": "Nova verzija: {noteTitle}",
+        "heading": "Skripta je dopunjena",
+        "body": "Izašla je verzija {version} skripte „{noteTitle}” koju si kupio. Preuzmi je iz biblioteke, bez doplate.",
+        "cta": "Otvori biblioteku"
+      },
+      "forum_reply": {
+        "subject": "Novi odgovor: {postTitle}",
+        "heading": "Neko ti je odgovorio",
+        "body": "{actor} je odgovorio na {kind, select, post {tvoju objavu} other {tvoj komentar}} u diskusiji „{postTitle}”.",
+        "cta": "Pročitaj odgovor"
+      },
+      "mention": {
+        "subject": "{actor} te je pomenuo",
+        "heading": "Pomenuli su te",
+        "body": "{actor} te je pomenuo u diskusiji „{postTitle}”.",
+        "cta": "Otvori diskusiju"
+      },
+      "payout_status": {
+        "subject": "Isplata: {status, select, requested {zahtev primljen} approved {odobrena} processing {u obradi} paid {uplaćena} other {odbijena}}",
+        "heading": "Promena statusa isplate",
+        "body": "Isplata od {amount} je {status, select, requested {primljena i čeka odobrenje} approved {odobrena} processing {u obradi} paid {uplaćena na tvoj račun} other {odbijena. Razlog: {reason}}}.",
+        "cta": "Pogledaj isplate"
+      },
+      "moderation": {
+        "subject": "Odluka moderatora",
+        "heading": "Moderator je doneo odluku",
+        "body": "{action, select, banned {Zabranjeno ti je učešće u zajednici {community}} other {Moderator je uklonio {target, select, post {tvoju objavu} other {tvoj komentar}}}}. Razlog: {reason}.",
+        "cta": "Pogledaj pravila zajednice"
+      },
+      "note_decision": {
+        "subject": "{decision, select, approved {Skripta je objavljena} other {Skripta nije odobrena}}: {noteTitle}",
+        "heading": "{decision, select, approved {Skripta je objavljena} other {Skripta nije odobrena}}",
+        "body": "{decision, select, approved {„{noteTitle}” je pregledana i sada je u prodaji.} other {„{noteTitle}” nije odobrena. Razlog: {reason}. Ispravi i pošalji ponovo.}}",
+        "cta": "Otvori skriptu"
+      },
+      "catalog_request": {
+        "subject": "Tvoj predlog za katalog: {decision, select, approved {prihvaćen} other {odbijen}}",
+        "heading": "Odgovor na predlog za katalog",
+        "body": "{decision, select, approved {Dodali smo „{name}” u katalog. Hvala!} other {Predlog „{name}” nismo dodali. Razlog: {reason}.}}",
+        "cta": "Pogledaj katalog"
+      }
+    },
+    "digest": {
+      "subject": {
+        "daily": "Danas u tvojim zajednicama: {count, plural, one {# nova objava} few {# nove objave} other {# novih objava}}",
+        "weekly": "Ove nedelje u tvojim zajednicama: {count, plural, one {# nova objava} few {# nove objave} other {# novih objava}}"
+      },
+      "preview": "{count, plural, one {# objava} few {# objave} other {# objava}} iz tvojih zajednica.",
+      "heading": {
+        "daily": "Danas u tvojim zajednicama",
+        "weekly": "Ove nedelje u tvojim zajednicama"
+      },
+      "intro": "Najaktivnije objave iz zajednica čiji si član. {unread, plural, =0 {} one {Imaš i # nepročitano obaveštenje.} few {Imaš i # nepročitana obaveštenja.} other {Imaš i # nepročitanih obaveštenja.}}",
+      "cta": "Otvori zajednice",
+      "comments": "{count, plural, one {# komentar} few {# komentara} other {# komentara}}",
+      "unsubscribe": "Ne šalji mi ovaj pregled"
+    },
+    "deletionConfirm": {
+      "subject": "Potvrdi brisanje naloga",
+      "preview": "Potvrdi da želiš da obrišeš nalog.",
+      "heading": "Potvrdi brisanje naloga",
+      "body": "Zatražio si brisanje naloga. Klikni na dugme da potvrdiš. Nalog će biti obrisan posle 14 dana, a do tada možeš da odustaneš.",
+      "cta": "Potvrdi brisanje",
+      "note": "Link važi 1 sat. Ako nisi ti zatražio brisanje, ignoriši ovaj email."
     }
   },
   "auth": {
@@ -730,7 +849,11 @@
     "noteRequired": "Izaberi objavljenu skriptu.",
     "pollOptions": "Anketa mora imati od 2 do 6 različitih odgovora.",
     "commentRequired": "Napiši komentar.",
-    "commentTooLong": "Komentar je predugačak."
+    "commentTooLong": "Komentar je predugačak.",
+    "bioTooLong": "Opis može imati najviše 300 znakova.",
+    "imageRequired": "Izaberi sliku.",
+    "imageTooLarge": "Slika može imati najviše 5 MB.",
+    "imageInvalid": "Ovo nije slika koju možemo da pročitamo (JPG, PNG, WebP, GIF, AVIF ili HEIC)."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -829,7 +952,19 @@
       "userNotFound": "Korisnik ne postoji.",
       "cannotBanSelf": "Ne možeš zabraniti sebe.",
       "cannotBanModerator": "Moderatora može da zabrani samo administrator."
-    }
+    },
+    "account": {
+      "balance": "Na računu imaš neisplaćen iznos. Zatraži isplatu ili potvrdi da se odričeš iznosa.",
+      "openPayout": "Imaš isplatu u toku. Nalog možeš obrisati kad isplata bude završena.",
+      "currentSession": "Ovo je sesija koju upravo koristiš. Odjavi se iz menija naloga.",
+      "lastSignInMethod": "Ne možeš ukloniti jedini način prijave. Prvo postavi lozinku.",
+      "linkInvalid": "Link za potvrdu je istekao ili nije ispravan. Zatraži brisanje ponovo.",
+      "followSelf": "Ne možeš pratiti sebe."
+    },
+    "unsubscribe": {
+      "invalid": "Link za odjavu nije ispravan."
+    },
+    "exportExpired": "Link za preuzimanje je istekao. Zatraži novi izvoz."
   },
   "onboarding": {
     "title": "Podesi profil",
@@ -1326,6 +1461,192 @@
       "adminRequired": "Administratori moraju da uključe dvofaktorsku prijavu pre pristupa administraciji.",
       "adminCannotDisable": "Administratori ne mogu da isključe dvofaktorsku prijavu.",
       "needsPassword": "Nalog nema lozinku (prijava preko Google-a ili linka). Postavi lozinku preko „Zaboravljena lozinka“, pa uključi dvofaktorsku prijavu."
+    },
+    "nav": {
+      "label": "Podešavanja",
+      "account": "Nalog",
+      "privacy": "Privatnost",
+      "notifications": "Obaveštenja",
+      "security": "Bezbednost",
+      "data": "Podaci i brisanje"
+    },
+    "account": {
+      "title": "Nalog",
+      "viewProfile": "Pogledaj javni profil",
+      "avatar": "Slika profila",
+      "avatarUpload": "Postavi sliku",
+      "avatarChange": "Promeni sliku",
+      "avatarRemove": "Ukloni sliku",
+      "avatarHint": "JPG, PNG ili WebP do 5 MB. Slika se smanjuje na 256×256.",
+      "profile": "Profil",
+      "name": "Ime i prezime",
+      "username": "Korisničko ime",
+      "usernameHint": "Mala slova, brojevi, tačka i donja crta. Menja i adresu profila.",
+      "bio": "O meni",
+      "bioHint": "Kratko, do 300 znakova. Vidi se na javnom profilu.",
+      "email": "Email",
+      "emailHint": "Za promenu email adrese piši podršci.",
+      "save": "Sačuvaj",
+      "saved": "Sačuvano.",
+      "programHint": "Fakultet, smer i godinu menjaš kroz podešavanje studija.",
+      "programLink": "Promeni studije"
+    },
+    "privacy": {
+      "title": "Privatnost",
+      "intro": "Biraš šta drugi vide na tvom javnom profilu.",
+      "saved": "Sačuvano.",
+      "error": "Nije sačuvano. Pokušaj ponovo.",
+      "showFaculty": {
+        "label": "Prikaži fakultet",
+        "hint": "Fakultet i univerzitet na profilu."
+      },
+      "showProgram": {
+        "label": "Prikaži smer",
+        "hint": "Studijski program, uz fakultet."
+      },
+      "showActivity": {
+        "label": "Prikaži objave i komentare",
+        "hint": "Spisak tvojih objava i komentara na profilu. Anonimne objave se nikad ne prikazuju."
+      },
+      "always": "Ime, korisničko ime, slika i datum pridruživanja su uvek javni. Ako prodaješ, javne su i tvoje skripte i broj prodaja."
+    },
+    "notifications": {
+      "title": "Obaveštenja",
+      "intro": "Za svaku vrstu obaveštenja biraš da li stiže samo ovde ili i emailom.",
+      "saved": "Sačuvano.",
+      "error": "Nije sačuvano. Pokušaj ponovo.",
+      "channels": {
+        "in_app_email": "Ovde i emailom",
+        "in_app": "Samo ovde",
+        "none": "Isključeno"
+      },
+      "types": {
+        "sale": {
+          "label": "Prodaja",
+          "hint": "Neko je kupio tvoju skriptu."
+        },
+        "review_new": {
+          "label": "Nova ocena",
+          "hint": "Kupac je ocenio tvoju skriptu."
+        },
+        "review_reply": {
+          "label": "Odgovor na ocenu",
+          "hint": "Prodavac je odgovorio na tvoju ocenu."
+        },
+        "note_version": {
+          "label": "Nova verzija kupljene skripte",
+          "hint": "Skripta koju imaš je dopunjena."
+        },
+        "forum_reply": {
+          "label": "Odgovori u zajednicama",
+          "hint": "Neko je odgovorio na tvoju objavu ili komentar."
+        },
+        "mention": {
+          "label": "Pominjanja",
+          "hint": "Neko te je pomenuo sa @korisničko ime."
+        },
+        "payout_status": {
+          "label": "Isplate",
+          "hint": "Promene statusa tvojih isplata."
+        },
+        "moderation": {
+          "label": "Odluke moderatora",
+          "hint": "Uklonjen sadržaj ili zabrana u zajednici."
+        },
+        "note_decision": {
+          "label": "Pregled skripti",
+          "hint": "Skripta je odobrena ili vraćena na doradu."
+        },
+        "catalog_request": {
+          "label": "Predlozi za katalog",
+          "hint": "Odgovor na tvoj predlog za predmet, profesora ili fakultet."
+        }
+      },
+      "digestTitle": "Pregled zajednica emailom",
+      "digestIntro": "Umesto emaila za svaki odgovor, šaljemo pregled najaktivnijih objava iz tvojih zajednica.",
+      "digestLabel": "Koliko često",
+      "digest": {
+        "daily": "Svaki dan",
+        "weekly": "Jednom nedeljno (ponedeljkom)",
+        "none": "Ne šalji"
+      }
+    },
+    "password": {
+      "title": "Lozinka",
+      "intro": "Posle promene bićeš odjavljen sa ostalih uređaja.",
+      "current": "Trenutna lozinka",
+      "new": "Nova lozinka",
+      "newHint": "Najmanje 10 znakova. Proveravamo da se ne nalazi među procurelim lozinkama.",
+      "submit": "Promeni lozinku",
+      "changed": "Lozinka je promenjena. Ostali uređaji su odjavljeni."
+    },
+    "sessions": {
+      "title": "Aktivne sesije",
+      "device": "{browser} na sistemu {os}",
+      "unknownDevice": "Nepoznat uređaj",
+      "current": "Ovaj uređaj",
+      "lastActive": "aktivno {date}",
+      "since": "prijava {date}",
+      "revoke": "Odjavi",
+      "revokeOthers": "Odjavi sve ostale uređaje",
+      "othersRevoked": "Ostali uređaji su odjavljeni."
+    },
+    "linked": {
+      "title": "Načini prijave",
+      "password": "Lozinka",
+      "magicLink": "Link na email",
+      "on": "Uključeno",
+      "off": "Nije postavljena",
+      "link": "Poveži",
+      "unlink": "Ukloni",
+      "setPassword": "Lozinku možeš postaviti preko „Zaboravljena lozinka“ na stranici za prijavu."
+    },
+    "data": {
+      "title": "Podaci i brisanje naloga",
+      "banner": {
+        "text": "Nalog će biti obrisan {date}.",
+        "cancel": "Otkaži brisanje"
+      },
+      "export": {
+        "title": "Izvoz podataka",
+        "intro": "Dobićeš ZIP arhivu sa svim podacima koje čuvamo o tebi (JSON). Pravimo je u pozadini i šaljemo link na email. Link važi {days} dana.",
+        "request": "Zatraži izvoz",
+        "requested": "Pravimo arhivu. Poslaćemo ti email kad bude spremna.",
+        "pending": "Arhiva se pravi. Obično traje par minuta.",
+        "download": "Preuzmi izvoz od {date}"
+      },
+      "delete": {
+        "title": "Brisanje naloga",
+        "intro": "Posle zahteva imaš {days} dana da se predomisliš. Tada brišemo nalog:",
+        "points": {
+          "personal": "lični podaci (ime, email, slika, studije) se brišu,",
+          "notes": "tvoje skripte se povlače iz prodaje,",
+          "library": "kupci zadržavaju pristup skriptama koje su kupili od tebe,",
+          "money": "porudžbine i isplate čuvamo onoliko koliko zakon zahteva, bez tvog imena."
+        },
+        "start": "Obriši nalog",
+        "dialogTitle": "Brisanje naloga",
+        "dialogDescription": "Nalog se briše posle 14 dana. Do tada možeš da otkažeš brisanje.",
+        "contentLegend": "Tvoje objave i komentari",
+        "contentKeep": "Zadrži ih kao „[obrisan korisnik]“",
+        "contentKeepHint": "Diskusije ostaju čitljive, bez tvog imena.",
+        "contentDelete": "Obriši ih",
+        "contentDeleteHint": "Objave i komentari nestaju; odgovori drugih ostaju.",
+        "balance": "Imaš neisplaćenih {amount}. Najbolje je da prvo zatražiš isplatu.",
+        "waive": "Odričem se iznosa od {amount}",
+        "password": "Lozinka",
+        "noPassword": "Nalog nema lozinku, pa ćemo ti poslati link za potvrdu na email.",
+        "confirm": "Potvrdi brisanje",
+        "sendEmail": "Pošalji link za potvrdu",
+        "emailSent": "Poslali smo ti email sa linkom za potvrdu. Link važi 1 sat.",
+        "scheduled": "Nalog će biti obrisan {date}.",
+        "scheduledKeep": "Objave i komentari ostaju kao „[obrisan korisnik]“.",
+        "scheduledDelete": "Objave i komentari će biti obrisani.",
+        "cancel": "Otkaži brisanje",
+        "openPayout": "Imaš isplatu u toku. Nalog možeš obrisati kad isplata bude završena.",
+        "confirmTitle": "Potvrdi brisanje naloga",
+        "confirmIntro": "Kad potvrdiš, nalog će biti obrisan za 14 dana. Do tada možeš da otkažeš brisanje u podešavanjima."
+      }
     }
   },
   "admin": {
@@ -1536,5 +1857,56 @@
     "emptyTitle": "Još ništa nisi sačuvao",
     "emptyDescription": "Na stranici skripte klikni „Sačuvaj“ da je nađeš ovde kasnije.",
     "emptyAction": "Pogledaj preporuke"
+  },
+  "notifications": {
+    "title": "Obaveštenja",
+    "settings": "Podešavanja obaveštenja",
+    "markAll": "Označi sve kao pročitano",
+    "unread": "Nepročitano:",
+    "anonymous": "Anonimni korisnik",
+    "emptyTitle": "Nema obaveštenja",
+    "emptyDescription": "Ovde stižu prodaje, ocene, odgovori u zajednicama i odluke o tvojim skriptama.",
+    "older": "Starija obaveštenja",
+    "items": {
+      "sale": "Prodao si „{noteTitle}”. Tvoj deo: {amount}.",
+      "review_new": "Nova ocena {rating}/5 za „{noteTitle}”.",
+      "review_reply": "Prodavac je odgovorio na tvoju ocenu za „{noteTitle}”.",
+      "note_version": "Izašla je verzija {version} skripte „{noteTitle}”.",
+      "forum_reply": "{actor} je odgovorio na {kind, select, post {tvoju objavu} other {tvoj komentar}}: „{postTitle}”.",
+      "mention": "{actor} te je pomenuo u „{postTitle}”.",
+      "payout_status": "Isplata od {amount}: {status, select, requested {zahtev primljen} approved {odobrena} processing {u obradi} paid {uplaćena} other {odbijena}}.",
+      "moderation": "{action, select, banned {Zabranjeno ti je učešće u {community}} other {Moderator je uklonio {target, select, post {tvoju objavu} other {tvoj komentar}}}}. Razlog: {reason}.",
+      "note_decision": "{decision, select, approved {Skripta „{noteTitle}” je objavljena.} other {Skripta „{noteTitle}” nije odobrena: {reason}.}}",
+      "catalog_request": "Predlog „{name}” je {decision, select, approved {prihvaćen} other {odbijen}}."
+    }
+  },
+  "profile": {
+    "metaDescription": "Profil korisnika {name} na Skriptarnici.",
+    "verified": "Verifikovan student",
+    "seller": "Prodavac",
+    "sold": "{count, plural, one {# prodata skripta} few {# prodate skripte} other {# prodatih skripti}}",
+    "joined": "Član od {date}",
+    "followers": "{count, plural, one {{formatted} pratilac} few {{formatted} pratioca} other {{formatted} pratilaca}}",
+    "edit": "Uredi profil",
+    "follow": "Prati",
+    "following": "Pratiš",
+    "notes": "Skripte",
+    "noNotes": "Još nema skripti u prodaji.",
+    "posts": "Objave",
+    "noPosts": "Još nema objava.",
+    "comments": "Komentari",
+    "noComments": "Još nema komentara.",
+    "postStats": "{score} glasova, {comments} komentara",
+    "inPost": "u „{title}”",
+    "activityHidden": "Korisnik je sakrio objave i komentare."
+  },
+  "unsubscribe": {
+    "title": "Odjava sa emailova",
+    "digest": "Više ti nećemo slati pregled zajednica emailom.",
+    "type": "Više ti nećemo slati emailove za: {type}. Obaveštenja u aplikaciji ostaju.",
+    "confirm": "Potvrdi odjavu",
+    "done": "Odjavljen si. Ovo možeš promeniti u podešavanjima.",
+    "manage": "Podešavanja obaveštenja",
+    "invalid": "Link za odjavu nije ispravan ili je oštećen. Emailove možeš isključiti u podešavanjima."
   }
 }

@@ -6,4 +6,6 @@ export interface LayoutUser {
   isAdmin: boolean;
   isSeller: boolean;
   unreadNotifications: number;
+  /** Set while an account deletion is pending (ISO); shows the cancel banner. */
+  deletionScheduledFor: string | null;
 }

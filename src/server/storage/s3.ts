@@ -50,6 +50,7 @@ export async function presignDownload(
   key: string,
   filename: string,
   expiresInSeconds = 60,
+  contentType = 'application/pdf',
 ): Promise<string> {
   const encoded = encodeURIComponent(filename);
   return getSignedUrl(
@@ -58,7 +59,7 @@ export async function presignDownload(
       Bucket: buckets.private,
       Key: key,
       ResponseContentDisposition: `attachment; filename="${filename.replace(/[^\x20-\x7e]|"/g, '_')}"; filename*=UTF-8''${encoded}`,
-      ResponseContentType: 'application/pdf',
+      ResponseContentType: contentType,
     }),
     { expiresIn: expiresInSeconds },
   );

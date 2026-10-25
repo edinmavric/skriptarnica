@@ -35,6 +35,9 @@ export const users = pgTable(
     banReason: text(),
     /** Account deletion requested; executed by a job after the grace period (SPEC §7.3). */
     deletionRequestedAt: timestamp({ withTimezone: true }),
+    deletionScheduledFor: timestamp({ withTimezone: true }),
+    /** On deletion: keep posts/comments as "[obrisan korisnik]" or delete them (SPEC §7.3). */
+    deletionDeleteContent: boolean().notNull().default(false),
     deletedAt: timestamp({ withTimezone: true }),
     ...timestamps(),
   },

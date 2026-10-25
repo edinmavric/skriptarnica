@@ -37,6 +37,7 @@ export const events = {
     targetType: z.string(),
     action: z.string(),
     reason: z.string().nullable(),
+    communityId: z.uuid().nullable().optional(),
   }),
   'catalog/request.decided': z.object({ requestId: z.uuid() }),
   'user/export.requested': z.object({ userId: z.uuid(), exportId: z.uuid() }),

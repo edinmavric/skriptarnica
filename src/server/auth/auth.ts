@@ -64,6 +64,7 @@ export const auth = betterAuth({
     '/revoke-session',
     '/revoke-sessions',
     '/revoke-other-sessions',
+    '/verify-password',
   ],
   rateLimit: { enabled: false },
   advanced: {

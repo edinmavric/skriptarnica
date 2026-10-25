@@ -38,6 +38,8 @@ export const studentProfiles = pgTable(
     // Privacy: what the public profile shows (SPEC §4.8).
     showFaculty: boolean().notNull().default(true),
     showProgram: boolean().notNull().default(true),
+    /** Non-anonymous posts and comments on the public profile. */
+    showActivity: boolean().notNull().default(true),
     ...timestamps(),
   },
   (t) => [

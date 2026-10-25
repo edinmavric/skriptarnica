@@ -132,3 +132,26 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Professor communities** show the conduct rules before a member's first post there. The acknowledgement is stored on `community_members.rules_acknowledged_at`.
 - **Moderation:** at most 2 pinned posts. Removing a post or comment needs a reason, which is shown to the author. Bans can last 24 hours, 7 days, 30 days or be permanent (stored as the year 9999). Only admins can ban moderators. Every action goes into `moderation_actions`, which is the community's mod log, readable by its moderators.
 - **Search and sitemap** include public communities and posts. Faculty-only communities show up in search only for students of that faculty, and are noindexed and left out of the sitemap.
+
+## Phase 8 — Notifications, profile, settings
+
+- **One way into notifications:** domain services emit events (they already did since Phases 4–7). Inngest functions call plain handlers (`services/notification-events.ts`), which call `notify()`. `notify()` is idempotent per `(user, dedupeKey)`, so job retries never notify twice. The purchase confirmation email is claimed atomically through `orders.confirmation_sent_at`. Integration tests call the handlers directly.
+- **Channels per type:** `in_app_email`, `in_app` or `none`; a missing row means the default in `config/notifications.ts`. Replies and mentions default to in-app only, because community activity reaches email through the digest (SPEC §4.9). Deleted and banned users get nothing.
+- **Payloads are stored, not re-derived:** a notification keeps the title, amount and link from when it happened, so later renames don't rewrite history. The text comes from i18n at render time. An anonymous actor is stored as `null`, so the author is never in the row.
+- **Mentions:** `@username` at the start or after whitespace or punctuation, ignoring code spans, at most 10 per text. Only users who can read the community are notified, and never the author. A reply that also mentions the parent author produces one notification, not two.
+- **Digest:** a daily job at 07:00 Belgrade time. Weekly digests go out on Mondays, and weekly is the default for users without a settings row. Each digest has up to 8 posts from the user's communities since the last one, never the user's own; nothing is sent when there is nothing new.
+- **Unsubscribe:** stateless HMAC tokens (key derived with HKDF from `BETTER_AUTH_SECRET`, so no new secret) for `List-Unsubscribe` and `List-Unsubscribe-Post` (RFC 8058). The one-click POST applies immediately; the GET page only shows a confirm button, because link scanners open links. Unsubscribing from a type downgrades it to in-app only; it doesn't delete notifications.
+- **Data export:** a JSON document in a zip (fflate 0.8.3, no dependencies), built by a job and stored in the private bucket. It is downloadable for 7 days, only by the signed-in owner, through a 60-second presigned URL. Someone else's export ID gives a 404, like a missing one.
+  - Excluded: secrets (password hash, session tokens, 2FA secret, OAuth tokens) and the encrypted payout details (only the last 4 digits are included).
+  - Other people's rows are cut down to what concerns this user: a sale shows the note and amounts, never the buyer; seller replies are included without the review text.
+  - Limit: one export per 24 hours (a recent one is reused).
+- **Account deletion** (SPEC §7.3):
+  - Identity is confirmed by password, or by a signed email link (1 hour) for accounts without a password. Other sessions are signed out right away.
+  - The grace period is 14 days with a banner on every page. Deletion is blocked while a payout is in progress; an unpaid balance needs an explicit waiver, which is recorded in the audit log with the amount.
+  - The daily job anonymizes the user row (`deleted_at` set, email replaced, username and avatar cleared). It deletes sessions, accounts, 2FA, the profile, preferences, notifications, follows, bookmarks, course marks, memberships and exports.
+  - Notes go to `unlisted`, so buyers keep access. Posts and comments either stay (shown as "[obrisan korisnik]") or are deleted, as the user chose. Orders, ledger, payouts and consents stay, pseudonymized.
+  - ⚖️ The retention period for financial records is in LEGAL_TODO.
+- **Dev route `/api/dev/account-deletion`** ends a pending grace period and runs the real job. It is enabled in development and test only, not preview, because it deletes data.
+- **Profiles:** `/u/[username]` shows only non-anonymous activity, and faculty-only communities only to viewers of that faculty. Faculty, program and activity can be hidden in privacy settings. Only sellers' profiles are indexed. Deleted and banned users have no profile (404).
+- **Follows** (sellers) are stored and counted on the profile. Nothing uses them for ranking yet.
+- **Avatars:** sharp re-encodes them to 256×256 WebP, which also strips metadata, and stores them in the public bucket under a random key with immutable caching; the old file is deleted.

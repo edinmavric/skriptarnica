@@ -39,6 +39,8 @@ export const orders = pgTable(
     provider: text().notNull(),
     providerRef: text(),
     paidAt: timestamp({ withTimezone: true }),
+    /** Purchase confirmation email claimed (idempotent across job retries). */
+    confirmationSentAt: timestamp({ withTimezone: true }),
     failureReason: text(),
     /** ⚖️ Buyer requested immediate access and acknowledged the effect on withdrawal (SPEC §4.3). */
     withdrawalWaiverAcceptedAt: timestamp({ withTimezone: true }).notNull(),

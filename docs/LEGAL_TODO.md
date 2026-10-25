@@ -17,3 +17,9 @@ Every ⚖️ item from SPEC.md. Each one is implemented technically as specified
 | 11  | §7.4   | All legal page texts (Terms, Privacy, Cookies, Community Guidelines, Seller Terms, Copyright report, Refunds)                  | Full text drafting and review                                                                                        | open   |
 | 12  | §7.4   | Service provider information / imprint per the Law on Electronic Commerce (`src/config/company.ts`)                            | Required fields and company details                                                                                  | open   |
 | 13  | §11    | Data breach procedure in RUNBOOK.md                                                                                            | Notification obligations and deadlines (Commissioner, affected users)                                                | open   |
+
+## Added in Phase 8
+
+- ⚖️ **Retention of pseudonymized financial records after account deletion** (orders, ledger, payouts, consents): how long the law requires us to keep them (accounting law), to be stated in the Privacy Policy. Code keeps them indefinitely until this is decided.
+- ⚖️ **Balance waiver on account deletion:** whether a seller may waive an unpaid balance, and what happens to the waived amount for accounting. The UI asks for an explicit waiver and the audit log records the amount.
+- ⚖️ **Data export scope** (right of access): confirm that excluding the 2FA secret, password hash and full payout account number is acceptable. They're excluded for security; the payout account appears as its last 4 digits.

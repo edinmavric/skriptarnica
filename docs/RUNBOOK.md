@@ -23,7 +23,25 @@ _To be written with the first production deploy._
 
 _Neon point-in-time restore; procedure and a restore test before launch (Phase 11)._
 
+## Background jobs (Inngest)
+
+All functions are served at `/api/inngest` (`src/server/jobs/functions`). Every handler is idempotent, so replaying a failed run from the Inngest dashboard is safe.
+
+| Function               | Trigger                         | What it does                                                         |
+| ---------------------- | ------------------------------- | -------------------------------------------------------------------- |
+| `process-note-version` | `note/version.uploaded`         | PDF analysis, previews, duplicate check, publish or send to review   |
+| `reconcile-payments`   | every 15 min                    | Asks the provider about orders pending too long                      |
+| `release-funds`        | daily 03:00                     | Moves matured sales from pending to available                        |
+| `notify-*`             | domain events                   | In-app notifications plus email by preference; purchase confirmation |
+| `build-data-export`    | `user/export.requested`         | Zip in the private bucket, email with the link                       |
+| `send-digests`         | daily 07:00 (weekly on Mondays) | Community activity digest                                            |
+| `account-housekeeping` | daily 03:30                     | Runs deletions whose 14-day grace has ended; expires exports         |
+
+Times are Europe/Belgrade. If `account-housekeeping` fails for one user, the others still run; the failure is logged with the user ID and the job retries the next day.
+
 ## Secret rotation
+
+`BETTER_AUTH_SECRET` also derives the unsubscribe and deletion-confirmation link keys (HKDF). Rotating it invalidates sessions, unsubscribe links in emails already sent, and pending deletion links.
 
 _Including the payout-details encryption key (key versioning), Phase 4/5._
 
