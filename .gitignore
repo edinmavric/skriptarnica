@@ -12,3 +12,6 @@ npm-debug.log*
 .sentryclirc
 test-results/
 playwright-report/
+
+# Claude Code session state
+.claude/scheduled_tasks.lock

@@ -56,6 +56,8 @@ export const serverSchema = z
     // Redis (Upstash REST)
     UPSTASH_REDIS_REST_URL: z.url(),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    /** Multiplies every rate limit. Only for E2E runs (many sign-ins from one IP); 1 in production. */
+    RATE_LIMIT_MULTIPLIER: z.coerce.number().int().min(1).max(1000).default(1),
 
     // Object storage (Cloudflare R2, S3 API)
     S3_ENDPOINT: z.url(),
@@ -102,6 +104,16 @@ export const serverSchema = z
       require('RESEND_API_KEY', 'Required outside development: emails must actually be sent');
       require('INNGEST_EVENT_KEY', 'Required outside development');
       require('INNGEST_SIGNING_KEY', 'Required outside development');
+    }
+    if (
+      (value.APP_ENV === 'production' || value.APP_ENV === 'preview') &&
+      value.RATE_LIMIT_MULTIPLIER !== 1
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['RATE_LIMIT_MULTIPLIER'],
+        message: 'Rate limits cannot be relaxed outside development and test',
+      });
     }
     if (value.APP_ENV === 'production' && value.PAYMENT_PROVIDER === 'mock') {
       ctx.addIssue({

@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
   // radix-ui is a barrel of every primitive; import only what each module uses (SPEC §8.2).
   experimental: { optimizePackageImports: ['radix-ui'] },
   poweredByHeader: false,
+  // Dev logs print every Server Function call with its arguments: passwords, 2FA codes, IBANs.
+  logging: { serverFunctions: false },
   // Native/WASM packages used by background jobs; loaded from node_modules at runtime.
   serverExternalPackages: ['mupdf', 'sharp', 'pdf-lib'],
   // Fonts read at runtime by the Open Graph and icon image routes (next/og needs TTF data).

@@ -27,6 +27,8 @@ export default defineConfig({
         command: 'npm run start',
         url: `${baseURL}/api/health`,
         reuseExistingServer: true,
+        // The suite signs in and registers many times from one IP.
+        env: { RATE_LIMIT_MULTIPLIER: '50' },
         timeout: 120_000,
       },
 });

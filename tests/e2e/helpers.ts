@@ -3,23 +3,26 @@ import { expect, type Page } from '@playwright/test';
 
 /** Fails on critical or serious axe violations (SPEC §8.1, §12). */
 export async function expectNoSeriousA11yViolations(page: Page) {
-  // Next 16 streams metadata: <title> can arrive just after the body. Check the settled page.
-  await expect(page).toHaveTitle(/\S/);
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
-    .analyze();
-  const serious = results.violations.filter(
-    (v) => v.impact === 'critical' || v.impact === 'serious',
-  );
-  expect(
-    serious.map(
-      (v) =>
-        `${v.impact} ${v.id}: ${v.help} → ${v.nodes
-          .map((n) => n.target.join(' '))
-          .slice(0, 3)
-          .join(', ')}`,
-    ),
-  ).toEqual([]);
+  // Next 16 streams metadata: after a navigation the old <title> is replaced a moment after the
+  // body, and axe can catch the instant with none. Retrying for a few seconds absorbs that;
+  // a real violation is still there on every attempt and fails.
+  await expect(async () => {
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze();
+    const serious = results.violations.filter(
+      (v) => v.impact === 'critical' || v.impact === 'serious',
+    );
+    expect(
+      serious.map(
+        (v) =>
+          `${v.impact} ${v.id}: ${v.help} → ${v.nodes
+            .map((n) => n.target.join(' '))
+            .slice(0, 3)
+            .join(', ')}`,
+      ),
+    ).toEqual([]);
+  }).toPass({ timeout: 5_000 });
 }
 
 /** Collects console errors (including CSP violations) for the lifetime of the page. */
