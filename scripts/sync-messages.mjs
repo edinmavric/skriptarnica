@@ -9,6 +9,15 @@ const sr = JSON.parse(readFileSync(srPath, 'utf8'));
 const en = JSON.parse(readFileSync(enPath, 'utf8'));
 
 function merge(source, target) {
+  // Arrays (e.g. legal sections) stay arrays, merged element by element.
+  if (Array.isArray(source)) {
+    return source.map((value, index) => {
+      const existing = Array.isArray(target) ? target[index] : undefined;
+      if (value && typeof value === 'object')
+        return merge(value, existing && typeof existing === 'object' ? existing : {});
+      return typeof existing === 'string' ? existing : value;
+    });
+  }
   const out = {};
   for (const [key, value] of Object.entries(source)) {
     if (value && typeof value === 'object') {

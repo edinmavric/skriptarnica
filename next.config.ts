@@ -20,9 +20,13 @@ const storage = new URL(env.NEXT_PUBLIC_STORAGE_PUBLIC_URL);
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // radix-ui is a barrel of every primitive; import only what each module uses (SPEC §8.2).
+  experimental: { optimizePackageImports: ['radix-ui'] },
   poweredByHeader: false,
   // Native/WASM packages used by background jobs; loaded from node_modules at runtime.
   serverExternalPackages: ['mupdf', 'sharp', 'pdf-lib'],
+  // Fonts read at runtime by the Open Graph and icon image routes (next/og needs TTF data).
+  outputFileTracingIncludes: { '/**/*': ['./src/assets/fonts/*.ttf'] },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

@@ -2,7 +2,13 @@ import type { Metadata } from 'next';
 
 import { siteConfig } from '@/config/site';
 
-/** Page metadata with canonical URL, Open Graph and Twitter (SPEC §8.3). */
+const DEFAULT_OG_IMAGE = '/opengraph-image';
+
+/**
+ * Page metadata with canonical URL, Open Graph and Twitter (SPEC §8.3). Without an `image` the
+ * site card (/opengraph-image) is used; pages with their own generated card in the same segment
+ * (notes, courses, communities, posts) pass `image: null` so that card applies.
+ */
 export function pageMetadata({
   title,
   description,
@@ -14,11 +20,12 @@ export function pageMetadata({
   title: string;
   description: string;
   path: string;
-  image?: string;
+  image?: string | null;
   noIndex?: boolean;
   type?: 'website' | 'article';
 }): Metadata {
-  const images = image ? [{ url: image, width: 1200, height: 630, alt: title }] : undefined;
+  const resolved = image === undefined ? DEFAULT_OG_IMAGE : image;
+  const images = resolved ? [{ url: resolved, width: 1200, height: 630, alt: title }] : undefined;
   return {
     title,
     description,
@@ -36,7 +43,7 @@ export function pageMetadata({
       card: 'summary_large_image',
       title,
       description,
-      ...(image ? { images: [image] } : {}),
+      ...(resolved ? { images: [resolved] } : {}),
     },
     ...(noIndex ? { robots: { index: false, follow: true } } : {}),
   };

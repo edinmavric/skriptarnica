@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getPost(id, await getCurrentUser());
   if (!data || data.post.deleted) return { robots: { index: false } };
   return pageMetadata({
+    image: null,
     title: data.post.title || `z/${slug}`,
     description: data.post.body ? markdownExcerpt(data.post.body, 160) : data.post.title,
     path: routes.post(slug, data.post.id, data.post.slug),

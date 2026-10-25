@@ -174,3 +174,27 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Ledger adjustments:** `seller_available ± X` against `platform_revenue ∓ X`, so the books stay balanced without a new account type. They need a reason of at least 10 characters, the amount typed twice (checked in the UI and on the server) and re-authentication.
 - **Reports:** resolving can remove the content (note, review, post or comment, through the same services moderators use) or ban the author in one step. Response templates are i18n texts the admin can edit before sending.
 - **Copyright claims** get their own table and queue. Accepting removes the note from sale (buyers keep access) and notifies the seller. The public claim form and counter-notice flow come in Phase 10.
+
+## Phase 10 — Compliance and polish
+
+- **Cookie consent:** first-party cookie `skr_consent` = `v1.<Cookie Policy version>.a0|a1`; a new policy version asks again. "Prihvati sve" and "Odbij" share one style and size (an e2e test compares them), nothing is pre-ticked, and settings are reachable from the banner and the footer.
+  - Every choice is also stored as consent history: per user, or under a random `skr_anon` ID for guests.
+  - The PostHog library isn't downloaded before an explicit yes. It sends pageviews only: no autocapture, no session recording, no external scripts. Withdrawing consent opts out and resets it.
+- **Analytics in dev and CI:** `NEXT_PUBLIC_POSTHOG_HOST` points at `/api/dev/analytics` (a dev-only sink that 404s in production) with a placeholder key. Flow 8 can then prove "nothing before consent / something after" without a real project or external traffic. This is a public placeholder, not a secret.
+- **Legal pages** render drafts from messages with live values (commission, hold days, deadlines, company data from `config/company.ts`), so texts can't contradict settings. Each page shows a draft notice; `[PRAVNIK: …]` marks review points (LEGAL_TODO). The imprint warns while `company.ts` holds placeholders.
+- **Copyright:** a public claim form (Turnstile, rate limited, receipt email). A claim is linked to the note automatically when its URL is our `/skripta/<slug>`. Sellers answer an accepted claim with a counter-notice (audited), which sends it back to the admin queue as "countered".
+- **Server-only messages:** long legal and info texts, emails and OG copy are never sent to the browser. Client messages are scoped by area: public pages get the common set; the signed-in area adds `seller`/`settings`; admin adds `admin`; `/dev` adds the dev catalogs.
+- **Open Graph images** come from `next/og` with the app's own fonts (TTF, subset, GSUB removed because satori can't read Piazzolla's contextual lookups). Notes, courses, communities and posts have their own cards; everything else uses the site card. Posts never show an author; faculty-only communities and non-public content get the generic card. `pageMetadata` defaults to the site card, and pages with their own card pass `image: null` (an explicit image would override the generated one).
+- **PWA:** web manifest plus icons generated with the same renderer (`/icon/{32,192,512}`, apple icon); the 512 icon keeps the letter in the maskable safe zone. No service worker, so nothing (and certainly no paid file) is cached offline.
+- **Emails:** the welcome email goes out after verification (it never blocks verification). Every type in SPEC §10 is now sent.
+- **Retention** (as stated in the Privacy Policy) runs daily: expired sessions and verification tokens, notifications after 12 months, and the IP hash on download events after 12 months. The audit log and ledger are append-only and kept.
+- **Report SLA:** open reports older than 72 hours are flagged in the admin queue.
+- **Performance** (SPEC §8.2). Lighthouse mobile, median of 3 runs, on 7 key public pages: performance 0.91–0.97; accessibility, best practices and SEO 0.98–1. What made the difference:
+  - Self-hosted variable fonts subset to Serbian Latin (`src/assets/fonts/web`): ~58 KB instead of ~157 KB preloaded. Piazzolla's optical-size axis is pinned at its display value, which is a small typographic trade for that saving.
+  - Zod was out of the browser everywhere: `instrumentation-client.ts` and the analytics loader imported `@/env`.
+  - The browser Sentry SDK loads after idle (errors in the first moment before it loads aren't reported; server-side reporting is unchanged). Locally there's no DSN, so it isn't downloaded at all here; in production it's fetched after idle.
+  - Lazy chunks for the search dialog, cookie settings, report dialog and the signed-in user menu; focus returns to their triggers by hand because these dialogs have no Radix Trigger.
+  - The global `TooltipProvider` is gone (only the dev catalog uses tooltips).
+  - Next 16 deprecated `priority` on images, so the code uses `preload`/`loading`/`fetchPriority` instead.
+- **JS budget, not met:** SPEC §8.2 asks for under 170 KB gzip per public route. We measure 221–239 KB (gzip, all scripts the HTML loads), of which the framework runtime (React DOM and the Next.js client) is about 150 KB on its own. The Lighthouse targets are met. Getting under 170 KB would mean leaving Radix Toast and the shared forms code, or changing framework, which is a product decision, so I'm reporting it rather than redefining the budget.
+- **Phase 11 check:** a unit test proves that `/dev/*` pages and the dev APIs (outbox, analytics sink, account-deletion fast-forward) are unavailable when `APP_ENV=production`.

@@ -461,3 +461,47 @@ describe('account deletion', () => {
     ).toHaveLength(0);
   });
 });
+
+describe('retention', () => {
+  it('drops expired sessions and year-old notifications, keeps fresh ones', async () => {
+    const { runRetention } = await import('@/server/services/retention');
+    const user = await createUser();
+    await db.insert(sessions).values([
+      {
+        id: randomUUID(),
+        token: randomUUID(),
+        userId: user.id,
+        expiresAt: new Date(Date.now() - 1000),
+      },
+      {
+        id: randomUUID(),
+        token: randomUUID(),
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 86_400_000),
+      },
+    ]);
+    await notify({
+      userId: user.id,
+      type: 'mention',
+      dedupeKey: 'old',
+      payload: { href: '/', actor: null, postTitle: 'x' },
+    });
+    await notify({
+      userId: user.id,
+      type: 'mention',
+      dedupeKey: 'new',
+      payload: { href: '/', actor: null, postTitle: 'y' },
+    });
+    await db
+      .update(notifications)
+      .set({ createdAt: new Date(Date.now() - 400 * 86_400_000) })
+      .where(and(eq(notifications.userId, user.id), eq(notifications.dedupeKey, 'old')));
+    await runRetention();
+    expect(await db.select().from(sessions).where(eq(sessions.userId, user.id))).toHaveLength(1);
+    expect(
+      (await db.select().from(notifications).where(eq(notifications.userId, user.id))).map(
+        (n) => n.dedupeKey,
+      ),
+    ).toEqual(['new']);
+  });
+});

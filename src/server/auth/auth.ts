@@ -115,6 +115,21 @@ export const auth = betterAuth({
       callback.searchParams.set('callbackURL', routes.onboarding);
       await sendActionEmail('verifyEmail', user.email, callback.toString());
     },
+    afterEmailVerification: async (user) => {
+      // Welcome email (SPEC §10); never blocks the verification itself.
+      try {
+        await sendActionEmail(
+          'welcome',
+          user.email,
+          `${env.NEXT_PUBLIC_APP_URL}${routes.onboarding}`,
+        );
+      } catch (error) {
+        logger.error(
+          { err: error instanceof Error ? error.message : String(error) },
+          'welcome email failed',
+        );
+      }
+    },
   },
   ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
     ? {

@@ -12,6 +12,8 @@ import { removeReview } from '../reviews';
 import { audit } from './audit';
 import { banUser } from './users';
 
+export const REPORT_SLA_HOURS = 72;
+
 export type ReportFilter = 'open' | 'resolved' | 'dismissed';
 
 /** Admin queue: every report (community moderators only see their community's). */
@@ -23,9 +25,12 @@ export async function listReports(status: ReportFilter = 'open', limit = 100) {
     .where(eq(reports.status, status))
     .orderBy(status === 'open' ? asc(reports.createdAt) : desc(reports.resolvedAt))
     .limit(limit);
+  // SLA (SPEC §7.5): reports are handled within 72 hours; older open ones are flagged.
+  const cutoff = Date.now() - REPORT_SLA_HOURS * 60 * 60 * 1000;
   return Promise.all(
     rows.map(async (row) => ({
       ...row,
+      overdue: row.report.status === 'open' && row.report.createdAt.getTime() < cutoff,
       target: await describeTarget(row.report.targetType, row.report.targetId),
     })),
   );

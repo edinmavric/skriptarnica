@@ -1,4 +1,6 @@
-import { expect, test, type Browser, type Page } from '@playwright/test';
+import { type Browser, type Page } from '@playwright/test';
+
+import { expect, test } from './fixtures';
 
 import { expectNoSeriousA11yViolations } from './helpers';
 import {

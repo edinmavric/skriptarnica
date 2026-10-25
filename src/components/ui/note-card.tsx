@@ -48,7 +48,9 @@ export function NoteCard({
             fill
             sizes="(min-width: 1024px) 240px, (min-width: 640px) 33vw, 50vw"
             className="object-cover object-top"
-            priority={priority}
+            // Next 16: `priority` is deprecated; eager + high fetch priority for above-the-fold cards.
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
           />
         ) : (
           <div className="notebook flex h-full flex-col justify-end p-3 pl-9">

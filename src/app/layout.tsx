@@ -4,11 +4,13 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
+import { CookieConsent } from '@/components/features/consent/cookie-consent';
 import { ToastProvider } from '@/components/ui/toast';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { siteConfig } from '@/config/site';
+import { clientMessages } from '@/i18n/client-messages';
 import { env } from '@/env';
 import { cn } from '@/lib/cn';
+import { CONSENT_COOKIE, parseConsent } from '@/lib/consent';
 import { parseTheme, THEME_COOKIE } from '@/lib/theme';
 
 import { golos, jetbrains, piazzolla } from './fonts';
@@ -56,10 +58,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         >
           {t('skipToContent')}
         </a>
-        <NextIntlClientProvider>
-          <TooltipProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </TooltipProvider>
+        <NextIntlClientProvider messages={await clientMessages('public')}>
+          <ToastProvider>
+            {children}
+            <CookieConsent initial={parseConsent(cookieStore.get(CONSENT_COOKIE)?.value)} />
+          </ToastProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -88,6 +88,17 @@ export default async function SellerDashboardPage() {
                       {note.courseName ?? '—'},{' '}
                       {t('updated', { when: formatRelative(note.updatedAt) })}
                     </p>
+                    {note.status === 'removed' ? (
+                      <p className="mt-1 text-sm text-danger">
+                        {t('removedBecause', { reason: note.rejectionReason ?? '—' })}{' '}
+                        <Link
+                          href={`/prodaja/skripta/${note.id}/prigovor`}
+                          className="underline underline-offset-2"
+                        >
+                          {t('counterNotice')}
+                        </Link>
+                      </p>
+                    ) : null}
                     {note.status === 'rejected' && note.rejectionReason ? (
                       <p className="mt-1 text-sm text-danger">
                         {t('rejectedBecause', { reason: note.rejectionReason })}

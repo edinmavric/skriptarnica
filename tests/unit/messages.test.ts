@@ -4,20 +4,22 @@ import { describe, expect, it } from 'vitest';
 import en from '@/i18n/messages/en.json';
 import sr from '@/i18n/messages/sr-Latn.json';
 
-type Messages = { [key: string]: string | Messages };
+type Messages = { [key: string]: string | Messages | Messages[] };
 
 function flatten(messages: Messages, prefix = ''): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [key, value] of Object.entries(messages)) {
     const path = prefix ? `${prefix}.${key}` : key;
     if (typeof value === 'string') out[path] = value;
+    else if (Array.isArray(value))
+      value.forEach((item, index) => Object.assign(out, flatten(item, `${path}.${index}`)));
     else Object.assign(out, flatten(value, path));
   }
   return out;
 }
 
-const srFlat = flatten(sr as Messages);
-const enFlat = flatten(en as Messages);
+const srFlat = flatten(sr as unknown as Messages);
+const enFlat = flatten(en as unknown as Messages);
 
 describe('i18n messages', () => {
   it('en skeleton has exactly the same keys as sr-Latn', () => {

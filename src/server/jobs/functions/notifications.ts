@@ -1,6 +1,7 @@
 import { executeDueDeletions } from '../../services/account-deletion';
 import { expireExports, generateExport } from '../../services/data-export';
 import { runDigests } from '../../services/digest';
+import { runRetention } from '../../services/retention';
 import {
   onCatalogRequestDecided,
   onForumReply,
@@ -67,10 +68,14 @@ export const sendDigests = inngest.createFunction(
   async () => ({ sent: await runDigests() }),
 );
 
-/** Daily housekeeping: due account deletions (after the 14-day grace) and expired exports. */
+/** Daily housekeeping: due account deletions (after the 14-day grace), expired exports, retention. */
 export const accountHousekeeping = inngest.createFunction(
   { id: 'account-housekeeping', triggers: [{ cron: 'TZ=Europe/Belgrade 30 3 * * *' }] },
-  async () => ({ deleted: await executeDueDeletions(), exportsExpired: await expireExports() }),
+  async () => ({
+    deleted: await executeDueDeletions(),
+    exportsExpired: await expireExports(),
+    retention: await runRetention(),
+  }),
 );
 
 export const notificationFunctions = [

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
+import { CookieSettingsButton } from '@/components/features/consent/cookie-consent';
 import { routes } from '@/config/routes';
 import { siteConfig } from '@/config/site';
 
@@ -60,7 +61,9 @@ export async function SiteFooter({
                   </Link>
                 </li>
               ))}
-              {group.title === t('privacy') && cookieSettings ? <li>{cookieSettings}</li> : null}
+              {group.title === t('privacy') ? (
+                <li>{cookieSettings ?? <CookieSettingsButton />}</li>
+              ) : null}
             </ul>
           </div>
         ))}

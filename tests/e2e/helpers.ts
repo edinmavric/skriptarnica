@@ -3,6 +3,8 @@ import { expect, type Page } from '@playwright/test';
 
 /** Fails on critical or serious axe violations (SPEC §8.1, §12). */
 export async function expectNoSeriousA11yViolations(page: Page) {
+  // Next 16 streams metadata: <title> can arrive just after the body. Check the settled page.
+  await expect(page).toHaveTitle(/\S/);
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();

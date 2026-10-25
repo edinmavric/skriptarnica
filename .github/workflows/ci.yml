@@ -33,6 +33,9 @@ env:
   EMAIL_FROM: CI <noreply@localhost>
   PAYMENT_PROVIDER: mock
   PAYOUT_ENCRYPTION_ACTIVE_VERSION: v1
+  # Consent-gated analytics against the local dev sink (no real PostHog project in CI).
+  NEXT_PUBLIC_POSTHOG_KEY: phc_local_dev_sink
+  NEXT_PUBLIC_POSTHOG_HOST: http://localhost:3000/api/dev/analytics
 
 jobs:
   verify:

@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return {};
   const t = await getTranslations('catalog.course');
   return pageMetadata({
+    image: null,
     title: `${data.course.name} (${data.faculty.shortName})`,
     description: t('metaDescription', { course: data.course.name, faculty: data.faculty.name }),
     path: routes.course(data.faculty.slug, data.course.slug),

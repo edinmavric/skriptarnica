@@ -65,7 +65,8 @@ export function Turnstile({
         widgetId = window.turnstile.render(container.current, {
           sitekey: siteKey,
           action,
-          language: 'sr-latn',
+          // Turnstile accepts only ISO 639-1 (+ region) codes; "auto" follows the browser.
+          language: 'auto',
           theme: 'auto',
           callback: (token: string) => callback.current(token),
           'expired-callback': () => callback.current(''),

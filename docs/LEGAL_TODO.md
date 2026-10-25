@@ -23,3 +23,13 @@ Every ⚖️ item from SPEC.md. Each one is implemented technically as specified
 - ⚖️ **Retention of pseudonymized financial records after account deletion** (orders, ledger, payouts, consents): how long the law requires us to keep them (accounting law), to be stated in the Privacy Policy. Code keeps them indefinitely until this is decided.
 - ⚖️ **Balance waiver on account deletion:** whether a seller may waive an unpaid balance, and what happens to the waived amount for accounting. The UI asks for an explicit waiver and the audit log records the amount.
 - ⚖️ **Data export scope** (right of access): confirm that excluding the 2FA secret, password hash and full payout account number is acceptable. They're excluded for security; the payout account appears as its last 4 digits.
+
+## Added in Phases 9–10
+
+- ⚖️ **Legal page drafts** (`src/i18n/messages/sr-Latn.json` → `legal.*`): every `[PRAVNIK: …]` marker is an open question. Live values (commission, hold period, deadlines, company data) are filled in from settings and `src/config/company.ts`, so they can't drift from the code. Each page shows a "draft" notice until the texts are approved; remove the notice (`legal.draftNotice`) when they are, and bump the versions in `src/config/legal.ts` so users re-accept.
+- ⚖️ **Imprint** (`src/config/company.ts`): every `PLACEHOLDER:` value must be replaced. The page warns while any placeholder is left.
+- ⚖️ **Copyright notice-and-takedown** (Law on Electronic Commerce, intermediary liability): response deadline (now 7 days, `company.copyrightResponseDays`), what happens to buyers who already bought a removed note (they keep access now), counter-notice handling, and how long claims are kept.
+- ⚖️ **Cookie consent:** the banner design (equal-weight "Prihvati sve" and "Odbij", nothing pre-ticked), the cookie list in the Cookie Policy, and recording anonymous visitors' choices under a random ID in a necessary cookie (`skr_anon`).
+- ⚖️ **Analytics (PostHog EU):** data processing agreement; pageviews only, no session recording; loaded only after consent.
+- ⚖️ **Admin impersonation:** read-only "view as user" sessions are audited; confirm this is acceptable under the Privacy Policy and mention it there.
+- ⚖️ **Report SLA:** reports are flagged after 72 hours (SPEC §7.5); confirm whether a legal deadline applies to illegal-content notices.

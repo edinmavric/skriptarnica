@@ -581,7 +581,7 @@
       "note": "Link važi 24 sata."
     },
     "welcome": {
-      "subject": "Dobro došao",
+      "subject": "Tvoj nalog je potvrđen",
       "preview": "Nalog je potvrđen.",
       "heading": "Nalog je spreman",
       "body": "Označi predmete koje slušaš i položene predmete, pa ćemo ti preporučiti skripte za njih.",
@@ -712,6 +712,14 @@
       "body": "Zatražio si brisanje naloga. Klikni na dugme da potvrdiš. Nalog će biti obrisan posle 14 dana, a do tada možeš da odustaneš.",
       "cta": "Potvrdi brisanje",
       "note": "Link važi 1 sat. Ako nisi ti zatražio brisanje, ignoriši ovaj email."
+    },
+    "copyrightReceived": {
+      "subject": "Primili smo prijavu povrede autorskih prava",
+      "preview": "Broj prijave: {reference}",
+      "heading": "Prijava je primljena",
+      "body": "Hvala. Prijavu broj {reference} pregledamo i odgovaramo emailom. Ako je osnovana, sporni sadržaj uklanjamo.",
+      "cta": "",
+      "note": "Ako ti zatreba, navedi broj prijave u prepisci."
     }
   },
   "auth": {
@@ -864,7 +872,10 @@
     "amountNonZero": "Iznos ne može biti nula.",
     "amountTooLarge": "Iznos je prevelik.",
     "amountMismatch": "Iznosi se ne poklapaju.",
-    "required": "Obavezno polje."
+    "required": "Obavezno polje.",
+    "proofTooShort": "Opiši dokaz o pravima u bar 30 znakova.",
+    "statementRequired": "Potvrdi izjavu.",
+    "counterTooShort": "Obrazloži prigovor u bar 50 znakova."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -990,7 +1001,10 @@
     "unsubscribe": {
       "invalid": "Link za odjavu nije ispravan."
     },
-    "exportExpired": "Link za preuzimanje je istekao. Zatraži novi izvoz."
+    "exportExpired": "Link za preuzimanje je istekao. Zatraži novi izvoz.",
+    "copyright": {
+      "nothingToCounter": "Za ovu skriptu nema odluke na koju možeš da uložiš prigovor."
+    }
   },
   "onboarding": {
     "title": "Podesi profil",
@@ -1408,7 +1422,9 @@
         "rejected": "Odbijeno",
         "unlisted": "Van prodaje",
         "removed": "Uklonjeno"
-      }
+      },
+      "removedBecause": "Uklonjena iz prodaje: {reason}. Kupci zadržavaju pristup.",
+      "counterNotice": "Uloži prigovor"
     },
     "money": {
       "title": "Zarada",
@@ -2013,7 +2029,8 @@
         "examMaterial": "Sadržaj sadrži ispitna pitanja koja se ne smeju deliti.",
         "personalData": "Sadržaj otkriva tuđe lične podatke.",
         "noViolation": "Pregledali smo prijavljeni sadržaj i nismo našli kršenje pravila."
-      }
+      },
+      "overdue": "Preko 72 h"
     },
     "copyright": {
       "title": "Povrede autorskih prava",
@@ -2309,5 +2326,409 @@
     "done": "Odjavljen si. Ovo možeš promeniti u podešavanjima.",
     "manage": "Podešavanja obaveštenja",
     "invalid": "Link za odjavu nije ispravan ili je oštećen. Emailove možeš isključiti u podešavanjima."
+  },
+  "legal": {
+    "version": "Važi od {date}",
+    "contents": "Sadržaj",
+    "draftNotice": "Nacrt. Tekst još nije pregledao pravnik i nije konačan. Delovi označeni sa [PRAVNIK: …] čekaju pravnu proveru.",
+    "terms": {
+      "title": "Uslovi korišćenja",
+      "intro": "Ovi uslovi važe za svakoga ko koristi {site}: za čitanje, kupovinu, prodaju skripti i učešće u zajednicama.",
+      "sections": [
+        {
+          "id": "pruzalac",
+          "title": "Ko pruža uslugu",
+          "body": "{site} je usluga privrednog društva {company}, {address}. Sve podatke o pružaocu usluge nađeš na stranici [Podaci o pružaocu usluge](/podaci-o-pruzaocu)."
+        },
+        {
+          "id": "nalog",
+          "title": "Nalog",
+          "body": "- Nalog može da otvori osoba koja ima najmanje 15 godina.\n- Prodavac mora imati najmanje 18 godina.\n- Odgovoran si za sve što se radi preko tvog naloga. Lozinku ne deli ni sa kim; preporučujemo dvofaktorsku prijavu.\n- Jedan nalog po osobi. Lažno predstavljanje (npr. kao drugi student ili profesor) nije dozvoljeno."
+        },
+        {
+          "id": "usluga",
+          "title": "Šta {site} radi",
+          "body": "{site} je mesto gde studenti prodaju i kupuju sopstvene skripte i razgovaraju u zajednicama fakulteta i predmeta. Mi nismo autor skripti: za sadržaj skripte odgovara prodavac. Skripte pregledamo pre objave (prve objave svakog prodavca) i na osnovu prijava, ali ne garantujemo tačnost sadržaja."
+        },
+        {
+          "id": "kupovina",
+          "title": "Kupovina digitalnog sadržaja",
+          "body": "- Cena je jasno prikazana pre plaćanja, u dinarima. [PRAVNIK: PDV i način prikaza cene.]\n- Kupljena skripta je dostupna odmah u biblioteci i možeš je preuzimati bez ograničenja, uključujući kasnije verzije.\n- Pre plaćanja izričito tražiš da isporuka počne odmah i potvrđuješ da time gubiš pravo na odustanak od ugovora, kako zakon predviđa za digitalni sadržaj. [PRAVNIK: Zakon o zaštiti potrošača, čl. 37.]\n- Ako skripta nije ono što je opisano (nečitljiva, prazna, druga tema), prijavi problem u roku od {problemDays} dana: vidi [Povraćaj i reklamacije](/povracaj-i-reklamacije).\n- Svaki preuzeti PDF nosi tvoje korisničko ime i datum (vodeni žig)."
+        },
+        {
+          "id": "licenca",
+          "title": "Šta smeš sa kupljenom skriptom",
+          "body": "Kupovinom dobijaš ličnu, neprenosivu licencu za učenje. Ne smeš je deliti, preprodavati ni objavljivati. Vodeni žig omogućava da se pronađe izvor kopije; deljenje kupljenih skripti dovodi do gašenja naloga."
+        },
+        {
+          "id": "sadrzaj",
+          "title": "Sadržaj koji objavljuješ",
+          "body": "Za objave, komentare, ocene i skripte koje objaviš odgovaraš ti. Daješ nam neisključivu dozvolu da ih prikazujemo na usluzi dok su objavljeni. Pravila ponašanja su u [Pravilima zajednice](/pravila-zajednice), a pravila za prodaju u [Pravilima za prodavce](/pravila-za-prodavce)."
+        },
+        {
+          "id": "zabrane",
+          "title": "Šta nije dozvoljeno",
+          "body": "- Prodaja tuđih skripti, skeniranih udžbenika i zbirki.\n- Ispitna pitanja i rešenja koja fakultet zabranjuje da se dele, kao i rešenja domaćih zadataka i projekata koji se ocenjuju.\n- Tuđi lični podaci, uvrede, pretnje, spam.\n- Zaobilaženje plaćanja ili zaštite (npr. uklanjanje vodenog žiga)."
+        },
+        {
+          "id": "mere",
+          "title": "Mere i gašenje naloga",
+          "body": "Sadržaj koji krši pravila uklanjamo, a nalog možemo privremeno ili trajno blokirati. O odluci te obaveštavamo sa razlogom. Nalog možeš sam obrisati u podešavanjima; brisanje se izvršava posle {graceDays} dana."
+        },
+        {
+          "id": "odgovornost",
+          "title": "Odgovornost",
+          "body": "Uslugu pružamo takvu kakva jeste i trudimo se da radi bez prekida, ali ne garantujemo da će uvek biti dostupna. [PRAVNIK: ograničenje odgovornosti u granicama zakona.]"
+        },
+        {
+          "id": "izmene",
+          "title": "Izmene uslova",
+          "body": "O izmenama te obaveštavamo unapred emailom i na sajtu. Nova verzija važi kad je prihvatiš pri sledećoj prijavi."
+        },
+        {
+          "id": "pravo",
+          "title": "Merodavno pravo i sporovi",
+          "body": "Primenjuje se pravo Republike Srbije. [PRAVNIK: nadležni sud; vansudsko rešavanje potrošačkih sporova.] Pišite nam na {email}."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Politika privatnosti",
+      "intro": "Ovde piše koje podatke o tebi prikupljamo, zašto, koliko ih čuvamo i koja su tvoja prava. [PRAVNIK: usklađenost sa Zakonom o zaštiti podataka o ličnosti.]",
+      "sections": [
+        {
+          "id": "rukovalac",
+          "title": "Rukovalac",
+          "body": "Rukovalac podacima je {company}, {address}. Za pitanja o privatnosti: {privacyEmail}. [PRAVNIK: lice za zaštitu podataka, ako je obavezno.]"
+        },
+        {
+          "id": "podaci",
+          "title": "Koje podatke obrađujemo",
+          "body": "- **Nalog:** ime, korisničko ime, email, lozinka (čuvamo samo heš), slika ako je postaviš.\n- **Studije:** univerzitet, fakultet, smer, godina, predmeti koje slušaš ili si položio, studentski email ako ga potvrdiš.\n- **Prodaja:** potvrda punoletstva, ime vlasnika i broj računa za isplate (šifrovano, vidi ga samo administrator pri isplati), istorija prodaja i isplata.\n- **Kupovina:** porudžbine, iznosi, preuzimanja. Podatke o kartici ne vidimo: obrađuje ih procesor plaćanja.\n- **Zajednice:** objave, komentari, glasovi, prijave.\n- **Tehnički:** sesije (pregledač i uređaj), IP adresa samo kao jednosmerni heš sa tajnim dodatkom, za zaštitu od zloupotreba."
+        },
+        {
+          "id": "svrhe",
+          "title": "Zašto i na kom osnovu",
+          "body": "- Pružanje usluge (ugovor): nalog, kupovina, prodaja, isplate, zajednice.\n- Zakonske obaveze: knjigovodstvo i čuvanje finansijskih zapisa.\n- Legitimni interes: bezbednost, sprečavanje prevara i deljenja kupljenih skripti, moderacija.\n- Pristanak: analitički kolačići i marketinški emailovi (možeš ga povući u svakom trenutku).\n- Preporuke skripti se računaju iz predmeta koje si označio; ne prodajemo podatke i ne koristimo ih za oglase."
+        },
+        {
+          "id": "obradjivaci",
+          "title": "Ko još obrađuje podatke",
+          "body": "Koristimo ove obrađivače, sa ugovorima o obradi: [PRAVNIK: prenos podataka iz Srbije i odgovarajuće mere zaštite.]\n\n| Obrađivač | Svrha | Lokacija |\n|---|---|---|\n| Vercel | hosting aplikacije | EU / SAD |\n| Neon | baza podataka | EU |\n| Cloudflare R2 | čuvanje fajlova | EU |\n| Resend | slanje emailova | EU / SAD |\n| Upstash | keš i ograničenje zahteva | EU |\n| Sentry | praćenje grešaka (bez ličnih podataka) | EU |\n| PostHog | analitika, samo uz pristanak | EU |\n| Procesor plaćanja | plaćanje karticom | [PRAVNIK: po izboru procesora] |"
+        },
+        {
+          "id": "rokovi",
+          "title": "Koliko čuvamo",
+          "body": "- Nalog: dok ga ne obrišeš. Posle brisanja lične podatke brišemo ili anonimizujemo.\n- Finansijski zapisi (porudžbine, knjiženja, isplate): koliko zakon zahteva, bez imena (pseudonimizovano). [PRAVNIK: rok iz zakona o računovodstvu.]\n- Sesije: do isteka (najviše 30 dana), istekle brišemo svakodnevno.\n- Obaveštenja: 12 meseci. Heš IP adrese uz preuzimanja: 12 meseci.\n- Zapisi o pristancima: trajno, kao dokaz.\n- Izvoz podataka: {exportDays} dana."
+        },
+        {
+          "id": "prava",
+          "title": "Tvoja prava",
+          "body": "Imaš pravo na pristup, ispravku, brisanje, ograničenje obrade, prenosivost i prigovor, kao i da povučeš pristanak.\n\n- Izvoz svih podataka: Podešavanja → Podaci i brisanje (dobijaš ZIP sa JSON-om).\n- Ispravka: Podešavanja → Nalog.\n- Brisanje: Podešavanja → Podaci i brisanje; izvršava se posle {graceDays} dana.\n- Pritužba: Povereniku za informacije od javnog značaja i zaštitu podataka o ličnosti."
+        },
+        {
+          "id": "bezbednost",
+          "title": "Bezbednost",
+          "body": "Lozinke čuvamo kao heš, podatke za isplate šifrujemo, sav saobraćaj ide preko HTTPS-a, a administratori moraju imati dvofaktorsku prijavu. Svaka administratorska radnja se beleži. Ako dođe do povrede podataka, obavestićemo Poverenika i tebe kako zakon nalaže."
+        }
+      ]
+    },
+    "cookies": {
+      "title": "Politika kolačića",
+      "intro": "Koristimo samo neophodne kolačiće i, ako pristaneš, analitičke. Marketinške kolačiće ne koristimo.",
+      "sections": [
+        {
+          "id": "neophodni",
+          "title": "Neophodni kolačići",
+          "body": "Bez njih sajt ne radi; za njih ne treba pristanak.\n\n| Kolačić | Svrha | Trajanje |\n|---|---|---|\n| skr.session_token | prijava | 30 dana |\n| skr_consent | tvoj izbor o kolačićima | 12 meseci |\n| skr_anon | dokaz o izboru za neprijavljene | 12 meseci |\n| theme | svetla ili tamna tema | 12 meseci |\n| Cloudflare Turnstile | zaštita od botova na formularima | sesija |"
+        },
+        {
+          "id": "analiticki",
+          "title": "Analitički kolačići (uz pristanak)",
+          "body": "Ako ih prihvatiš, PostHog beleži koje stranice se posećuju, da bismo znali šta da poboljšamo. Ne snimamo sesije i ne pratimo klikove. Pre pristanka se biblioteka za analitiku i ne učitava.\n\n| Kolačić | Svrha | Trajanje |\n|---|---|---|\n| ph_*_posthog | anonimni identifikator posete | 12 meseci |"
+        },
+        {
+          "id": "izbor",
+          "title": "Kako da promeniš izbor",
+          "body": "Izbor menjaš u svakom trenutku preko linka „Podešavanja kolačića“ u dnu svake stranice. Kada promenimo ovu politiku, ponovo te pitamo."
+        }
+      ]
+    },
+    "community": {
+      "title": "Pravila zajednice",
+      "intro": "Zajednice su za pomoć u učenju. Ova pravila važe za objave, komentare, ocene i poruke.",
+      "sections": [
+        {
+          "id": "postovanje",
+          "title": "Poštovanje",
+          "body": "Bez uvreda, pretnji, govora mržnje i ličnih napada. Neslaganje je u redu; ponižavanje nije."
+        },
+        {
+          "id": "profesori",
+          "title": "O profesorima",
+          "body": "Iskustva sa predavanjima, literaturom i načinom ispitivanja su dobrodošla. Nisu dozvoljeni: uvrede, privatni život, lični podaci i neproverene tvrdnje predstavljene kao činjenice. Pre prve objave u zajednici profesora potvrđuješ da znaš ova pravila."
+        },
+        {
+          "id": "ispiti",
+          "title": "Ispitni materijal",
+          "body": "Ne deli ispitna pitanja i rešenja koja fakultet zabranjuje da se dele, ni rešenja domaćih zadataka i projekata koji se ocenjuju. Iskustva sa roka („bila su dva zadatka iz kola“) su u redu."
+        },
+        {
+          "id": "spam",
+          "title": "Spam i reklame",
+          "body": "Bez reklama, linkova radi zarade i ponavljanja iste objave. Svoju skriptu možeš da podeliš kao objavu tipa „Skripta“, jednom po zajednici."
+        },
+        {
+          "id": "anonimnost",
+          "title": "Anonimne objave",
+          "body": "Anonimnost važi prema drugim korisnicima. Moderatori i administratori vide autora da bi mogli da primene pravila."
+        },
+        {
+          "id": "moderacija",
+          "title": "Moderacija",
+          "body": "Moderatori mogu da uklone sadržaj, zaključaju diskusiju ili zabrane učešće, uvek sa razlogom koji vidiš. Sadržaj koji krši pravila prijavi dugmetom „Prijavi“; prijave obrađujemo u roku od 72 sata."
+        }
+      ]
+    },
+    "seller": {
+      "title": "Pravila za prodavce",
+      "intro": "Prodavati može punoletan korisnik koji prihvati ova pravila.",
+      "sections": [
+        {
+          "id": "originalnost",
+          "title": "Samo sopstvene skripte",
+          "body": "Prodaješ samo ono što si sam napisao ili za šta imaš dozvolu autora. Nisu dozvoljeni skenirani udžbenici, zbirke, tuđe beleške, ispitna pitanja koja se ne smeju deliti i rešenja ocenjenih radova. Pri svakom otpremanju potvrđuješ originalnost. Sistem prepoznaje duplikate."
+        },
+        {
+          "id": "pregled",
+          "title": "Pregled pre objave",
+          "body": "Prve 3 skripte svakog prodavca pregleda administrator pre objave. Kasnije skripte se objavljuju odmah, ali se mogu ukloniti na osnovu prijave."
+        },
+        {
+          "id": "cena",
+          "title": "Cena i provizija",
+          "body": "Cenu određuješ sam (najviše {maxPrice}). Provizija platforme je {commission} cene, a tebi pripada {sellerShare}. Primer: skripta od 800 RSD → ti dobijaš {exampleSeller}."
+        },
+        {
+          "id": "isplate",
+          "title": "Isplate",
+          "body": "Zarada od svake prodaje čeka {holdDays} dana (zbog mogućih reklamacija), a zatim postaje dostupna. Isplatu tražiš kada imaš najmanje {minPayout}; novac stiže na račun koji si uneo. Podaci o računu su šifrovani."
+        },
+        {
+          "id": "povracaji",
+          "title": "Reklamacije",
+          "body": "Ako kupac opravdano reklamira skriptu (nečitljiva, ne odgovara opisu), novac se vraća kupcu, a iznos se oduzima od tvoje zarade."
+        },
+        {
+          "id": "porezi",
+          "title": "Porezi",
+          "body": "Prihod od prodaje skripti može biti oporeziv. Prijava i plaćanje poreza su tvoja obaveza, osim ako platforma drugačije ne odluči i ne obavesti te. [PRAVNIK/KNJIGOVOĐA: poreski tretman prihoda studenata.]"
+        },
+        {
+          "id": "verzije",
+          "title": "Nove verzije",
+          "body": "Skriptu možeš da dopuniš novom verzijom; kupci je dobijaju besplatno."
+        }
+      ]
+    },
+    "refunds": {
+      "title": "Povraćaj i reklamacije",
+      "intro": "Skripte su digitalni sadržaj koji se isporučuje odmah. Zato se pravo na odustanak gubi, ali reklamacija zbog nedostatka važi.",
+      "sections": [
+        {
+          "id": "odustanak",
+          "title": "Pravo na odustanak",
+          "body": "Pre plaćanja tražiš da isporuka počne odmah i potvrđuješ da time gubiš pravo na odustanak. [PRAVNIK: Zakon o zaštiti potrošača, čl. 37.]"
+        },
+        {
+          "id": "reklamacija",
+          "title": "Kada imaš pravo na povraćaj",
+          "body": "- Fajl je nečitljiv ili oštećen.\n- Sadržaj ne odgovara opisu (drugi predmet, mnogo manje strana).\n- Skripta je uklonjena zbog povrede autorskih prava.\n\nProblem prijavi iz biblioteke u roku od {problemDays} dana od kupovine. Odgovaramo u roku od 8 dana. [PRAVNIK: rokovi po zakonu.]"
+        },
+        {
+          "id": "kako",
+          "title": "Kako se vraća novac",
+          "body": "Povraćaj ide na karticu kojom je plaćeno, preko procesora plaćanja. Posle povraćaja skripta više nije u tvojoj biblioteci."
+        },
+        {
+          "id": "kontakt",
+          "title": "Kontakt",
+          "body": "Za reklamacije koje ne možeš da podneseš kroz biblioteku piši na {email}."
+        }
+      ]
+    },
+    "copyright": {
+      "title": "Prijava povrede autorskih prava",
+      "intro": "Ako je na sajtu skripta koja krši tvoja autorska prava, prijavi je ovde. Odgovaramo u roku od {copyrightDays} dana.",
+      "sections": [
+        {
+          "id": "postupak",
+          "title": "Postupak",
+          "body": "1. Popuniš formular ispod; prijava stiže administratoru.\n2. Ako je prijava osnovana, skripta se skida iz prodaje, a prodavac dobija obaveštenje sa razlogom.\n3. Prodavac može da uloži prigovor sa obrazloženjem; o prigovoru odlučujemo i obaveštavamo obe strane.\n4. Kupci koji su skriptu kupili pre skidanja zadržavaju pristup, osim ako zakon drugačije ne nalaže. [PRAVNIK: obaveze posrednika po Zakonu o elektronskoj trgovini.]"
+        },
+        {
+          "id": "odgovornost",
+          "title": "Odgovornost podnosioca",
+          "body": "Prijavu podnosiš pod punom materijalnom i krivičnom odgovornošću. Lažne prijave mogu imati pravne posledice."
+        },
+        {
+          "id": "kontakt",
+          "title": "Kontakt",
+          "body": "Pravna obaveštenja šalji na {legalEmail}."
+        }
+      ]
+    }
+  },
+  "imprint": {
+    "title": "Podaci o pružaocu usluge",
+    "intro": "Podaci u skladu sa Zakonom o elektronskoj trgovini.",
+    "placeholder": "Podaci o kompaniji još nisu uneti (pre pokretanja).",
+    "legalName": "Poslovno ime",
+    "address": "Sedište",
+    "registrationNumber": "Matični broj",
+    "taxId": "PIB",
+    "register": "Registar",
+    "email": "Email",
+    "legalEmail": "Pravna obaveštenja",
+    "privacyEmail": "Zaštita podataka",
+    "phone": "Telefon"
+  },
+  "consent": {
+    "title": "Kolačići",
+    "text": "Koristimo neophodne kolačiće za prijavu i bezbednost. Analitičke kolačiće uključujemo samo ako pristaneš.",
+    "policy": "Politika kolačića",
+    "accept": "Prihvati sve",
+    "reject": "Odbij",
+    "customize": "Podešavanja",
+    "settingsTitle": "Podešavanja kolačića",
+    "settingsDescription": "Izaberi koje kolačiće dozvoljavaš. Izbor menjaš u bilo kom trenutku.",
+    "necessary": "Neophodni",
+    "necessaryHint": "Prijava, bezbednost i tvoj izbor o kolačićima. Uvek uključeni.",
+    "analytics": "Analitički",
+    "analyticsHint": "Koje stranice se posećuju (PostHog, EU). Bez snimanja sesija.",
+    "noMarketing": "Marketinške kolačiće ne koristimo.",
+    "save": "Sačuvaj izbor",
+    "footerLink": "Podešavanja kolačića"
+  },
+  "copyrightForm": {
+    "title": "Podnesi prijavu",
+    "name": "Ime i prezime",
+    "email": "Email za odgovor",
+    "organization": "Organizacija (opciono)",
+    "url": "Link do sporne skripte",
+    "urlHint": "Kopiraj adresu stranice skripte, npr. https://skriptarnica.rs/skripta/…",
+    "proof": "Šta je tvoje delo i kako to dokazuješ",
+    "proofHint": "Npr. naziv udžbenika i izdavača, ISBN, link do originala, ugovor o autorskim pravima.",
+    "statement": "Pod punom materijalnom i krivičnom odgovornošću izjavljujem da su podaci tačni i da sam nosilac prava ili ovlašćen da postupam u njegovo ime.",
+    "submit": "Pošalji prijavu",
+    "sent": "Prijava je poslata (broj {reference}). Poslali smo potvrdu na tvoj email.",
+    "counter": {
+      "title": "Prigovor na uklanjanje skripte",
+      "back": "Nazad na prodaju",
+      "intro": "Skripta je uklonjena {date} zbog prijave povrede autorskih prava. Ako smatraš da je odluka pogrešna, objasni zašto.",
+      "text": "Obrazloženje",
+      "textHint": "Npr. da je skripta tvoj autorski rad, šta je u njoj originalno, dokazi.",
+      "statement": "Pod punom odgovornošću izjavljujem da su navodi tačni.",
+      "submit": "Pošalji prigovor",
+      "submitted": "Prigovor je poslat. Odluku ćeš dobiti emailom.",
+      "none": "Za ovu skriptu nema odluke na koju možeš da uložiš prigovor."
+    }
+  },
+  "info": {
+    "howItWorks": {
+      "title": "Kako funkcioniše",
+      "intro": "{site} spaja studente koji su napisali dobre skripte sa onima kojima trebaju, i ima zajednice za svaki fakultet i predmet.",
+      "sections": [
+        {
+          "title": "Kupuješ",
+          "body": "1. Napravi nalog i označi predmete koje slušaš.\n2. Na početnoj strani su skripte za tvoje predmete: pogledaj prve strane, ocene i ko je napisao.\n3. Plati karticom. Skripta je odmah u biblioteci, a nove verzije dobijaš besplatno.\n4. Ako fajl nije ono što piše u opisu, prijavi problem u roku od {problemDays} dana."
+        },
+        {
+          "title": "Prodaješ",
+          "body": "1. Postani prodavac (potrebno je da imaš 18 godina) i unesi račun za isplate.\n2. Otpremi PDF, izaberi predmet i profesora, napiši kako si učio.\n3. Prve skripte pregledamo pre objave.\n4. Od svake prodaje dobijaš sve osim provizije od {commission}. Primer: {examplePrice} → {exampleSeller}."
+        },
+        {
+          "title": "Zajednice",
+          "body": "Svaki fakultet i predmet ima zajednicu: pitanja o rokovima, iskustva, literatura. Možeš da objavljuješ i anonimno."
+        }
+      ]
+    },
+    "commission": {
+      "title": "Provizija i isplate",
+      "intro": "Provizija je {commission} od cene skripte. Ostalo je tvoje.",
+      "sections": [
+        {
+          "title": "Računica",
+          "body": "| Cena skripte | Provizija ({commission}) | Ti dobijaš |\n|---|---|---|\n| {examplePrice} | {exampleCommission} | {exampleSeller} |\n\nProvizija pokriva plaćanje karticom, čuvanje fajlova, vodeni žig i podršku."
+        },
+        {
+          "title": "Kada stiže novac",
+          "body": "Zarada od prodaje čeka {holdDays} dana, zbog mogućih reklamacija kupaca. Posle toga je dostupna i možeš da zatražiš isplatu na svoj račun kada imaš najmanje {minPayout}."
+        },
+        {
+          "title": "Porezi",
+          "body": "Prihod od prodaje može biti oporeziv; prijava je tvoja obaveza. Više u [Pravilima za prodavce](/pravila-za-prodavce)."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Česta pitanja",
+      "intro": "Kratki odgovori na pitanja koja najčešće dobijamo.",
+      "sections": [
+        {
+          "title": "Da li mogu da delim kupljenu skriptu?",
+          "body": "Ne. Kupljena skripta je za tvoje učenje. Svaki PDF nosi tvoje korisničko ime, pa se izvor kopije može pronaći."
+        },
+        {
+          "title": "Šta ako skripta nije dobra?",
+          "body": "Ako je nečitljiva ili ne odgovara opisu, prijavi problem iz biblioteke u roku od {problemDays} dana i vraćamo novac. Ako je samo nije bila po tvom ukusu, ostavi iskrenu ocenu."
+        },
+        {
+          "title": "Smem li da prodajem skriptu napravljenu po predavanjima?",
+          "body": "Da, ako si je sam napisao. Ne smeš da prodaješ skenirane udžbenike, tuđe beleške ni ispitna pitanja koja fakultet zabranjuje da se dele."
+        },
+        {
+          "title": "Koliko košta?",
+          "body": "Za kupce nema dodatnih troškova osim cene skripte. Prodavci plaćaju proviziju od {commission} po prodaji."
+        },
+        {
+          "title": "Da li su anonimne objave stvarno anonimne?",
+          "body": "Drugi korisnici ne vide ko je autor. Moderatori i administratori vide, da bi mogli da primene pravila."
+        },
+        {
+          "title": "Kako da obrišem nalog?",
+          "body": "U Podešavanjima → Podaci i brisanje. Imaš 14 dana da se predomisliš. Pre toga možeš da preuzmeš sve svoje podatke."
+        }
+      ]
+    },
+    "contact": {
+      "title": "Kontakt",
+      "intro": "Piši nam na {email}. Odgovaramo radnim danima.",
+      "sections": [
+        {
+          "title": "Problem sa kupovinom",
+          "body": "Najbrže je preko biblioteke: dugme „Prijavi problem“ pored skripte."
+        },
+        {
+          "title": "Sadržaj koji krši pravila",
+          "body": "Koristi dugme „Prijavi“ na skripti, objavi ili profilu. Za autorska prava postoji [posebna prijava](/prijava-povrede-autorskih-prava)."
+        },
+        {
+          "title": "Podaci o kompaniji",
+          "body": "Vidi [Podatke o pružaocu usluge](/podaci-o-pruzaocu)."
+        }
+      ]
+    }
+  },
+  "og": {
+    "defaultKicker": "Skripte i zajednice za studente",
+    "defaultTitle": "Nađi skriptu za svoj predmet",
+    "defaultDetails": "Od studenata koji su položili, uz zajednice fakulteta i predmeta.",
+    "note": "Skripta",
+    "pages": "{count, plural, one {# strana} few {# strane} other {# strana}}",
+    "free": "Besplatno",
+    "courseNotes": "{count, plural, =0 {Skripte i zajednica predmeta} one {# skripta} few {# skripte} other {# skripti}}",
+    "members": "{count, plural, one {# član} few {# člana} other {# članova}}",
+    "comments": "{count, plural, one {# komentar} few {# komentara} other {# komentara}}"
   }
 }

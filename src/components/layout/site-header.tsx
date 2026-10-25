@@ -9,7 +9,7 @@ import type { Theme } from '@/lib/theme';
 
 import { ThemeToggle } from './theme-toggle';
 import type { LayoutUser } from './types';
-import { UserMenu } from './user-menu';
+import { UserMenu } from './user-menu-lazy';
 import { Wordmark } from './wordmark';
 
 export async function SiteHeader({

@@ -34,6 +34,7 @@ type ActionKind =
   | 'exportReady'
   | 'deletionScheduled'
   | 'deletionConfirm'
+  | 'copyrightReceived'
   | 'deletionCancelled';
 
 /**

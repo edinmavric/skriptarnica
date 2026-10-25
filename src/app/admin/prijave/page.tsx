@@ -43,7 +43,7 @@ export default async function AdminReportsPage({
         <p className="text-ink-muted">{t('none')}</p>
       ) : (
         <ul className="flex flex-col gap-4">
-          {rows.map(({ report, reporterName, target }) => (
+          {rows.map(({ report, reporterName, target, overdue }) => (
             <li key={report.id} className="flex flex-col gap-3 rounded-md border border-rule p-4">
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <Badge tone="outline">{t(`targets.${report.targetType}`)}</Badge>
@@ -53,6 +53,7 @@ export default async function AdminReportsPage({
                   {reporterName ? `, ${t('by', { name: reporterName })}` : ''}
                 </span>
                 {report.communityId ? <Badge tone="neutral">{t('community')}</Badge> : null}
+                {overdue ? <Badge tone="danger">{t('overdue')}</Badge> : null}
               </div>
               {report.text ? <p className="text-sm">{report.text}</p> : null}
               {target ? (

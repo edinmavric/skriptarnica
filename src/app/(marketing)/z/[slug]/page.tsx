@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const loaded = await loadCommunity((await params).slug, null);
   if (!loaded) return {};
   return pageMetadata({
+    image: null,
     title: `z/${loaded.community.slug}: ${loaded.community.name}`,
     description: loaded.community.description || loaded.community.name,
     path: routes.community(loaded.community.slug),

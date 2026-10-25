@@ -34,7 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       data.note.shortDescription || t('metaFallback', { course: data.course?.name ?? '' }),
     path: routes.note(data.note.slug),
-    ...(data.previews[0] ? { image: data.previews[0].url } : {}),
+    // The generated card (opengraph-image.tsx) shows title, course and price.
+    image: null,
     noIndex: data.note.status !== 'published',
   });
   return base;

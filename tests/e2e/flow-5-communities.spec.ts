@@ -1,4 +1,6 @@
-import { expect, test, type Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
+
+import { expect, test } from './fixtures';
 
 import { expectNoSeriousA11yViolations } from './helpers';
 import { enableTwoFactor, grantAdmin, newTestUser, signUpAndVerify } from './support';

@@ -64,7 +64,8 @@ export function PreviewGallery({
                 height={preview.height}
                 sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 72vw"
                 className="h-auto w-full"
-                priority={index === 0}
+                // The first page is the LCP on note pages: preload it from <head> (Next 16).
+                preload={index === 0}
               />
               {preview.blurred ? (
                 <span className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-paper-raised/95 px-3 py-2 text-sm">
