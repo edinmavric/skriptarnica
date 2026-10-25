@@ -28,7 +28,8 @@
     "storage:setup": "tsx scripts/storage-setup.ts",
     "admin:grant": "tsx scripts/grant-admin.ts",
     "payout-keys:rotate": "tsx scripts/rotate-payout-keys.ts",
-    "lighthouse": "node scripts/lighthouse.mjs"
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "preflight": "tsx scripts/preflight.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1156.0",
