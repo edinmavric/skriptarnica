@@ -16,5 +16,6 @@ export async function getLayoutUser(user: CurrentUser | null): Promise<LayoutUse
     isSeller: counters.isSeller,
     unreadNotifications: counters.unreadNotifications,
     deletionScheduledFor: counters.deletionScheduledFor,
+    impersonating: Boolean(user.impersonatedBy),
   };
 }

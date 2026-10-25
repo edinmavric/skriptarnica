@@ -2,6 +2,7 @@ import { executeDueDeletions } from '../../services/account-deletion';
 import { expireExports, generateExport } from '../../services/data-export';
 import { runDigests } from '../../services/digest';
 import {
+  onCatalogRequestDecided,
   onForumReply,
   onModerationDecision,
   onNoteDecided,
@@ -51,6 +52,11 @@ export const notifyForumReply = inngest.createFunction(
   async ({ event }) => onForumReply(events['forum/reply.created'].parse(event.data)),
 );
 
+export const notifyCatalogRequest = inngest.createFunction(
+  { id: 'notify-catalog-request', triggers: [{ event: 'catalog/request.decided' }] },
+  async ({ event }) => onCatalogRequestDecided(events['catalog/request.decided'].parse(event.data)),
+);
+
 export const buildDataExport = inngest.createFunction(
   { id: 'build-data-export', triggers: [{ event: 'user/export.requested' }], retries: 3 },
   async ({ event }) => generateExport(events['user/export.requested'].parse(event.data).exportId),
@@ -76,6 +82,7 @@ export const notificationFunctions = [
   notifyPayoutStatus,
   notifyModeration,
   notifyForumReply,
+  notifyCatalogRequest,
   buildDataExport,
   sendDigests,
   accountHousekeeping,

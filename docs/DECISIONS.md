@@ -155,3 +155,22 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **Profiles:** `/u/[username]` shows only non-anonymous activity, and faculty-only communities only to viewers of that faculty. Faculty, program and activity can be hidden in privacy settings. Only sellers' profiles are indexed. Deleted and banned users have no profile (404).
 - **Follows** (sellers) are stored and counted on the profile. Nothing uses them for ranking yet.
 - **Avatars:** sharp re-encodes them to 256×256 WebP, which also strips metadata, and stores them in the public bucket under a random key with immutable caching; the old file is deleted.
+
+## Phase 9 — Admin panel
+
+- **Access:** `role=admin` with 2FA, checked on every page (layout guard), Server Action (`auth: 'admin'`) and route handler (CSV export). Without 2FA an admin is sent to enable it; non-admins get a 404, so the area isn't advertised.
+- **Re-authentication:** sensitive actions declare `reauth: true` in `createAction`. They require a password confirmation (`auth.api.verifyPassword`) within the last 10 minutes, stored in Redis per session ID, so it doesn't carry over to a stolen cookie from another session. The UI's `ReauthProvider` asks for the password and retries the action once.
+  - Covered: ban/unban, 2FA reset, impersonation, catalog delete, CSV import, note removal, copyright decisions, refunds, payouts, revealing payout details, ledger adjustments and platform settings.
+  - Not covered: note review, report triage, catalog edits, because they are frequent and reversible.
+- **Audit:** every admin mutation writes to `audit_log` (append-only trigger) in the same transaction as the change. An integration test runs each admin service and checks the entries it adds; settings changes record a before/after diff. CSV exports are audited too.
+- **Read-only impersonation:** an admin-created session row with `impersonated_by` (exposed to better-auth as a session field), lasting 30 minutes. The admin's own cookie is parked in an httpOnly `skr.admin_return` cookie and restored on "Završi pregled".
+  - The impersonation cookie is signed with better-auth's `makeSignature`, so better-auth reads it like any session.
+  - `canMutate` refuses impersonated sessions, so every write action is blocked. Downloads and data-export downloads refuse them as well, and the admin area 404s, since the "user" isn't an admin.
+  - Admins, banned and deleted users can't be impersonated. Start and end are audited, and a banner shows on every page.
+- **Ban:** sets `banned_at` and the reason, and deletes all sessions. The session-create hook then refuses sign-in, and the sign-in form says the account is suspended, only after a correct password. A banned seller's notes stay as they are; removing them is a separate decision. Admins can't be banned from the panel.
+- **Catalog:** create goes through the same upserts as the seed, so new faculties and courses get their communities. Edits update by ID and keep the slug (URL) unless the admin changes it. Duplicate slugs are refused. Delete works only for unused entries: foreign-key violations become "in use", and an unused course's empty system community goes with it.
+- **CSV import** (courses): header-based, `;` or `,`, BOM-tolerant, at most 2000 rows. The faculty (slug) must exist, as must the program if one is given. Professors are created as needed. A dry run (preview) comes first; rows fail independently; the real run is audited once with counts.
+- **CSV export:** UTF-8 with a BOM for Excel, RSD with two decimals plus raw para for the ledger. Spreadsheet-formula cells are neutralized. Date ranges are inclusive Belgrade calendar days and DST-aware (`lib/time.ts`).
+- **Ledger adjustments:** `seller_available ± X` against `platform_revenue ∓ X`, so the books stay balanced without a new account type. They need a reason of at least 10 characters, the amount typed twice (checked in the UI and on the server) and re-authentication.
+- **Reports:** resolving can remove the content (note, review, post or comment, through the same services moderators use) or ban the author in one step. Response templates are i18n texts the admin can edit before sending.
+- **Copyright claims** get their own table and queue. Accepting removes the note from sale (buyers keep access) and notifies the seller. The public claim form and counter-notice flow come in Phase 10.

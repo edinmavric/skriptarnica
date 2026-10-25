@@ -43,6 +43,7 @@ export const decideRefundAction = createAction(
       note: z.string().trim().max(1000).nullable(),
     }),
     auth: 'admin',
+    reauth: true,
   },
   async (input, { user, ipHash }) => {
     const { decideRefund } = await import('../services/wallet');
@@ -72,6 +73,7 @@ export const decidePayoutAction = createAction(
       }),
     ]),
     auth: 'admin',
+    reauth: true,
   },
   async (input, { user, ipHash }) => {
     const { decidePayout } = await import('../services/wallet');
@@ -88,7 +90,7 @@ export const decidePayoutAction = createAction(
 );
 
 export const revealPayoutDetailsAction = createAction(
-  { schema: z.object({ payoutId: z.uuid() }), auth: 'admin' },
+  { schema: z.object({ payoutId: z.uuid() }), auth: 'admin', reauth: true },
   async (input, { user, ipHash }) => {
     const { payoutDetailsForAdmin } = await import('../services/admin/money');
     const result = await payoutDetailsForAdmin(user.id, input.payoutId, ipHash);

@@ -163,3 +163,11 @@ export async function chooseCourse(page: Page, query: string, option: RegExp): P
   await page.getByRole('button', { name: 'Sačuvaj i nastavi' }).click();
   await expect(page.getByRole('heading', { name: 'Otpremi PDF' })).toBeVisible();
 }
+
+/** Answers the admin re-authentication prompt (sensitive actions, SPEC §4.10). */
+export async function confirmReauth(page: Page, password: string): Promise<void> {
+  const dialog = page.getByRole('dialog', { name: 'Potvrdi lozinku' });
+  await dialog.getByLabel(/^Lozinka/).fill(password);
+  await dialog.getByRole('button', { name: 'Potvrdi' }).click();
+  await expect(dialog).toBeHidden();
+}

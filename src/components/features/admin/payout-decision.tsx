@@ -7,12 +7,15 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
+
+import { useReauth } from './reauth';
 import { decidePayoutAction, revealPayoutDetailsAction } from '@/server/actions/admin';
 
 export function PayoutDecision({ payoutId, status }: { payoutId: string; status: string }) {
   const t = useTranslations('admin.payouts');
   const tAll = useTranslations() as unknown as (key: string) => string;
   const router = useRouter();
+  const reauth = useReauth();
   const { toast } = useToast();
   const [reference, setReference] = useState('');
   const [reason, setReason] = useState('');
@@ -20,7 +23,7 @@ export function PayoutDecision({ payoutId, status }: { payoutId: string; status:
   const [pending, startTransition] = useTransition();
   const run = (input: Parameters<typeof decidePayoutAction>[0], success: string) =>
     startTransition(async () => {
-      const result = await decidePayoutAction(input);
+      const result = await reauth(() => decidePayoutAction(input));
       if (result.ok) {
         toast({ title: success, tone: 'success' });
         router.refresh();
@@ -45,7 +48,7 @@ export function PayoutDecision({ payoutId, status }: { payoutId: string; status:
           className="self-start"
           onClick={() =>
             startTransition(async () => {
-              const result = await revealPayoutDetailsAction({ payoutId });
+              const result = await reauth(() => revealPayoutDetailsAction({ payoutId }));
               if (result.ok) setDetails(result.value);
             })
           }

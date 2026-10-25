@@ -441,7 +441,11 @@
       "imprint": "Podaci o pružaocu usluge",
       "copyrightLine": "© {year} {name}"
     },
-    "breadcrumbs": "Putanja"
+    "breadcrumbs": "Putanja",
+    "impersonation": {
+      "text": "Pregledaš sajt kao {name}. Samo čitanje: izmene nisu moguće.",
+      "stop": "Završi pregled"
+    }
   },
   "devUi": {
     "title": "Katalog komponenti",
@@ -670,7 +674,7 @@
       "moderation": {
         "subject": "Odluka moderatora",
         "heading": "Moderator je doneo odluku",
-        "body": "{action, select, banned {Zabranjeno ti je učešće u zajednici {community}} other {Moderator je uklonio {target, select, post {tvoju objavu} other {tvoj komentar}}}}. Razlog: {reason}.",
+        "body": "{action, select, banned {Zabranjeno ti je učešće u zajednici {community}} other {Uklonili smo {target, select, post {tvoju objavu} note {tvoju skriptu iz prodaje (kupci zadržavaju pristup)} other {tvoj komentar}}}}. Razlog: {reason}.",
         "cta": "Pogledaj pravila zajednice"
       },
       "note_decision": {
@@ -853,7 +857,14 @@
     "bioTooLong": "Opis može imati najviše 300 znakova.",
     "imageRequired": "Izaberi sliku.",
     "imageTooLarge": "Slika može imati najviše 5 MB.",
-    "imageInvalid": "Ovo nije slika koju možemo da pročitamo (JPG, PNG, WebP, GIF, AVIF ili HEIC)."
+    "imageInvalid": "Ovo nije slika koju možemo da pročitamo (JPG, PNG, WebP, GIF, AVIF ili HEIC).",
+    "slugInvalid": "Samo mala slova, brojevi i crtice.",
+    "domainInvalid": "Neispravan domen.",
+    "slugTaken": "Ova adresa je zauzeta.",
+    "amountNonZero": "Iznos ne može biti nula.",
+    "amountTooLarge": "Iznos je prevelik.",
+    "amountMismatch": "Iznosi se ne poklapaju.",
+    "required": "Obavezno polje."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -910,7 +921,22 @@
     },
     "admin": {
       "notPending": "Skripta više nije na pregledu.",
-      "noReadyVersion": "Skripta nema obrađen fajl."
+      "noReadyVersion": "Skripta nema obrađen fajl.",
+      "reauthRequired": "Potvrdi lozinku da nastaviš.",
+      "notSelf": "Ovo ne možeš uraditi na svom nalogu.",
+      "notAdmin": "Ovo nije moguće za administratorski nalog.",
+      "no2fa": "Korisnik nema uključenu dvofaktorsku prijavu.",
+      "inUse": "Stavka se koristi (skripte, studenti ili predmeti), pa ne može da se obriše.",
+      "csvEmpty": "CSV nema redova.",
+      "csvTooLarge": "Najviše 2000 redova po uvozu.",
+      "csvColumns": "Nedostaju kolone fakultet i predmet.",
+      "requestDecided": "O predlogu je već odlučeno.",
+      "reportDecided": "Prijava je već obrađena.",
+      "cannotRemoveTarget": "Ovaj sadržaj ne može da se ukloni odavde.",
+      "noOwner": "Sadržaj nema autora koga je moguće blokirati.",
+      "claimDecided": "O prijavi je već odlučeno.",
+      "claimNoNote": "Prvo poveži prijavu sa skriptom.",
+      "notSeller": "Korisnik nije prodavac."
     },
     "purchase": {
       "unavailable": "Skripta nije dostupna za kupovinu.",
@@ -1657,11 +1683,41 @@
       "dashboard": "Pregled",
       "notes": "Skripte na pregledu",
       "refunds": "Povraćaji",
-      "payouts": "Isplate"
+      "payouts": "Isplate",
+      "reports": "Prijave",
+      "copyright": "Autorska prava",
+      "users": "Korisnici",
+      "catalog": "Katalog",
+      "catalogRequests": "Predlozi za katalog",
+      "orders": "Porudžbine",
+      "exports": "Izveštaji (CSV)",
+      "settings": "Podešavanja",
+      "audit": "Dnevnik izmena"
     },
     "dashboard": {
       "title": "Pregled",
-      "reviewQueue": "Skripte čekaju pregled"
+      "reviewQueue": "Skripte čekaju pregled",
+      "users": "Korisnici",
+      "newUsers": "{count, plural, one {# novi} few {# nova} other {# novih}} za 7 dana",
+      "gmv": "Promet",
+      "revenue": "Prihod platforme",
+      "last30": "poslednjih 30 dana",
+      "openReports": "Otvorene prijave",
+      "claims": "Prijave povrede autorskih prava",
+      "catalogRequests": "Predlozi za katalog",
+      "pendingPayouts": "Isplate u toku",
+      "openRefunds": "Zahtevi za povraćaj",
+      "queues": "Redovi za obradu",
+      "chart": {
+        "title": "Prodaje po danima (poslednjih 30 dana)",
+        "summary": "Ukupno {total} prodaja za {days} dana.",
+        "keyboardHint": "Grafikon prodaja. Strelicama levo i desno biraš dan.",
+        "tooltip": "{date}: {count, plural, one {# prodaja} few {# prodaje} other {# prodaja}}, promet {amount}",
+        "table": "Prikaži kao tabelu",
+        "day": "Dan",
+        "sales": "Prodaje",
+        "earned": "Promet"
+      }
     },
     "notes": {
       "title": "Skripte na pregledu",
@@ -1718,6 +1774,351 @@
       "reason": "Razlog odbijanja",
       "reject": "Odbij",
       "rejected": "Isplata je odbijena; iznos je vraćen prodavcu."
+    },
+    "reauth": {
+      "title": "Potvrdi lozinku",
+      "description": "Ova radnja je osetljiva. Posle potvrde, 10 minuta je ne tražimo ponovo.",
+      "password": "Lozinka",
+      "confirm": "Potvrdi"
+    },
+    "users": {
+      "title": "Korisnici",
+      "search": "Pretraži",
+      "searchPlaceholder": "Email, korisničko ime, ime ili ID",
+      "user": "Korisnik",
+      "email": "Email",
+      "status": "Status",
+      "joined": "Registrovan",
+      "admin": "Administrator",
+      "seller": "Prodavac",
+      "banned": "Blokiran",
+      "deleted": "Obrisan",
+      "none": "Nema korisnika za ovu pretragu.",
+      "prev": "Prethodna strana",
+      "next": "Sledeća strana",
+      "back": "Svi korisnici",
+      "username": "Korisničko ime",
+      "faculty": "Fakultet",
+      "verifiedStudent": "Verifikovan student",
+      "twoFactor": "Dvofaktorska prijava",
+      "paidOrders": "Plaćene porudžbine",
+      "notes": "Skripte",
+      "reportsAgainst": "Prijave protiv naloga",
+      "sessions": "Aktivne sesije",
+      "yes": "da",
+      "no": "ne",
+      "sellerStatus": "Prodavac: {status}",
+      "bannedSince": "Blokiran od {date}",
+      "deletionScheduled": "Brisanje zakazano za {date}",
+      "banReason": "Razlog blokade: {reason}",
+      "publicProfile": "Javni profil",
+      "wallet": "Novčanik",
+      "balances": {
+        "pendingPara": "Na čekanju",
+        "availablePara": "Dostupno",
+        "paidOutPara": "Isplaćeno"
+      },
+      "ledger": "Knjiženja",
+      "when": "Kada",
+      "account": "Konto",
+      "amount": "Iznos",
+      "description": "Opis",
+      "history": "Istorija (dnevnik izmena)",
+      "noHistory": "Nema zapisa.",
+      "actions": {
+        "ban": "Blokiraj nalog",
+        "banTitle": "Blokiranje naloga",
+        "banDescription": "Korisnik se odmah odjavljuje sa svih uređaja i ne može da se prijavi. Razlog ostaje u dnevniku.",
+        "banConfirm": "Blokiraj",
+        "banned": "Nalog je blokiran.",
+        "unban": "Ukini blokadu",
+        "unbanned": "Blokada je ukinuta.",
+        "reason": "Razlog",
+        "resetTwoFactor": "Resetuj dvofaktorsku prijavu",
+        "twoFactorReset": "Dvofaktorska prijava je resetovana.",
+        "impersonate": "Pogledaj sajt kao ovaj korisnik",
+        "impersonating": "Pregled kao korisnik…"
+      },
+      "adjustment": {
+        "title": "Ručna korekcija stanja",
+        "amount": "Iznos (RSD)",
+        "amountHint": "Pozitivan iznos uplaćuje prodavcu, negativan umanjuje stanje. Protivstavka je prihod platforme.",
+        "confirm": "Ponovi iznos",
+        "reason": "Razlog",
+        "reasonHint": "Najmanje 10 znakova. Vidi se u knjiženjima i dnevniku.",
+        "submit": "Proknjiži korekciju",
+        "done": "Korekcija je proknjižena."
+      }
+    },
+    "catalog": {
+      "title": "Katalog",
+      "import": "Uvoz iz CSV-a",
+      "types": "Vrste",
+      "search": "Pretraži",
+      "searchPlaceholder": "Naziv",
+      "none": "Nema stavki.",
+      "prev": "Prethodna strana",
+      "next": "Sledeća strana",
+      "saved": "Sačuvano.",
+      "choose": "Izaberi",
+      "slugHint": "Deo adrese. Ostavi prazno za automatski. Promena menja adresu stranice.",
+      "domainsHint": "Studentski email domeni, odvojeni zarezom (npr. etf.bg.ac.rs).",
+      "approveRequest": "Prihvati i dodaj",
+      "save": "Sačuvaj",
+      "create": "Dodaj",
+      "delete": "Obriši",
+      "deleted": "Obrisano.",
+      "new": {
+        "university": "Novi univerzitet",
+        "faculty": "Novi fakultet",
+        "program": "Novi smer",
+        "course": "Novi predmet",
+        "professor": "Novi profesor"
+      },
+      "plural": {
+        "university": "Univerziteti",
+        "faculty": "Fakulteti",
+        "program": "Smerovi",
+        "course": "Predmeti",
+        "professor": "Profesori"
+      },
+      "single": {
+        "university": "Univerzitet",
+        "faculty": "Fakultet",
+        "program": "Smer",
+        "course": "Predmet",
+        "professor": "Profesor"
+      },
+      "fields": {
+        "name": "Naziv",
+        "shortName": "Skraćenica",
+        "city": "Grad",
+        "emailDomains": "Email domeni",
+        "slug": "Adresa (slug)",
+        "universityId": "Univerzitet",
+        "facultyId": "Fakultet",
+        "level": "Nivo studija",
+        "durationYears": "Trajanje (godina)",
+        "code": "Šifra",
+        "ects": "ESPB",
+        "title": "Zvanje"
+      },
+      "levels": {
+        "oas": "Osnovne akademske",
+        "mas": "Master akademske",
+        "das": "Doktorske",
+        "oss": "Osnovne strukovne"
+      },
+      "links": {
+        "programs": "Smerovi i godina",
+        "placement": "{program}: {year}. godina, {semester}. semestar{mandatory, select, yes {} other {, izborni}}",
+        "remove": "Ukloni",
+        "noPrograms": "Predmet nije na nekom smeru.",
+        "program": "Smer",
+        "year": "Godina",
+        "semester": "Semestar",
+        "mandatory": "Obavezan",
+        "addProgram": "Dodaj na smer",
+        "professors": "Profesori",
+        "noProfessors": "Nema povezanih profesora.",
+        "professor": "Profesor",
+        "addProfessor": "Poveži profesora"
+      }
+    },
+    "import": {
+      "title": "Uvoz predmeta iz CSV-a",
+      "back": "Katalog",
+      "intro": "Jedan predmet po redu. Fakultet (i smer, ako je naveden) moraju postojati. Profesori se dodaju ako ne postoje. Prvo pogledaj pregled; neispravni redovi se preskaču.",
+      "columns": "Kolone (zaglavlje):",
+      "file": "CSV fajl",
+      "paste": "Ili nalepi sadržaj",
+      "format": "Razdvajanje zarezom ili tačkom-zarezom. Više profesora odvoji sa ; ili |.",
+      "preview": "Pregledaj",
+      "import": "Uvezi",
+      "done": "Uvoz je završen.",
+      "summary": "Novih: {created}, izmenjenih: {updated}, sa greškom: {errors}",
+      "line": "Red",
+      "course": "Predmet",
+      "result": "Rezultat",
+      "status": {
+        "created": "novo",
+        "updated": "izmena",
+        "error": "greška"
+      },
+      "errors": {
+        "faculty": "Fakultet (slug) ne postoji.",
+        "name": "Naziv predmeta je prekratak.",
+        "numbers": "Godina, semestar ili ESPB nisu ispravni.",
+        "program": "Smer (slug) ne postoji na tom fakultetu.",
+        "placement": "Uz smer moraju godina i semestar."
+      }
+    },
+    "requests": {
+      "title": "Predlozi za katalog",
+      "none": "Nema predloga na čekanju.",
+      "note": "Napomena: {note}",
+      "approve": "Prihvati…",
+      "reject": "Odbij",
+      "reason": "Razlog",
+      "confirmReject": "Odbij predlog",
+      "cancel": "Otkaži"
+    },
+    "reports": {
+      "title": "Prijave",
+      "filter": "Status prijava",
+      "status": {
+        "open": "Otvorene",
+        "resolved": "Rešene",
+        "dismissed": "Odbačene"
+      },
+      "none": "Nema prijava.",
+      "targets": {
+        "note": "Skripta",
+        "review": "Ocena",
+        "post": "Objava",
+        "comment": "Komentar",
+        "user": "Korisnik",
+        "community": "Zajednica"
+      },
+      "by": "prijavio {name}",
+      "community": "iz zajednice",
+      "targetGone": "Prijavljeni sadržaj više ne postoji.",
+      "outcome": "Ishod: {action}",
+      "action": "Šta uraditi",
+      "actions": {
+        "none": "Samo zatvori prijavu",
+        "remove_content": "Ukloni sadržaj",
+        "ban_user": "Blokiraj autora"
+      },
+      "template": "Šablon odgovora",
+      "chooseTemplate": "Izaberi šablon",
+      "note": "Obrazloženje",
+      "noteHint": "Vidi ga autor uklonjenog sadržaja.",
+      "resolve": "Reši",
+      "dismiss": "Odbaci",
+      "resolvedToast": "Prijava je rešena.",
+      "dismissedToast": "Prijava je odbačena.",
+      "templateNames": {
+        "abuse": "Uvrede",
+        "spam": "Spam",
+        "plagiarism": "Plagijat",
+        "examMaterial": "Ispitni materijal",
+        "personalData": "Lični podaci",
+        "noViolation": "Bez kršenja pravila"
+      },
+      "templates": {
+        "abuse": "Sadržaj sadrži uvrede ili lični napad, što je protivno pravilima zajednice.",
+        "spam": "Sadržaj je reklama ili spam.",
+        "plagiarism": "Sadržaj je preuzet od drugog autora bez dozvole.",
+        "examMaterial": "Sadržaj sadrži ispitna pitanja koja se ne smeju deliti.",
+        "personalData": "Sadržaj otkriva tuđe lične podatke.",
+        "noViolation": "Pregledali smo prijavljeni sadržaj i nismo našli kršenje pravila."
+      }
+    },
+    "copyright": {
+      "title": "Povrede autorskih prava",
+      "intro": "Prihvatanje skida skriptu iz prodaje (kupci zadržavaju pristup) i obaveštava prodavca. Odluke su pravni zapis; obrazloženje je obavezno.",
+      "none": "Nema otvorenih prijava.",
+      "status": {
+        "open": "Nova",
+        "accepted": "Prihvaćena",
+        "rejected": "Odbijena",
+        "countered": "Prigovor prodavca"
+      },
+      "email": "Email podnosioca",
+      "url": "Sporni sadržaj",
+      "note": "Skripta",
+      "noNote": "Nije povezana sa skriptom",
+      "proof": "Dokaz o pravima",
+      "statement": "Izjava pod punom odgovornošću",
+      "counterNotice": "Prigovor",
+      "decisionNote": "Obrazloženje",
+      "decisionHint": "Najmanje 5 znakova. Šalje se prodavcu.",
+      "accept": "Prihvati i skini skriptu",
+      "reject": "Odbij prijavu",
+      "done": {
+        "accepted": "Prijava je prihvaćena, skripta je skinuta.",
+        "rejected": "Prijava je odbijena."
+      }
+    },
+    "orders": {
+      "title": "Porudžbine",
+      "search": "Pretraga",
+      "searchPlaceholder": "Email, korisničko ime, ID ili referenca",
+      "statusLabel": "Status",
+      "allStatuses": "Svi statusi",
+      "status": {
+        "pending": "Na čekanju",
+        "paid": "Plaćena",
+        "failed": "Neuspela",
+        "refunded": "Vraćen novac",
+        "disputed": "Osporena"
+      },
+      "filter": "Prikaži",
+      "created": "Kreirana",
+      "buyer": "Kupac",
+      "total": "Iznos",
+      "none": "Nema porudžbina.",
+      "prev": "Prethodna strana",
+      "next": "Sledeća strana",
+      "detailTitle": "Porudžbina od {total}",
+      "provider": "Procesor",
+      "paidAt": "Plaćeno",
+      "failure": "Razlog neuspeha",
+      "items": "Stavke",
+      "split": "{price} = {commission} provizija + {seller} prodavcu",
+      "ledger": "Knjiženja",
+      "refunds": "Povraćaji"
+    },
+    "exports": {
+      "title": "Izveštaji (CSV)",
+      "intro": "Za knjigovodstvo. Iznosi su u dinarima sa dve decimale; datumi su dani po beogradskom vremenu, uključujući oba kraja.",
+      "kind": "Izveštaj",
+      "kinds": {
+        "porudzbine": "Porudžbine i stavke",
+        "isplate": "Isplate prodavcima",
+        "knjizenja": "Sva knjiženja (glavna knjiga)"
+      },
+      "from": "Od",
+      "to": "Do",
+      "download": "Preuzmi CSV"
+    },
+    "settings": {
+      "title": "Podešavanja platforme",
+      "intro": "Svaka promena se beleži u dnevnik izmena sa starom i novom vrednošću. Nova provizija važi za nove porudžbine.",
+      "saved": "Podešavanja su sačuvana.",
+      "invalid": "Neispravne vrednosti: {fields}",
+      "unit": "Jedinica: {unit}",
+      "flags": "Funkcije",
+      "taxCalculation": "Obračun poreza",
+      "invoicing": "Izdavanje računa",
+      "legalHint": "⚖️ Uključi tek posle potvrde knjigovođe.",
+      "save": "Sačuvaj podešavanja",
+      "fields": {
+        "commissionPercent": "Provizija platforme",
+        "fundsHoldDays": "Period zadržavanja sredstava (dana)",
+        "minPayoutRsd": "Minimalna isplata",
+        "maxNotePriceRsd": "Maksimalna cena skripte",
+        "maxPdfSizeMb": "Najveći PDF",
+        "previewPagesMax": "Najviše strana u pregledu",
+        "previewPagesPercent": "Najviše procenata strana u pregledu",
+        "purchaseProblemWindowDays": "Rok za prijavu problema (dana)",
+        "preModeratedNotesCount": "Prvih N skripti ide na pregled",
+        "maxCommunitiesPerUser": "Najviše zajednica po korisniku",
+        "minAccountAgeDaysToCreateCommunity": "Starost naloga za novu zajednicu (dana)"
+      }
+    },
+    "audit": {
+      "title": "Dnevnik izmena",
+      "action": "Radnja (početak)",
+      "actor": "Ko (email)",
+      "target": "Cilj (ID)",
+      "filter": "Filtriraj",
+      "when": "Kada",
+      "details": "Detalji",
+      "system": "sistem",
+      "none": "Nema zapisa.",
+      "older": "Stariji zapisi"
     }
   },
   "purchase": {
@@ -1875,7 +2276,7 @@
       "forum_reply": "{actor} je odgovorio na {kind, select, post {tvoju objavu} other {tvoj komentar}}: „{postTitle}”.",
       "mention": "{actor} te je pomenuo u „{postTitle}”.",
       "payout_status": "Isplata od {amount}: {status, select, requested {zahtev primljen} approved {odobrena} processing {u obradi} paid {uplaćena} other {odbijena}}.",
-      "moderation": "{action, select, banned {Zabranjeno ti je učešće u {community}} other {Moderator je uklonio {target, select, post {tvoju objavu} other {tvoj komentar}}}}. Razlog: {reason}.",
+      "moderation": "{action, select, banned {Zabranjeno ti je učešće u {community}} other {Moderator je uklonio {target, select, post {tvoju objavu} note {tvoju skriptu iz prodaje} other {tvoj komentar}}}}. Razlog: {reason}.",
       "note_decision": "{decision, select, approved {Skripta „{noteTitle}” je objavljena.} other {Skripta „{noteTitle}” nije odobrena: {reason}.}}",
       "catalog_request": "Predlog „{name}” je {decision, select, approved {prihvaćen} other {odbijen}}."
     }

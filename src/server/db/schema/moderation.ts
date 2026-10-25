@@ -65,3 +65,41 @@ export const auditLog = pgTable(
     index('audit_log_created_idx').on(t.createdAt),
   ],
 );
+
+export const copyrightClaimStatus = pgEnum('copyright_claim_status', [
+  'open',
+  'accepted',
+  'rejected',
+  'countered',
+]);
+
+/**
+ * Copyright infringement claims (SPEC §3.6), separate from user reports: the claimant may not
+ * have an account, and the outcome (removal, counter-notice) is a legal record. ⚖️
+ */
+export const copyrightClaims = pgTable(
+  'copyright_claims',
+  {
+    id: id(),
+    claimantName: text().notNull(),
+    claimantEmail: text().notNull(),
+    organization: text(),
+    /** What the claimant owns and how they can prove it. */
+    ownershipProof: text().notNull(),
+    contentUrl: text().notNull(),
+    noteId: uuid(),
+    /** Statement under full material and criminal liability that the claim is accurate. */
+    statementAcceptedAt: timestamp({ withTimezone: true }).notNull(),
+    status: copyrightClaimStatus().notNull().default('open'),
+    counterNotice: text(),
+    counterNoticeAt: timestamp({ withTimezone: true }),
+    decidedById: uuid().references(() => users.id, { onDelete: 'set null' }),
+    decidedAt: timestamp({ withTimezone: true }),
+    decisionNote: text(),
+    ...timestamps(),
+  },
+  (t) => [
+    index('copyright_claims_status_idx').on(t.status, t.createdAt),
+    index('copyright_claims_note_idx').on(t.noteId),
+  ],
+);

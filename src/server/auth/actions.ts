@@ -164,6 +164,9 @@ export const signInAction = createAction(
         }
         return err(appError('UNAUTHENTICATED', 'errors.invalidCredentials'));
       }
+      // The session hook refuses banned accounts; reached only with the correct password, so
+      // saying "suspended" leaks nothing to someone who doesn't know it.
+      if (code === 'FAILED_TO_CREATE_SESSION') return err(appError('FORBIDDEN', 'errors.banned'));
       throw error;
     }
   },

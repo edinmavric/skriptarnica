@@ -11,6 +11,7 @@ import {
   newTestUser,
   signUpAndVerify,
   type TestUser,
+  confirmReauth,
 } from './support';
 
 const PAID_NOTE = '/skripta/oet-1-teorija-i-zadaci-demo';
@@ -152,6 +153,8 @@ test.describe('flow 6: refund through admin', () => {
     await adminPage.goto('/admin/povracaji');
     const row = adminPage.getByRole('listitem').filter({ hasText: problem });
     await row.getByRole('button', { name: 'Odobri povraćaj' }).click();
+    // Money: the admin confirms the password first (re-authentication).
+    await confirmReauth(adminPage, admin.password);
     await expect(adminPage.getByText('Povraćaj je izvršen.').first()).toBeVisible();
 
     await page.goto('/biblioteka');

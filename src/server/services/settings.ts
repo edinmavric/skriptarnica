@@ -1,3 +1,4 @@
+import { unstable_rethrow } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -55,6 +56,8 @@ export async function getSettings(tx: DbOrTx = db): Promise<PlatformSettings> {
       if (parsed.success) return parsed.data;
     }
   } catch (error) {
+    // Next's dynamic-rendering signal is not a cache failure; let the framework handle it.
+    unstable_rethrow(error);
     logger.warn(
       { err: error instanceof Error ? error.message : String(error) },
       'settings cache read failed',

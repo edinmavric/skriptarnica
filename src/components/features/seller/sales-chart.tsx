@@ -32,8 +32,15 @@ const dayLabel = (iso: string) =>
  * rounded tops, hairline grid, value label on the peak only; tooltip on hover and on keyboard
  * focus (arrow keys move between days); the same numbers are in the table view.
  */
-export function SalesChart({ data }: { data: Point[] }) {
-  const t = useTranslations('seller.money.chart');
+export function SalesChart({
+  data,
+  namespace = 'seller.money.chart',
+}: {
+  data: Point[];
+  /** Copy for the amount ("zarada" for sellers, "promet" on the admin dashboard). */
+  namespace?: 'seller.money.chart' | 'admin.dashboard.chart';
+}) {
+  const t = useTranslations(namespace);
   const [active, setActive] = useState<number | null>(null);
   const maxCount = Math.max(...data.map((point) => point.count), 0);
   const top = niceMax(maxCount);

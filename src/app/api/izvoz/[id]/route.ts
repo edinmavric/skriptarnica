@@ -15,6 +15,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.redirect(new URL(`${routes.signIn}?next=${next}`, request.url));
   }
   if (!/^[0-9a-f-]{36}$/.test(id)) return new NextResponse(null, { status: 404 });
+  // An admin viewing as this user (read-only impersonation) can't take their data.
+  if (user.impersonatedBy) return new NextResponse(null, { status: 403 });
   const result = await exportDownloadUrl(user.id, id);
   if (!result.ok) return new NextResponse(null, { status: 404 });
   return NextResponse.redirect(result.value, { headers: { 'Cache-Control': 'no-store' } });

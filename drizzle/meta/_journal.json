@@ -57,6 +57,13 @@
       "when": 1792904378368,
       "tag": "0007_notifications_profile_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792906770611,
+      "tag": "0008_admin_copyright_claims",
+      "breakpoints": true
     }
   ]
 }

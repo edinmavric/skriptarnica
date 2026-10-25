@@ -82,6 +82,10 @@ export const auth = betterAuth({
     },
   },
   session: {
+    // Read-only admin impersonation marker (SPEC §4.10); set only by the admin service.
+    additionalFields: {
+      impersonatedBy: { type: 'string', input: false, required: false },
+    },
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
     freshAge: 60 * 15,

@@ -4,6 +4,7 @@ import type { z } from 'zod';
 
 import { appError, err, type AppError, type Result } from '@/lib/result';
 
+import { hasRecentReauth } from '../auth/reauth';
 import { getCurrentUser, type CurrentUser } from '../auth/session';
 import { logger } from '../logger';
 import { canMutate, canParticipate, isAdmin, type PolicyResult } from '../policies';
@@ -21,6 +22,8 @@ interface ActionOptions<S extends z.ZodType, A extends AuthLevel> {
   schema: S;
   auth: A;
   rateLimit?: { name: RateLimitName; by: 'ip' | 'user' };
+  /** Sensitive admin action: needs a password confirmation in the last 10 minutes. */
+  reauth?: boolean;
   /** Optional extra policy (e.g. canSell) evaluated after authentication. */
   policy?: (
     user: ActionContext<A>['user'],
@@ -78,6 +81,9 @@ export function createAction<S extends z.ZodType, A extends AuthLevel, T>(
       if (options.policy) {
         const check = await options.policy(ctx.user, parsed.data);
         if (!check.allowed) return err(appError('FORBIDDEN', `errors.policy.${check.reason}`));
+      }
+      if (options.reauth && (!user || !(await hasRecentReauth(user.sessionId)))) {
+        return err(appError('FORBIDDEN', 'errors.admin.reauthRequired'));
       }
       if (options.rateLimit) {
         const key = options.rateLimit.by === 'user' && user ? `u:${user.id}` : `ip:${ctx.ipHash}`;

@@ -7,6 +7,7 @@ import { extractMentions } from '@/lib/mentions';
 
 import { db } from '../db/client';
 import {
+  catalogRequests,
   comments,
   communities,
   entitlements,
@@ -324,4 +325,25 @@ export async function onForumReply({ kind, id }: EventData<'forum/reply.created'
       payload: { href, actor, postTitle: row.post.title },
     });
   }
+}
+
+export async function onCatalogRequestDecided({
+  requestId,
+}: EventData<'catalog/request.decided'>): Promise<void> {
+  const [request] = await db
+    .select()
+    .from(catalogRequests)
+    .where(eq(catalogRequests.id, requestId));
+  if (!request?.userId || request.status === 'pending') return;
+  await notify({
+    userId: request.userId,
+    type: 'catalog_request',
+    dedupeKey: `catalog-request:${requestId}`,
+    payload: {
+      href: routes.onboarding,
+      name: request.payload.name,
+      decision: request.status,
+      reason: request.rejectionReason ?? '—',
+    },
+  });
 }

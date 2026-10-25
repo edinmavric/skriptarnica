@@ -7,18 +7,23 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
+
+import { useReauth } from './reauth';
 import { decideRefundAction } from '@/server/actions/admin';
 
 export function RefundDecision({ refundId }: { refundId: string }) {
   const t = useTranslations('admin.refunds');
   const tAll = useTranslations() as unknown as (key: string) => string;
   const router = useRouter();
+  const reauth = useReauth();
   const { toast } = useToast();
   const [note, setNote] = useState('');
   const [pending, startTransition] = useTransition();
   const decide = (approve: boolean) =>
     startTransition(async () => {
-      const result = await decideRefundAction({ refundId, approve, note: note || null });
+      const result = await reauth(() =>
+        decideRefundAction({ refundId, approve, note: note || null }),
+      );
       if (result.ok) {
         toast({ title: approve ? t('approved') : t('rejected'), tone: 'success' });
         router.refresh();
