@@ -1,6 +1,8 @@
 import { and, asc, eq, sql } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 
+import { normalizeForSearch } from '@/lib/search/normalize';
+
 import { db } from '../db/client';
 import {
   courseProfessors,
@@ -218,4 +220,72 @@ export async function listCatalogSitemapEntries() {
 export async function countCatalog() {
   const [row] = await db.select({ courses: sql<number>`count(*)::int` }).from(courses);
   return row?.courses ?? 0;
+}
+
+export interface ProgramSearchResult {
+  programId: string;
+  programName: string;
+  level: 'oas' | 'mas' | 'das' | 'oss' | 'ias';
+  durationYears: number;
+  facultyId: string;
+  facultyName: string;
+  facultyShortName: string;
+  universityId: string;
+  universityName: string;
+  city: string;
+}
+
+/** Every undergraduate program with its faculty and university, plus a normalized haystack. */
+const allPrograms = unstable_cache(
+  async () => {
+    const rows = await db
+      .select({
+        programId: studyPrograms.id,
+        programName: studyPrograms.name,
+        level: studyPrograms.level,
+        durationYears: studyPrograms.durationYears,
+        facultyId: faculties.id,
+        facultyName: faculties.name,
+        facultyShortName: faculties.shortName,
+        universityId: universities.id,
+        universityName: universities.name,
+        universityShortName: universities.shortName,
+        city: faculties.city,
+      })
+      .from(studyPrograms)
+      .innerJoin(faculties, eq(faculties.id, studyPrograms.facultyId))
+      .innerJoin(universities, eq(universities.id, faculties.universityId))
+      .orderBy(asc(studyPrograms.name));
+    return rows.map(({ universityShortName, ...row }) => ({
+      ...row,
+      haystack: normalizeForSearch(
+        `${row.programName} ${row.facultyName} ${row.facultyShortName} ${row.universityName} ${universityShortName} ${row.city}`.toLowerCase(),
+      ),
+    }));
+  },
+  ['all-programs'],
+  { tags: [CATALOG_TAG], revalidate: 3600 },
+);
+
+/**
+ * Finds study programs by any mix of program, faculty, university and city words
+ * ("softversko etf", "medicina nis"), so a student doesn't need to know where to look first.
+ */
+export async function searchPrograms(query: string, limit = 20): Promise<ProgramSearchResult[]> {
+  // Serbian inflects word endings (informatika / informaciono, matematika / matematički), so
+  // longer words match on their stem: everything but the last four letters, at least five.
+  const terms = normalizeForSearch(query.toLowerCase())
+    .split(' ')
+    .filter(Boolean)
+    .map((term) => (term.length > 8 ? term.slice(0, Math.max(5, term.length - 4)) : term));
+  if (terms.length === 0) return [];
+  const programs = await allPrograms();
+  const words = (text: string) => text.split(' ');
+  return programs
+    .filter((program) => {
+      const haystackWords = words(program.haystack);
+      return terms.every((term) => haystackWords.some((word) => word.startsWith(term)));
+    })
+    .slice(0, limit)
+    .map(({ haystack: _haystack, ...program }) => program);
 }

@@ -194,7 +194,9 @@
         "course": "Predmet",
         "professor": "Profesor",
         "exam": "Ispit",
-        "general": "Opšta"
+        "general": "Opšta",
+        "university": "Univerzitet",
+        "program": "Smer"
       },
       "roles": {
         "moderator": "Moderator",
@@ -1017,13 +1019,15 @@
       "username": "Korisničko ime",
       "program": "Smer i godina",
       "courses": "Predmeti",
-      "verify": "Studentski email"
+      "verify": "Studentski email",
+      "communities": "Zajednice"
     },
     "titles": {
       "username": "Izaberi korisničko ime",
       "program": "Gde studiraš?",
       "courses": "Koje predmete slušaš, a koje si položio?",
-      "verify": "Potvrdi da si student (opciono)"
+      "verify": "Potvrdi da si student (opciono)",
+      "communities": "Pridruži se svojim zajednicama"
     },
     "username": {
       "label": "Korisničko ime",
@@ -1039,7 +1043,12 @@
       "programPlaceholder": "Izaberi smer",
       "year": "Godina studija",
       "yearOption": "{year}. godina",
-      "submit": "Nastavi"
+      "submit": "Nastavi",
+      "search": "Pronađi svoj smer",
+      "searchHint": "Kucaj smer, fakultet ili grad, npr. „softversko etf“ ili „medicina niš“.",
+      "searchPlaceholder": "Smer, fakultet ili grad",
+      "searchEmpty": "Nema takvog smera. Probaj drugačije ili izaberi korak po korak.",
+      "orStepByStep": "Ili izaberi korak po korak:"
     },
     "courses": {
       "intro": "Na osnovu godine smo označili predmete — promeni šta ne odgovara. Ocena je opciona i vidi se samo uz tvoje skripte.",
@@ -1089,6 +1098,14 @@
       "noteHint": "Npr. godina i semestar predmeta ili link ka sajtu fakulteta.",
       "submit": "Pošalji predlog",
       "sent": "Hvala! Predlog je poslat administratoru."
+    },
+    "communities": {
+      "intro": "Ovde studenti tvog univerziteta, fakulteta, smera i predmeta pitaju šta je bilo na roku i dele iskustva. Izabrali smo ih za tebe; odčekiraj one koje ne želiš.",
+      "members": "{count, plural, =0 {još nema članova} one {# član} few {# člana} other {# članova}}",
+      "alreadyMember": "Već si član",
+      "join": "{count, plural, one {Pridruži se jednoj zajednici} other {Pridruži se izabranim zajednicama (#)}}",
+      "continue": "Nastavi",
+      "none": "Za tvoj smer još nema zajednica. Možeš ih naći kasnije u meniju Zajednice."
     }
   },
   "devOutbox": {
@@ -1115,7 +1132,8 @@
         "oas": "Osnovne akademske studije",
         "mas": "Master akademske studije",
         "das": "Doktorske studije",
-        "oss": "Osnovne strukovne studije"
+        "oss": "Osnovne strukovne studije",
+        "ias": "Integrisane akademske studije"
       },
       "emptyTitle": "Predmeti još nisu uneti",
       "emptyDescription": "Katalog popunjavamo uz pomoć studenata. Ako studiraš ovde, predloži predmete pri podešavanju profila.",
@@ -1939,7 +1957,8 @@
         "oas": "Osnovne akademske",
         "mas": "Master akademske",
         "das": "Doktorske",
-        "oss": "Osnovne strukovne"
+        "oss": "Osnovne strukovne",
+        "ias": "Integrisane akademske studije"
       },
       "links": {
         "programs": "Smerovi i godina",

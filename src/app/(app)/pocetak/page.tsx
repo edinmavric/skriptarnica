@@ -11,6 +11,7 @@ import { routes } from '@/config/routes';
 import { db } from '@/server/db/client';
 import { userCourseStatus } from '@/server/db/schema';
 import { getStudentProfile, requireAppUser } from '@/server/auth/session';
+import { suggestedCommunities } from '@/server/services/onboarding';
 import {
   listProgramCoursesUpToYear,
   listProgramsForFaculty,
@@ -32,7 +33,7 @@ export default async function OnboardingPage() {
   const stored = (profile?.onboardingStep ?? 'program') as OnboardingData['step'];
   const step: OnboardingData['step'] = needsUsername ? 'username' : stored;
 
-  const [universities, programs, courses, statuses] = await Promise.all([
+  const [universities, programs, courses, statuses, communities] = await Promise.all([
     listUniversitiesWithFaculties(),
     profile?.facultyId ? listProgramsForFaculty(profile.facultyId) : Promise.resolve([]),
     profile?.programId && profile.year
@@ -46,6 +47,7 @@ export default async function OnboardingPage() {
       })
       .from(userCourseStatus)
       .where(eq(userCourseStatus.userId, user.id)),
+    step === 'communities' ? suggestedCommunities(user.id) : Promise.resolve([]),
   ]);
 
   const data: OnboardingData = {
@@ -59,6 +61,7 @@ export default async function OnboardingPage() {
       year: profile?.year ?? null,
     },
     programs,
+    communities,
     courses,
     statuses,
     studentVerified: Boolean(profile?.studentVerifiedAt),

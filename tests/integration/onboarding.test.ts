@@ -109,7 +109,7 @@ describe('onboarding: course statuses', () => {
     expect(byCourse[a.id]).toMatchObject({ status: 'passed', grade: 10 });
     expect(byCourse[b.id]).toBeUndefined();
     expect(byCourse[c.id]).toMatchObject({ status: 'enrolled', grade: null });
-    expect((await getProfile(user.id))?.onboardingStep).toBe('verify');
+    expect((await getProfile(user.id))?.onboardingStep).toBe('communities');
   });
 
   it('refuses courses from another faculty (no cross-faculty writes)', async () => {

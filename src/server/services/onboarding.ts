@@ -1,14 +1,17 @@
 import { createHash, randomBytes } from 'node:crypto';
 
-import { and, eq, gt, inArray, isNull } from 'drizzle-orm';
+import { and, eq, gt, inArray, isNull, or } from 'drizzle-orm';
 
 import { routes } from '@/config/routes';
 import { env } from '@/env';
 import { appError, err, ok, type Result } from '@/lib/result';
 
 import { db } from '../db/client';
+import type { CurrentUser } from '../auth/session';
 import {
   catalogRequests,
+  communities,
+  communityMembers,
   courses,
   faculties,
   programCourses,
@@ -20,9 +23,10 @@ import {
   users,
 } from '../db/schema';
 import { sendActionEmail } from '../email/send';
+import { joinCommunity } from './communities';
 import type { CatalogRequestInput, CoursesStepInput } from '@/lib/validation/onboarding';
 
-export type OnboardingStep = 'username' | 'program' | 'courses' | 'verify' | 'done';
+export type OnboardingStep = 'username' | 'program' | 'courses' | 'communities' | 'verify' | 'done';
 
 async function ensureProfile(userId: string) {
   await db.insert(studentProfiles).values({ userId }).onConflictDoNothing();
@@ -137,11 +141,101 @@ export async function saveCourseStatuses(
     if (advanceStep) {
       await tx
         .update(studentProfiles)
-        .set({ onboardingStep: 'verify' })
+        .set({ onboardingStep: 'communities' })
         .where(eq(studentProfiles.userId, userId));
     }
   });
   return ok(undefined);
+}
+
+export interface SuggestedCommunity {
+  id: string;
+  slug: string;
+  name: string;
+  type: 'university' | 'faculty' | 'program' | 'course' | 'professor' | 'exam' | 'general';
+  memberCount: number;
+  joined: boolean;
+}
+
+const suggestionOrder = { university: 0, faculty: 1, program: 2, course: 3 } as const;
+
+/**
+ * Communities to suggest after onboarding: the student's university, faculty and program
+ * (smer), and the courses they're taking (marked "enrolled"), or else this year's courses of
+ * their program.
+ */
+export async function suggestedCommunities(userId: string): Promise<SuggestedCommunity[]> {
+  const [profile] = await db
+    .select()
+    .from(studentProfiles)
+    .where(eq(studentProfiles.userId, userId));
+  if (!profile?.facultyId) return [];
+  const enrolled = (
+    await db
+      .select({ courseId: userCourseStatus.courseId })
+      .from(userCourseStatus)
+      .where(and(eq(userCourseStatus.userId, userId), eq(userCourseStatus.status, 'enrolled')))
+  ).map((row) => row.courseId);
+  const courseIds =
+    enrolled.length > 0 || !profile.programId || !profile.year
+      ? enrolled
+      : (
+          await db
+            .select({ courseId: programCourses.courseId })
+            .from(programCourses)
+            .where(
+              and(
+                eq(programCourses.programId, profile.programId),
+                eq(programCourses.year, profile.year),
+              ),
+            )
+        ).map((row) => row.courseId);
+  const matches = [
+    profile.universityId ? eq(communities.universityId, profile.universityId) : undefined,
+    and(eq(communities.type, 'faculty'), eq(communities.facultyId, profile.facultyId)),
+    profile.programId ? eq(communities.programId, profile.programId) : undefined,
+    courseIds.length > 0
+      ? and(eq(communities.type, 'course'), inArray(communities.courseId, courseIds))
+      : undefined,
+  ].filter((condition) => condition !== undefined);
+  const rows = await db
+    .select({
+      id: communities.id,
+      slug: communities.slug,
+      name: communities.name,
+      type: communities.type,
+      memberCount: communities.memberCount,
+      membership: communityMembers.id,
+    })
+    .from(communities)
+    .leftJoin(
+      communityMembers,
+      and(eq(communityMembers.communityId, communities.id), eq(communityMembers.userId, userId)),
+    )
+    .where(or(...matches));
+  const rank = (type: SuggestedCommunity['type']) =>
+    type in suggestionOrder ? suggestionOrder[type as keyof typeof suggestionOrder] : 9;
+  return rows
+    .map(({ membership, ...row }) => ({ ...row, joined: membership !== null }))
+    .sort((a, b) => rank(a.type) - rank(b.type) || a.name.localeCompare(b.name, 'sr'));
+}
+
+/** Joins the chosen suggestions (only ones actually suggested) and moves on to verification. */
+export async function joinSuggestedCommunities(
+  user: CurrentUser,
+  communityIds: string[],
+): Promise<Result<{ joined: number }>> {
+  const suggestions = await suggestedCommunities(user.id);
+  const chosen = suggestions.filter(
+    (community) => communityIds.includes(community.id) && !community.joined,
+  );
+  let joined = 0;
+  for (const community of chosen) {
+    const result = await joinCommunity(user, community.slug);
+    if (result.ok) joined += 1;
+  }
+  await skipToStep(user.id, 'verify');
+  return ok({ joined });
 }
 
 export async function completeOnboarding(userId: string): Promise<void> {

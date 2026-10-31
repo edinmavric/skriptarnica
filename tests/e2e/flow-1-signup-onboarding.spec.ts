@@ -13,13 +13,22 @@ test.describe('flow 1: sign-up → verification → onboarding', () => {
     await expect(page.getByRole('heading', { name: 'Gde studiraš?' })).toBeVisible();
     await expectNoSeriousA11yViolations(page);
 
-    // Diacritics-insensitive search: "beograd" → Univerzitet u Beogradu, "elektro" → ETF.
-    await page.getByRole('combobox', { name: 'Univerzitet' }).fill('beograd');
-    await page.getByRole('option', { name: /Univerzitet u Beogradu/ }).click();
-    await page.getByRole('combobox', { name: 'Fakultet' }).fill('elektrotehn');
-    await page.getByRole('option', { name: /Elektrotehnički fakultet/ }).click();
-    await page.getByRole('combobox', { name: 'Smer' }).click();
-    await page.getByRole('option', { name: 'Elektrotehnika i računarstvo' }).click();
+    // Program search across every university fills university, faculty and program at once
+    // (diacritics-insensitive: "racunarstvo" finds "računarstvo").
+    await page.getByRole('combobox', { name: 'Pronađi svoj smer' }).fill('racunarstvo etf');
+    await page
+      .getByRole('option', { name: /Elektrotehnika i računarstvo/ })
+      .first()
+      .click();
+    await expect(page.getByRole('combobox', { name: 'Univerzitet' })).toHaveValue(
+      /Univerzitet u Beogradu/,
+    );
+    await expect(page.getByRole('combobox', { name: 'Fakultet' })).toHaveValue(
+      /Elektrotehnički fakultet/,
+    );
+    await expect(page.getByRole('combobox', { name: 'Smer', exact: true })).toHaveValue(
+      'Elektrotehnika i računarstvo',
+    );
     await page.getByLabel('Godina studija').selectOption('1');
     await page.getByRole('button', { name: 'Nastavi' }).click();
 
@@ -33,6 +42,19 @@ test.describe('flow 1: sign-up → verification → onboarding', () => {
       .click();
     await page.getByLabel('Ocena iz predmeta Matematika 1').selectOption('9');
     await page.getByRole('button', { name: 'Sačuvaj predmete' }).click();
+
+    // Communities step: university, faculty, program and enrolled courses, all pre-ticked.
+    await expect(
+      page.getByRole('heading', { name: 'Pridruži se svojim zajednicama' }),
+    ).toBeVisible();
+    await expect(page.getByRole('checkbox', { name: /Univerzitet u Beogradu/ })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: /^Elektrotehnički fakultet/ })).toBeChecked();
+    await expect(
+      page.getByRole('checkbox', { name: /Elektrotehnika i računarstvo \(ETF\)/ }),
+    ).toBeChecked();
+    await page.getByRole('checkbox', { name: /Univerzitet u Beogradu/ }).uncheck();
+    await expectNoSeriousA11yViolations(page);
+    await page.getByRole('button', { name: /Pridruži se izabranim zajednicama/ }).click();
 
     // Student email step: wrong domain is rejected with a clear message, then skipped.
     await expect(page.getByRole('heading', { name: /Potvrdi da si student/ })).toBeVisible();

@@ -165,7 +165,7 @@ export function CatalogForm({
               </Select>
             ) : field.kind === 'level' ? (
               <Select {...common}>
-                {(['oas', 'mas', 'das', 'oss'] as const).map((level) => (
+                {(['oas', 'ias', 'oss', 'mas', 'das'] as const).map((level) => (
                   <option key={level} value={level}>
                     {t(`levels.${level}`)}
                   </option>

@@ -44,6 +44,8 @@ export async function upsertUniversity(tx: DbOrTx, input: UniversityInput) {
     .onConflictDoUpdate({ target: universities.slug, set: values })
     .returning();
   if (!row) throw new Error('university upsert failed');
+  const { ensureUniversityCommunity } = await import('./communities');
+  await ensureUniversityCommunity(tx, row);
   return row;
 }
 
@@ -82,7 +84,7 @@ export async function upsertFaculty(tx: DbOrTx, input: FacultyInput) {
 export interface ProgramInput {
   facultyId: string;
   name: string;
-  level: 'oas' | 'mas' | 'das' | 'oss';
+  level: 'oas' | 'mas' | 'das' | 'oss' | 'ias';
   durationYears: number;
   slug?: string;
 }
@@ -95,6 +97,12 @@ export async function upsertProgram(tx: DbOrTx, input: ProgramInput) {
     .onConflictDoUpdate({ target: [studyPrograms.facultyId, studyPrograms.slug], set: values })
     .returning();
   if (!row) throw new Error('program upsert failed');
+  // Every program (smer) gets its community automatically, like faculties and courses.
+  const [faculty] = await tx.select().from(faculties).where(eq(faculties.id, row.facultyId));
+  if (faculty) {
+    const { ensureProgramCommunity } = await import('./communities');
+    await ensureProgramCommunity(tx, row, faculty);
+  }
   return row;
 }
 

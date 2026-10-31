@@ -17,12 +17,14 @@ import {
   completeOnboarding,
   confirmStudentEmail,
   createCatalogRequest,
+  joinSuggestedCommunities,
   requestStudentEmailVerification,
   saveCourseStatuses,
   saveProgramStep,
   setUsername,
   skipToStep,
 } from '../services/onboarding';
+import { searchPrograms } from '../services/catalog-pages';
 import { invalidateRecommendations } from '../services/recommendations-cache';
 
 import { createAction } from './safe-action';
@@ -55,12 +57,31 @@ export const saveCoursesStepAction = createAction(
 );
 
 export const skipStepAction = createAction(
-  { schema: z.object({ to: z.enum(['courses', 'verify', 'done']) }), auth: 'user' },
+  { schema: z.object({ to: z.enum(['courses', 'communities', 'verify', 'done']) }), auth: 'user' },
   async (input, { user }) => {
     if (input.to === 'done') await completeOnboarding(user.id);
     else await skipToStep(user.id, input.to);
     return ok(undefined);
   },
+);
+
+/** Program (smer) search across every university, for the onboarding shortcut. */
+export const searchProgramsAction = createAction(
+  {
+    schema: z.object({ query: z.string().trim().min(2).max(80) }),
+    auth: 'user',
+    rateLimit: { name: 'search', by: 'user' },
+  },
+  async (input) => ok(await searchPrograms(input.query)),
+);
+
+export const joinCommunitiesAction = createAction(
+  {
+    schema: z.object({ communityIds: z.array(z.uuid()).max(50) }),
+    auth: 'user',
+    rateLimit: { name: 'generic', by: 'user' },
+  },
+  async (input, { user }) => joinSuggestedCommunities(user, input.communityIds),
 );
 
 export const requestStudentEmailAction = createAction(

@@ -17,12 +17,14 @@ import {
 
 import { id, timestamps, tsvector } from './_common';
 import { users } from './auth';
-import { courses, faculties, professors } from './catalog';
+import { courses, faculties, professors, studyPrograms, universities } from './catalog';
 import { examPeriods } from './exam-periods';
 import { notes } from './marketplace';
 
 export const communityType = pgEnum('community_type', [
+  'university',
   'faculty',
+  'program',
   'course',
   'professor',
   'exam',
@@ -36,7 +38,9 @@ export const communities = pgTable(
   {
     id: id(),
     type: communityType().notNull(),
+    universityId: uuid().references(() => universities.id, { onDelete: 'set null' }),
     facultyId: uuid().references(() => faculties.id, { onDelete: 'set null' }),
+    programId: uuid().references(() => studyPrograms.id, { onDelete: 'set null' }),
     courseId: uuid().references(() => courses.id, { onDelete: 'set null' }),
     professorId: uuid().references(() => professors.id, { onDelete: 'set null' }),
     name: text().notNull(),
@@ -60,6 +64,14 @@ export const communities = pgTable(
     uniqueIndex('communities_faculty_auto_uq')
       .on(t.facultyId)
       .where(sql`type = 'faculty'`),
+    // Keyed on the link column, not the type: a new enum value can't be used in the same
+    // migration transaction that adds it. Only automatic communities set these columns.
+    uniqueIndex('communities_university_auto_uq')
+      .on(t.universityId)
+      .where(sql`university_id IS NOT NULL`),
+    uniqueIndex('communities_program_auto_uq')
+      .on(t.programId)
+      .where(sql`program_id IS NOT NULL`),
     index('communities_faculty_idx').on(t.facultyId),
     index('communities_creator_idx').on(t.createdById),
     index('communities_search_tsv_idx').using('gin', t.searchTsv),

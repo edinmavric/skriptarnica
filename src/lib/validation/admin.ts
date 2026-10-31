@@ -47,7 +47,7 @@ export const facultyFormSchema = universityFormSchema.extend({
 export const programFormSchema = z.object({
   facultyId: z.uuid({ error: 'validation.required' }),
   name,
-  level: z.enum(['oas', 'mas', 'das', 'oss']),
+  level: z.enum(['oas', 'mas', 'das', 'oss', 'ias']),
   durationYears: z.coerce.number().int().min(1).max(6),
   slug,
 });

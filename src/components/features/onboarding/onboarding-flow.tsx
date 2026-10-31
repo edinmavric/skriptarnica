@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState, useTransition } from 'react';
+import { useMemo, useRef, useState, useTransition } from 'react';
 
 import { FormAlert } from '@/components/forms/form-alert';
 import { useActionForm } from '@/components/forms/use-action-form';
@@ -15,17 +15,19 @@ import { Select } from '@/components/ui/select';
 import { cn } from '@/lib/cn';
 import { studentEmailSchema, usernameStepSchema } from '@/lib/validation/onboarding';
 import {
+  joinCommunitiesAction,
   listProgramsAction,
   requestStudentEmailAction,
   saveCoursesStepAction,
   saveProgramStepAction,
+  searchProgramsAction,
   setUsernameAction,
   skipStepAction,
 } from '@/server/actions/onboarding';
 
 import { CatalogRequestDialog } from './catalog-request-dialog';
 
-type Step = 'username' | 'program' | 'courses' | 'verify';
+type Step = 'username' | 'program' | 'courses' | 'communities' | 'verify';
 
 export interface OnboardingData {
   step: Step;
@@ -44,6 +46,13 @@ export interface OnboardingData {
     year: number | null;
   };
   programs: { id: string; name: string; durationYears: number }[];
+  communities: {
+    id: string;
+    name: string;
+    type: 'university' | 'faculty' | 'program' | 'course' | 'professor' | 'exam' | 'general';
+    memberCount: number;
+    joined: boolean;
+  }[];
   courses: { id: string; name: string; code: string | null; year: number; semester: number }[];
   statuses: { courseId: string; status: 'enrolled' | 'passed'; grade: number | null }[];
   studentVerified: boolean;
@@ -136,6 +145,41 @@ function ProgramStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
     [university],
   );
   const program = programs.find((p) => p.id === programId) ?? null;
+  const [matches, setMatches] = useState<
+    {
+      programId: string;
+      programName: string;
+      durationYears: number;
+      facultyId: string;
+      facultyShortName: string;
+      universityId: string;
+      universityName: string;
+    }[]
+  >([]);
+  const [searching, setSearching] = useState(false);
+  const searchSeq = useRef(0);
+
+  function searchPrograms(query: string) {
+    const seq = ++searchSeq.current;
+    if (query.trim().length < 2) {
+      setMatches([]);
+      return;
+    }
+    setSearching(true);
+    void searchProgramsAction({ query }).then((result) => {
+      if (seq !== searchSeq.current) return;
+      setSearching(false);
+      setMatches(result.ok ? result.value : []);
+    });
+  }
+
+  function pickMatch(match: (typeof matches)[number]) {
+    setUniversityId(match.universityId);
+    setFacultyId(match.facultyId);
+    setProgramId(match.programId);
+    setFieldErrors({});
+    void loadPrograms(match.facultyId);
+  }
 
   async function loadPrograms(nextFacultyId: string) {
     setLoadingPrograms(true);
@@ -171,6 +215,25 @@ function ProgramStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
   return (
     <div className="flex max-w-md flex-col gap-4">
       <FormAlert message={error} />
+      <Field label={t('search')} description={t('searchHint')} id="ob-search">
+        <Combobox
+          options={matches.map((match) => ({
+            value: match.programId,
+            label: match.programName,
+            description: `${match.facultyShortName}, ${match.universityName}`,
+          }))}
+          value={null}
+          placeholder={t('searchPlaceholder')}
+          onQueryChange={searchPrograms}
+          loading={searching}
+          emptyMessage={t('searchEmpty')}
+          onChange={(value) => {
+            const match = matches.find((candidate) => candidate.programId === value);
+            if (match) pickMatch(match);
+          }}
+        />
+      </Field>
+      <p className="text-sm text-ink-muted">{t('orStepByStep')}</p>
       <Field label={t('university')} error={fieldErrors.universityId} id="ob-universityId">
         <Combobox
           options={universityOptions}
@@ -400,6 +463,87 @@ function CoursesStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
   );
 }
 
+function CommunitiesStep({
+  communities,
+  onDone,
+}: {
+  communities: OnboardingData['communities'];
+  onDone: () => void;
+}) {
+  const t = useTranslations('onboarding.communities');
+  const tTypes = useTranslations('forum.community.types');
+  const tAll = useTranslations() as unknown as (key: string) => string;
+  const [chosen, setChosen] = useState<Set<string>>(
+    () => new Set(communities.filter((c) => !c.joined).map((c) => c.id)),
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+  const toggle = (id: string) =>
+    setChosen((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  const join = () =>
+    startTransition(async () => {
+      const result = await joinCommunitiesAction({ communityIds: [...chosen] });
+      if (result.ok) onDone();
+      else setError(tAll(result.error.messageKey));
+    });
+
+  if (communities.length === 0) {
+    return (
+      <div className="flex max-w-xl flex-col gap-4">
+        <p className="text-ink-muted">{t('none')}</p>
+        <Button onClick={join} loading={pending} className="self-start">
+          {t('continue')}
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="flex max-w-xl flex-col gap-4">
+      <p className="text-ink-muted">{t('intro')}</p>
+      <FormAlert message={error} />
+      <ul className="divide-y divide-rule border-y border-rule">
+        {communities.map((community) => (
+          <li key={community.id}>
+            <label
+              className={cn(
+                'flex min-h-14 items-center gap-3 py-2',
+                community.joined ? 'cursor-default' : 'cursor-pointer',
+              )}
+            >
+              <input
+                type="checkbox"
+                className="size-5 shrink-0 accent-pen"
+                checked={community.joined || chosen.has(community.id)}
+                disabled={community.joined}
+                onChange={() => toggle(community.id)}
+              />
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="font-medium">{community.name}</span>
+                <span className="text-sm text-ink-muted">
+                  {community.joined
+                    ? t('alreadyMember')
+                    : t('members', { count: community.memberCount })}
+                </span>
+              </span>
+              <Badge tone="outline" className="shrink-0">
+                {tTypes(community.type)}
+              </Badge>
+            </label>
+          </li>
+        ))}
+      </ul>
+      <Button onClick={join} loading={pending} className="self-start">
+        {chosen.size > 0 ? t('join', { count: chosen.size }) : t('continue')}
+      </Button>
+    </div>
+  );
+}
+
 function VerifyStep({ verified, onDone }: { verified: boolean; onDone: () => void }) {
   const t = useTranslations('onboarding.verify');
   const [sent, setSent] = useState(false);
@@ -450,13 +594,15 @@ export function OnboardingFlow({ data }: { data: OnboardingData }) {
     ...(data.needsUsername ? (['username'] as const) : []),
     'program',
     'courses',
+    'communities',
     'verify',
   ];
   const refresh = () => router.refresh();
-  const nextAfter: Record<Step, 'courses' | 'verify' | 'done'> = {
+  const nextAfter: Record<Step, 'courses' | 'communities' | 'verify' | 'done'> = {
     username: 'courses',
     program: 'courses',
-    courses: 'verify',
+    courses: 'communities',
+    communities: 'verify',
     verify: 'done',
   };
 
@@ -470,6 +616,9 @@ export function OnboardingFlow({ data }: { data: OnboardingData }) {
         {data.step === 'username' ? <UsernameStep onDone={refresh} /> : null}
         {data.step === 'program' ? <ProgramStep data={data} onDone={refresh} /> : null}
         {data.step === 'courses' ? <CoursesStep data={data} onDone={refresh} /> : null}
+        {data.step === 'communities' ? (
+          <CommunitiesStep communities={data.communities} onDone={refresh} />
+        ) : null}
         {data.step === 'verify' ? (
           <VerifyStep verified={data.studentVerified} onDone={() => router.push('/')} />
         ) : null}

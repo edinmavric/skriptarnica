@@ -75,7 +75,8 @@ export const faculties = pgTable(
   ],
 );
 
-export const programLevel = pgEnum('program_level', ['oas', 'mas', 'das', 'oss']);
+/** oas/oss = undergraduate academic/applied, ias = integrated (e.g. medicine), mas/das = master/doctoral. */
+export const programLevel = pgEnum('program_level', ['oas', 'mas', 'das', 'oss', 'ias']);
 
 export const studyPrograms = pgTable(
   'study_programs',
@@ -198,7 +199,7 @@ export interface CatalogRequestPayload {
   universityId?: string;
   facultyId?: string;
   programId?: string;
-  level?: 'oas' | 'mas' | 'das' | 'oss';
+  level?: 'oas' | 'mas' | 'das' | 'oss' | 'ias';
   durationYears?: number;
   year?: number;
   semester?: number;

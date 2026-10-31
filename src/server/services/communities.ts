@@ -15,6 +15,8 @@ import {
   faculties,
   professors,
   studentProfiles,
+  studyPrograms,
+  universities,
   users,
 } from '../db/schema';
 import type { DbOrTx } from '../db/types';
@@ -50,6 +52,56 @@ async function uniqueCommunitySlug(tx: DbOrTx, base: string): Promise<string> {
     if (!taken) return candidate;
   }
   return `${slug}-${uuidv7().slice(-6)}`;
+}
+
+/** Automatic university community, e.g. z/univerzitet-u-beogradu. Idempotent. */
+export async function ensureUniversityCommunity(
+  tx: DbOrTx,
+  university: { id: string; name: string; shortName: string; slug: string; city: string },
+): Promise<string> {
+  const [existing] = await tx
+    .select({ id: communities.id })
+    .from(communities)
+    .where(eq(communities.universityId, university.id));
+  if (existing) return existing.id;
+  const id = uuidv7();
+  await tx.insert(communities).values({
+    id,
+    type: 'university',
+    universityId: university.id,
+    name: university.name,
+    slug: await uniqueCommunitySlug(tx, university.slug),
+    description: `Zajednica studenata: ${university.name}.`,
+    searchText: normalizeForSearch(`${university.name} ${university.shortName} ${university.city}`),
+  });
+  await addDefaultFlairs(tx, id);
+  return id;
+}
+
+/** Automatic study program (smer) community, e.g. z/softversko-inzenjerstvo-etf-bg. Idempotent. */
+export async function ensureProgramCommunity(
+  tx: DbOrTx,
+  program: { id: string; name: string; slug: string },
+  faculty: { id: string; shortName: string; slug: string },
+): Promise<string> {
+  const [existing] = await tx
+    .select({ id: communities.id })
+    .from(communities)
+    .where(eq(communities.programId, program.id));
+  if (existing) return existing.id;
+  const id = uuidv7();
+  await tx.insert(communities).values({
+    id,
+    type: 'program',
+    facultyId: faculty.id,
+    programId: program.id,
+    name: `${program.name} (${faculty.shortName})`,
+    slug: await uniqueCommunitySlug(tx, `${program.slug}-${faculty.slug}`),
+    description: `Studenti smera ${program.name}, ${faculty.shortName}.`,
+    searchText: normalizeForSearch(`${program.name} ${faculty.shortName} smer`),
+  });
+  await addDefaultFlairs(tx, id);
+  return id;
 }
 
 /** Automatic faculty community (SPEC §4.7), owner = system. Idempotent. */
@@ -105,11 +157,22 @@ export async function ensureCourseCommunity(
 
 /** Backfill for the whole catalog (seed, admin catalog import). */
 export async function ensureCatalogCommunities(): Promise<number> {
+  const count = async () =>
+    (await db.select({ n: sql<number>`count(*)::int` }).from(communities))[0]?.n ?? 0;
+  const start = await count();
+  for (const university of await db.select().from(universities)) {
+    await ensureUniversityCommunity(db, university);
+  }
+  let created = (await count()) - start;
   const facultyRows = await db.select().from(faculties);
-  let created = 0;
   for (const faculty of facultyRows) {
     const before = await db.select({ n: sql<number>`count(*)::int` }).from(communities);
     await ensureFacultyCommunity(db, faculty);
+    const programRows = await db
+      .select()
+      .from(studyPrograms)
+      .where(eq(studyPrograms.facultyId, faculty.id));
+    for (const program of programRows) await ensureProgramCommunity(db, program, faculty);
     const courseRows = await db.select().from(courses).where(eq(courses.facultyId, faculty.id));
     for (const course of courseRows) await ensureCourseCommunity(db, course, faculty);
     const after = await db.select({ n: sql<number>`count(*)::int` }).from(communities);
@@ -302,7 +365,11 @@ export async function listCommunitiesForViewer(viewer: CurrentUser | null) {
   const profile = viewer
     ? (
         await db
-          .select({ facultyId: studentProfiles.facultyId })
+          .select({
+            facultyId: studentProfiles.facultyId,
+            programId: studentProfiles.programId,
+            universityId: studentProfiles.universityId,
+          })
           .from(studentProfiles)
           .where(eq(studentProfiles.userId, viewer.id))
       )[0]
@@ -330,7 +397,18 @@ export async function listCommunitiesForViewer(viewer: CurrentUser | null) {
         .from(communities)
         .where(
           and(
-            eq(communities.facultyId, profile.facultyId),
+            or(
+              // The viewer's faculty, minus other programs' communities (only their own smer)…
+              and(
+                eq(communities.facultyId, profile.facultyId),
+                or(
+                  ne(communities.type, 'program'),
+                  profile.programId ? eq(communities.programId, profile.programId) : undefined,
+                ),
+              ),
+              // …and their university.
+              profile.universityId ? eq(communities.universityId, profile.universityId) : undefined,
+            ),
             visible,
             mineIds.length ? sql`${communities.id} NOT IN ${mineIds}` : undefined,
           ),

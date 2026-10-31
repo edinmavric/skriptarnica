@@ -64,6 +64,13 @@
       "when": 1792906770611,
       "tag": "0008_admin_copyright_claims",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793477811685,
+      "tag": "0009_university_program_communities",
+      "breakpoints": true
     }
   ]
 }

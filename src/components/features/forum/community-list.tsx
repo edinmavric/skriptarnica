@@ -10,7 +10,7 @@ interface Item {
   slug: string;
   name: string;
   description: string;
-  type: 'faculty' | 'course' | 'professor' | 'exam' | 'general';
+  type: 'university' | 'faculty' | 'program' | 'course' | 'professor' | 'exam' | 'general';
   visibility: 'public' | 'faculty_only';
   memberCount: number;
   postCount: number;

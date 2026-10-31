@@ -21,7 +21,8 @@ import { db } from '../client';
 import { courses, faculties, studyPrograms } from '../schema';
 
 /**
- * Seeds. `catalog`: sample universities/faculties/programs (idempotent).
+ * Seeds. `catalog`: every accredited Serbian university with its faculties and undergraduate
+ * programs (catalog.json, compiled from official sources listed per entry; idempotent).
  * `demo`: illustrative courses/professors and demo content for dev/preview — never production.
  * Usage: npm run db:seed -- catalog|demo|all
  */
@@ -39,9 +40,10 @@ interface CatalogFile {
       slug: string;
       city: string;
       emailDomains: string[];
-      programs: {
+      /** Missing when a faculty's programs couldn't be verified yet. */
+      programs?: {
         name: string;
-        level: 'oas' | 'mas' | 'das' | 'oss';
+        level: 'oas' | 'mas' | 'das' | 'oss' | 'ias';
         durationYears: number;
         slug: string;
       }[];
@@ -64,14 +66,20 @@ const readJson = <T>(file: string): T =>
   JSON.parse(readFileSync(path.join(here, file), 'utf8')) as T;
 
 async function seedCatalog() {
-  const data = readJson<CatalogFile>('catalog.sample.json');
+  const data = readJson<CatalogFile>('catalog.json');
   await db.transaction(async (tx) => {
     for (const uni of data.universities) {
       const university = await upsertUniversity(tx, uni);
       for (const fac of uni.faculties) {
         const faculty = await upsertFaculty(tx, { ...fac, universityId: university.id });
-        for (const program of fac.programs) {
-          await upsertProgram(tx, { ...program, facultyId: faculty.id });
+        for (const program of fac.programs ?? []) {
+          await upsertProgram(tx, {
+            name: program.name,
+            level: program.level,
+            durationYears: program.durationYears,
+            slug: program.slug,
+            facultyId: faculty.id,
+          });
         }
       }
     }
