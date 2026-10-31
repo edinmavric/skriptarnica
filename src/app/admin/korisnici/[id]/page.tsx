@@ -20,6 +20,7 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
   const ledger = seller ? await sellerLedger(user.id) : null;
   const facts: [string, string][] = [
     [t('email'), user.email],
+    [t('emailConfirmed'), user.emailVerified ? t('yes') : t('no')],
     [t('username'), user.username ?? '—'],
     [t('joined'), formatDate(user.createdAt)],
     [t('faculty'), detail.facultyName ?? '—'],
@@ -46,6 +47,9 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
             <Badge tone="danger">{t('bannedSince', { date: formatDate(user.bannedAt) })}</Badge>
           ) : null}
           {user.deletedAt ? <Badge tone="neutral">{t('deleted')}</Badge> : null}
+          {!user.emailVerified && !user.deletedAt ? (
+            <Badge tone="warning">{t('emailUnverified')}</Badge>
+          ) : null}
           {user.deletionScheduledFor ? (
             <Badge tone="warning">
               {t('deletionScheduled', { date: formatDate(user.deletionScheduledFor) })}
@@ -70,6 +74,7 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
         twoFactor={user.twoFactorEnabled}
         isAdmin={user.role === 'admin'}
         deleted={Boolean(user.deletedAt)}
+        emailVerified={user.emailVerified}
       />
       <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[12rem_1fr]">
         {facts.map(([label, value]) => (

@@ -21,7 +21,14 @@ const storage = new URL(env.NEXT_PUBLIC_STORAGE_PUBLIC_URL);
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // radix-ui is a barrel of every primitive; import only what each module uses (SPEC §8.2).
-  experimental: { optimizePackageImports: ['radix-ui'] },
+  experimental: {
+    optimizePackageImports: ['radix-ui'],
+    // Next 16.4's persisted Turbopack dev cache can resume out of step with the code after a
+    // restart (notably with a changed NEXT_PUBLIC_ value or a tab left open), and every HMR
+    // connection then gets "HMR hash mismatch" and reloads forever (vercel/next.js#100267,
+    // fix in #100291). Off until a release carries the fix; costs a slower first compile.
+    turbopackFileSystemCacheForDev: false,
+  },
   poweredByHeader: false,
   // Dev logs print every Server Function call with its arguments: passwords, 2FA codes, IBANs.
   logging: { serverFunctions: false },

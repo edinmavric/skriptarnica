@@ -261,15 +261,18 @@ describe('digest', () => {
       body: 'Tekst.',
       isAnonymous: false,
     });
-    const monday = new Date('2026-10-26T07:00:00+01:00');
-    expect(await runDigests(new Date(Math.max(Date.now(), monday.getTime())), reader.id)).toBe(1);
+    // Weekly digests go out on Mondays: run at the next Monday after now (10:00 UTC is Monday
+    // in Belgrade with or without daylight saving), after the posts above were created.
+    const monday = new Date();
+    monday.setUTCHours(10, 0, 0, 0);
+    do monday.setUTCDate(monday.getUTCDate() + 1);
+    while (monday.getUTCDay() !== 1);
+    expect(await runDigests(monday, reader.id)).toBe(1);
     const email = sent.digest[0] as { items: { title: string }[] };
     expect(email.items.map((item) => item.title)).toContain(title);
     expect(email.items.map((item) => item.title)).not.toContain('Moja objava u digestu');
     // Nothing new since the last digest → nothing sent.
-    expect(
-      await runDigests(new Date(Math.max(Date.now(), monday.getTime()) + 1000), reader.id),
-    ).toBe(0);
+    expect(await runDigests(new Date(monday.getTime() + 1000), reader.id)).toBe(0);
   });
 });
 

@@ -948,7 +948,8 @@
       "noOwner": "Sadržaj nema autora koga je moguće blokirati.",
       "claimDecided": "O prijavi je već odlučeno.",
       "claimNoNote": "Prvo poveži prijavu sa skriptom.",
-      "notSeller": "Korisnik nije prodavac."
+      "notSeller": "Korisnik nije prodavac.",
+      "alreadyVerified": "This user’s email is already confirmed."
     },
     "purchase": {
       "unavailable": "Skripta nije dostupna za kupovinu.",
@@ -1863,7 +1864,9 @@
         "resetTwoFactor": "Resetuj dvofaktorsku prijavu",
         "twoFactorReset": "Dvofaktorska prijava je resetovana.",
         "impersonate": "Pogledaj sajt kao ovaj korisnik",
-        "impersonating": "Pregled kao korisnik…"
+        "impersonating": "Pregled kao korisnik…",
+        "verifyEmail": "Confirm email",
+        "emailVerified": "Email confirmed."
       },
       "adjustment": {
         "title": "Ručna korekcija stanja",
@@ -1874,7 +1877,10 @@
         "reasonHint": "Najmanje 10 znakova. Vidi se u knjiženjima i dnevniku.",
         "submit": "Proknjiži korekciju",
         "done": "Korekcija je proknjižena."
-      }
+      },
+      "emailConfirmed": "Email confirmed",
+      "emailUnverified": "Email not confirmed",
+      "onlyUnverified": "Only unconfirmed emails"
     },
     "catalog": {
       "title": "Katalog",

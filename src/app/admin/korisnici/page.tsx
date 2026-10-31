@@ -11,23 +11,38 @@ import { searchUsers } from '@/server/services/admin/users';
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; strana?: string }>;
+  searchParams: Promise<{ q?: string; strana?: string; nepotvrdjeni?: string }>;
 }) {
   const t = await getTranslations('admin.users');
-  const { q = '', strana } = await searchParams;
+  const { q = '', strana, nepotvrdjeni } = await searchParams;
   const page = Math.max(0, Number(strana ?? 0) || 0);
-  const { rows, hasMore } = await searchUsers(q, page);
+  const onlyUnverified = nepotvrdjeni === '1';
+  const { rows, hasMore } = await searchUsers(q, page, onlyUnverified);
+  const pageHref = (target: number) =>
+    `?q=${encodeURIComponent(q)}&strana=${target}${onlyUnverified ? '&nepotvrdjeni=1' : ''}`;
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-display font-bold">{t('title')}</h1>
-      <form role="search" className="flex max-w-xl gap-2">
-        <label htmlFor="user-search" className="sr-only">
-          {t('search')}
+      <form role="search" className="flex max-w-2xl flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="flex min-w-0 flex-1 gap-2">
+          <label htmlFor="user-search" className="sr-only">
+            {t('search')}
+          </label>
+          <Input id="user-search" name="q" defaultValue={q} placeholder={t('searchPlaceholder')} />
+          <Button type="submit" variant="secondary">
+            {t('search')}
+          </Button>
+        </div>
+        <label className="flex min-h-11 items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="nepotvrdjeni"
+            value="1"
+            defaultChecked={onlyUnverified}
+            className="size-4 accent-pen"
+          />
+          {t('onlyUnverified')}
         </label>
-        <Input id="user-search" name="q" defaultValue={q} placeholder={t('searchPlaceholder')} />
-        <Button type="submit" variant="secondary">
-          {t('search')}
-        </Button>
       </form>
       <TableScroll label={t('title')}>
         <table className="w-full min-w-[40rem] text-left text-sm">
@@ -59,6 +74,9 @@ export default async function AdminUsersPage({
                     ) : null}
                     {row.bannedAt ? <Badge tone="danger">{t('banned')}</Badge> : null}
                     {row.deletedAt ? <Badge tone="neutral">{t('deleted')}</Badge> : null}
+                    {!row.emailVerified && !row.deletedAt ? (
+                      <Badge tone="warning">{t('emailUnverified')}</Badge>
+                    ) : null}
                   </span>
                 </td>
                 <td className="py-2 whitespace-nowrap">{formatDate(row.createdAt)}</td>
@@ -70,18 +88,12 @@ export default async function AdminUsersPage({
       {rows.length === 0 ? <p className="text-ink-muted">{t('none')}</p> : null}
       <div className="flex gap-3">
         {page > 0 ? (
-          <Link
-            href={`?q=${encodeURIComponent(q)}&strana=${page - 1}`}
-            className="text-pen underline underline-offset-2"
-          >
+          <Link href={pageHref(page - 1)} className="text-pen underline underline-offset-2">
             {t('prev')}
           </Link>
         ) : null}
         {hasMore ? (
-          <Link
-            href={`?q=${encodeURIComponent(q)}&strana=${page + 1}`}
-            className="text-pen underline underline-offset-2"
-          >
+          <Link href={pageHref(page + 1)} className="text-pen underline underline-offset-2">
             {t('next')}
           </Link>
         ) : null}

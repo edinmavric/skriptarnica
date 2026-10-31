@@ -17,6 +17,7 @@ import {
   resetTwoFactorAction,
   startImpersonationAction,
   unbanUserAction,
+  verifyUserEmailAction,
 } from '@/server/actions/admin-panel';
 
 import { useReauth } from './reauth';
@@ -51,12 +52,14 @@ export function UserActions({
   twoFactor,
   isAdmin,
   deleted,
+  emailVerified,
 }: {
   userId: string;
   banned: boolean;
   twoFactor: boolean;
   isAdmin: boolean;
   deleted: boolean;
+  emailVerified: boolean;
 }) {
   const t = useTranslations('admin.users.actions');
   const { run, pending } = useRun();
@@ -65,6 +68,14 @@ export function UserActions({
   if (deleted) return null;
   return (
     <div className="flex flex-wrap gap-2">
+      {!emailVerified ? (
+        <Button
+          loading={pending}
+          onClick={() => run(() => verifyUserEmailAction({ userId }), t('emailVerified'))}
+        >
+          {t('verifyEmail')}
+        </Button>
+      ) : null}
       {!isAdmin ? (
         banned ? (
           <Button

@@ -33,7 +33,9 @@ In development:
 
 Reset the local database to a clean catalog plus demo content with `npm run db:reset` (development only; it drops the database), then restart `npm run dev`. E2E tests run against their own `<db>_e2e` database, which `npm run test:e2e` recreates on each run, so they never write into your dev data. Stop `npm run dev` before running E2E: both use port 3000.
 
-If the dev server keeps reloading the page (the browser console shows "HMR hash mismatch"), Next's dev bundler got into a bad state. Restart `npm run dev`; if it persists, `npm run dev:clean` clears its cache in `.next/dev`.
+If the dev server keeps reloading the page (the browser console shows "HMR hash mismatch"), that's a Next 16.4 Turbopack bug ([vercel/next.js#100267](https://github.com/vercel/next.js/issues/100267)) triggered by its persisted dev cache, which `next.config.ts` turns off for that reason. If it still happens, restart `npm run dev`, or run `npm run dev:clean` to clear `.next/dev`.
+
+Emails aren't sent in development (no `RESEND_API_KEY`): read them, including confirmation links, at http://localhost:3000/dev/outbox. Admins can also confirm a user's email by hand in Admin → Korisnici (filter "Samo nepotvrđeni emailovi", then "Potvrdi email").
 
 If `docker compose` fails with `client version 1.42 is too old`, your Compose plugin is older than the Docker engine. Upgrade the plugin, or prefix the command with `DOCKER_API_VERSION=1.44`.
 

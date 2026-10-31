@@ -46,6 +46,7 @@ import {
   banUser,
   endImpersonation,
   resetTwoFactor,
+  verifyUserEmail,
   startImpersonation,
   unbanUser,
 } from '../services/admin/users';
@@ -93,6 +94,18 @@ export const unbanUserAction = createAction(
   async (input, { user, ipHash }) => {
     const result = await unbanUser(user.id, input.userId, ipHash);
     if (result.ok) revalidatePath(`/admin/korisnici/${input.userId}`);
+    return result;
+  },
+);
+
+export const verifyUserEmailAction = createAction(
+  { schema: z.object({ userId: z.uuid() }), auth: 'admin', reauth: true },
+  async (input, { user, ipHash }) => {
+    const result = await verifyUserEmail(user.id, input.userId, ipHash);
+    if (result.ok) {
+      revalidatePath(`/admin/korisnici/${input.userId}`);
+      revalidatePath('/admin/korisnici');
+    }
     return result;
   },
 );

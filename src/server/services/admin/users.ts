@@ -21,7 +21,7 @@ import { audit } from './audit';
 
 export const IMPERSONATION_MINUTES = 30;
 
-export async function searchUsers(query: string, page = 0) {
+export async function searchUsers(query: string, page = 0, onlyUnverified = false) {
   const q = query.trim();
   const pattern = `%${q.replace(/[%_\\]/g, (char) => `\\${char}`)}%`;
   const where = q
@@ -32,6 +32,9 @@ export async function searchUsers(query: string, page = 0) {
         sql`${users.id}::text = ${q}`,
       )
     : undefined;
+  const filter = onlyUnverified
+    ? and(where, eq(users.emailVerified, false), isNull(users.deletedAt))
+    : where;
   const rows = await db
     .select({
       id: users.id,
@@ -42,12 +45,13 @@ export async function searchUsers(query: string, page = 0) {
       bannedAt: users.bannedAt,
       deletedAt: users.deletedAt,
       twoFactorEnabled: users.twoFactorEnabled,
+      emailVerified: users.emailVerified,
       createdAt: users.createdAt,
       sellerStatus: sellerProfiles.status,
     })
     .from(users)
     .leftJoin(sellerProfiles, eq(sellerProfiles.userId, users.id))
-    .where(where)
+    .where(filter)
     .orderBy(desc(users.createdAt))
     .limit(51)
     .offset(page * 50);
@@ -150,6 +154,35 @@ export async function unbanUser(
       action: 'user.unbanned',
       targetType: 'user',
       targetId: userId,
+      ipHash,
+    });
+  });
+  return ok(undefined);
+}
+
+/**
+ * Confirms a user's email address by hand, for when the confirmation email doesn't arrive
+ * (free-tier email limits, spam filters). Audited like every admin action on a user.
+ */
+export async function verifyUserEmail(
+  adminId: string,
+  userId: string,
+  ipHash: string,
+): Promise<Result<void>> {
+  const [target] = await db.select().from(users).where(eq(users.id, userId));
+  if (!target || target.deletedAt) return err(appError('NOT_FOUND', 'errors.notFound'));
+  if (target.emailVerified) return err(appError('CONFLICT', 'errors.admin.alreadyVerified'));
+  await db.transaction(async (tx) => {
+    await tx
+      .update(users)
+      .set({ emailVerified: true, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+    await audit(tx, {
+      actorId: adminId,
+      action: 'user.email_verified',
+      targetType: 'user',
+      targetId: userId,
+      details: { email: target.email },
       ipHash,
     });
   });

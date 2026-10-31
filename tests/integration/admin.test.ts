@@ -40,8 +40,10 @@ import {
   banUser,
   endImpersonation,
   resetTwoFactor,
+  searchUsers,
   startImpersonation,
   unbanUser,
+  verifyUserEmail,
 } from '@/server/services/admin/users';
 import { sellerBalances } from '@/server/services/ledger';
 import { becomeSeller } from '@/server/services/sellers';
@@ -523,5 +525,30 @@ describe('reports and dashboard', () => {
       expect(csv.startsWith('﻿')).toBe(true);
       expect(csv.split('\r\n')[0]).toMatch(/_id/);
     }
+  });
+});
+
+describe('admin email confirmation', () => {
+  it('confirms an unverified email by hand, audited, once', async () => {
+    const admin = await createUser({ role: 'admin', twoFactorEnabled: true });
+    const user = await createUser({ emailVerified: false });
+
+    const listed = await searchUsers(user.email, 0, true);
+    expect(listed.rows.map((row) => row.id)).toEqual([user.id]);
+
+    const result = await verifyUserEmail(admin.id, user.id, 'ip-hash');
+    expect(result.ok).toBe(true);
+    const [row] = await db.select().from(users).where(eq(users.id, user.id));
+    expect(row?.emailVerified).toBe(true);
+    const entries = await db
+      .select({ action: auditLog.action, actorId: auditLog.actorId })
+      .from(auditLog)
+      .where(eq(auditLog.targetId, user.id));
+    expect(entries).toContainEqual({ action: 'user.email_verified', actorId: admin.id });
+
+    expect((await searchUsers(user.email, 0, true)).rows).toHaveLength(0);
+    const again = await verifyUserEmail(admin.id, user.id, 'ip-hash');
+    expect(again.ok).toBe(false);
+    if (!again.ok) expect(again.error.messageKey).toBe('errors.admin.alreadyVerified');
   });
 });
