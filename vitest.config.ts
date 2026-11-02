@@ -11,7 +11,8 @@ export default defineConfig({
           name: 'unit',
           environment: 'node',
           include: ['tests/unit/**/*.test.ts', 'src/**/*.test.ts'],
-          env: { SKIP_ENV_VALIDATION: 'true' },
+          // Validation (and its defaults) is skipped here, so set what module-level code reads.
+          env: { SKIP_ENV_VALIDATION: 'true', LOG_LEVEL: 'warn' },
         },
       },
       {
