@@ -191,8 +191,11 @@ email_). Tell early testers to check spam.
 
 ### 11. Wire up and smoke-test
 
-Scripts read `.env`, so run the ones below from a shell where the production values are set
-(e.g. a separate `.env.production.local` you `source`), never with your dev `.env`.
+The scripts below run on your machine against the Neon database: pass Neon's **direct** URL as
+`DATABASE_URL` on the command line. It overrides the one in your dev `.env`; the other dev values
+only satisfy env validation (`APP_ENV` stays `development`, which the catalog seed and
+`admin:grant` don't care about). Your shell history keeps the URL, so clear it afterwards or
+prefix the command with a space (with `HISTCONTROL=ignorespace`).
 
 1. `https://<project>.vercel.app/api/health` → `{ "ok": true }`.
 2. Inngest → Apps → **Sync new app** → `https://<project>.vercel.app/api/inngest`. All functions
@@ -202,7 +205,7 @@ Scripts read `.env`, so run the ones below from a shell where the production val
 3. Load the catalog (direct URL):
 
    ```bash
-   DATABASE_URL='<direct url>' APP_ENV=preview npm run db:seed -- catalog
+   DATABASE_URL='<direct url>' npm run db:seed -- catalog
    ```
 
    Do **not** run the `demo` or `all` seed against this database.

@@ -236,36 +236,47 @@ export interface ProgramSearchResult {
 }
 
 /** Every undergraduate program with its faculty and university, plus a normalized haystack. */
-const allPrograms = unstable_cache(
-  async () => {
-    const rows = await db
-      .select({
-        programId: studyPrograms.id,
-        programName: studyPrograms.name,
-        level: studyPrograms.level,
-        durationYears: studyPrograms.durationYears,
-        facultyId: faculties.id,
-        facultyName: faculties.name,
-        facultyShortName: faculties.shortName,
-        universityId: universities.id,
-        universityName: universities.name,
-        universityShortName: universities.shortName,
-        city: faculties.city,
-      })
-      .from(studyPrograms)
-      .innerJoin(faculties, eq(faculties.id, studyPrograms.facultyId))
-      .innerJoin(universities, eq(universities.id, faculties.universityId))
-      .orderBy(asc(studyPrograms.name));
-    return rows.map(({ universityShortName, ...row }) => ({
-      ...row,
-      haystack: normalizeForSearch(
-        `${row.programName} ${row.facultyName} ${row.facultyShortName} ${row.universityName} ${universityShortName} ${row.city}`.toLowerCase(),
-      ),
-    }));
-  },
-  ['all-programs'],
-  { tags: [CATALOG_TAG], revalidate: 3600 },
-);
+async function loadAllPrograms() {
+  const rows = await db
+    .select({
+      programId: studyPrograms.id,
+      programName: studyPrograms.name,
+      level: studyPrograms.level,
+      durationYears: studyPrograms.durationYears,
+      facultyId: faculties.id,
+      facultyName: faculties.name,
+      facultyShortName: faculties.shortName,
+      universityId: universities.id,
+      universityName: universities.name,
+      universityShortName: universities.shortName,
+      city: faculties.city,
+    })
+    .from(studyPrograms)
+    .innerJoin(faculties, eq(faculties.id, studyPrograms.facultyId))
+    .innerJoin(universities, eq(universities.id, faculties.universityId))
+    .orderBy(asc(studyPrograms.name));
+  return rows.map(({ universityShortName, ...row }) => ({
+    ...row,
+    haystack: normalizeForSearch(
+      `${row.programName} ${row.facultyName} ${row.facultyShortName} ${row.universityName} ${universityShortName} ${row.city}`.toLowerCase(),
+    ),
+  }));
+}
+
+const cachedPrograms = unstable_cache(loadAllPrograms, ['all-programs'], {
+  tags: [CATALOG_TAG],
+  revalidate: 3600,
+});
+
+/**
+ * An empty list means the catalog hadn't been seeded when it was cached. The seed script runs
+ * outside Next.js and can't revalidate the tag, so read the database again rather than serving
+ * "no programs" for up to an hour after seeding.
+ */
+async function allPrograms() {
+  const cached = await cachedPrograms();
+  return cached.length > 0 ? cached : loadAllPrograms();
+}
 
 /**
  * Finds study programs by any mix of program, faculty, university and city words
