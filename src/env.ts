@@ -75,6 +75,15 @@ export const serverSchema = z
 
     // Email
     RESEND_API_KEY: optionalString,
+    /**
+     * SMTP instead of Resend (e.g. Gmail with an app password) while there's no own domain to
+     * verify in Resend. Set SMTP_HOST, SMTP_USER and SMTP_PASSWORD, or none of them.
+     */
+    SMTP_HOST: optionalString,
+    /** 465 = implicit TLS (Gmail); 587 = STARTTLS. */
+    SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(465),
+    SMTP_USER: optionalString,
+    SMTP_PASSWORD: optionalString,
     EMAIL_FROM: z.string().min(3),
     /** Where operational alerts (dead jobs, webhook failures) are sent. */
     ALERT_EMAIL: z.preprocess(emptyToUndefined, z.email().optional()),
@@ -101,7 +110,14 @@ export const serverSchema = z
       if (!value[key]) ctx.addIssue({ code: 'custom', path: [key], message });
     };
     if (value.APP_ENV === 'production' || value.APP_ENV === 'preview') {
-      require('RESEND_API_KEY', 'Required outside development: emails must actually be sent');
+      if (!value.RESEND_API_KEY && !value.SMTP_HOST) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['RESEND_API_KEY'],
+          message:
+            'Set RESEND_API_KEY or SMTP_HOST outside development: emails must actually be sent',
+        });
+      }
       require('INNGEST_EVENT_KEY', 'Required outside development');
       require('INNGEST_SIGNING_KEY', 'Required outside development');
     }
@@ -124,6 +140,17 @@ export const serverSchema = z
     }
     if (value.PAYMENT_PROVIDER === 'mock') {
       require('MOCK_PAYMENT_WEBHOOK_SECRET', 'Required by the mock payment provider');
+    }
+    if (value.RESEND_API_KEY && value.SMTP_HOST) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_HOST'],
+        message: 'Set either RESEND_API_KEY or SMTP_HOST, not both',
+      });
+    }
+    if (value.SMTP_HOST) {
+      require('SMTP_USER', 'Required with SMTP_HOST');
+      require('SMTP_PASSWORD', 'Required with SMTP_HOST');
     }
     if (Boolean(value.GOOGLE_CLIENT_ID) !== Boolean(value.GOOGLE_CLIENT_SECRET)) {
       ctx.addIssue({

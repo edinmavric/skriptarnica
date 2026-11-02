@@ -261,12 +261,13 @@ describe('digest', () => {
       body: 'Tekst.',
       isAnonymous: false,
     });
-    // Weekly digests go out on Mondays: run at the next Monday after now (10:00 UTC is Monday
-    // in Belgrade with or without daylight saving), after the posts above were created.
-    const monday = new Date();
+    // Weekly digests go out on Mondays: run at the first Monday 10:00 UTC still ahead of now
+    // (Monday in Belgrade with or without daylight saving). It's always under 7 days after the
+    // posts above, so they fall inside the weekly window, whatever day the test runs.
+    const now = new Date();
+    const monday = new Date(now);
     monday.setUTCHours(10, 0, 0, 0);
-    do monday.setUTCDate(monday.getUTCDate() + 1);
-    while (monday.getUTCDay() !== 1);
+    while (monday.getUTCDay() !== 1 || monday <= now) monday.setUTCDate(monday.getUTCDate() + 1);
     expect(await runDigests(monday, reader.id)).toBe(1);
     const email = sent.digest[0] as { items: { title: string }[] };
     expect(email.items.map((item) => item.title)).toContain(title);

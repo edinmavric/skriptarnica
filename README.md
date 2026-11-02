@@ -35,7 +35,7 @@ Reset the local database to a clean catalog plus demo content with `npm run db:r
 
 If the dev server keeps reloading the page (the browser console shows "HMR hash mismatch"), that's a Next 16.4 Turbopack bug ([vercel/next.js#100267](https://github.com/vercel/next.js/issues/100267)) triggered by its persisted dev cache, which `next.config.ts` turns off for that reason. If it still happens, restart `npm run dev`, or run `npm run dev:clean` to clear `.next/dev`.
 
-Emails aren't sent in development (no `RESEND_API_KEY`): read them, including confirmation links, at http://localhost:3000/dev/outbox. Admins can also confirm a user's email by hand in Admin → Korisnici (filter "Samo nepotvrđeni emailovi", then "Potvrdi email").
+Emails aren't sent in development (no `RESEND_API_KEY` or `SMTP_*`): read them, including confirmation links, at http://localhost:3000/dev/outbox. Admins can also confirm a user's email by hand in Admin → Korisnici (filter "Samo nepotvrđeni emailovi", then "Potvrdi email").
 
 If `docker compose` fails with `client version 1.42 is too old`, your Compose plugin is older than the Docker engine. Upgrade the plugin, or prefix the command with `DOCKER_API_VERSION=1.44`.
 
@@ -56,6 +56,10 @@ If `docker compose` fails with `client version 1.42 is too old`, your Compose pl
 ## Environment
 
 All variables are validated with zod in `src/env.ts`, and the app does not start with an invalid env. Every variable is documented in `.env.example`. `SKIP_ENV_VALIDATION=true` is only for tooling (unit tests).
+
+## Deployment
+
+Step by step in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (Vercel, Neon, R2, Upstash, Inngest, Gmail SMTP; no own domain needed). Day-to-day operations: [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
 ## Project structure
 

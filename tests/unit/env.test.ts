@@ -84,6 +84,22 @@ describe('parseEnv', () => {
     );
   });
 
+  it('accepts SMTP instead of Resend on preview/production', () => {
+    const jobs = { INNGEST_EVENT_KEY: 'e', INNGEST_SIGNING_KEY: 's' };
+    const smtp = { SMTP_HOST: 'smtp.gmail.com', SMTP_USER: 'x@gmail.com', SMTP_PASSWORD: 'p' };
+    const env = parseEnv({ ...valid, ...jobs, ...smtp, APP_ENV: 'preview' }, { isServer: true });
+    expect(env.SMTP_PORT).toBe(465);
+    expect(() =>
+      parseEnv(
+        { ...valid, ...jobs, ...smtp, SMTP_PASSWORD: '', APP_ENV: 'preview' },
+        { isServer: true },
+      ),
+    ).toThrow(/SMTP_PASSWORD/);
+    expect(() =>
+      parseEnv({ ...valid, ...jobs, ...smtp, RESEND_API_KEY: 'r' }, { isServer: true }),
+    ).toThrow(/not both/);
+  });
+
   it('validates versioned encryption keys', () => {
     expect(() =>
       parseEnv({ ...valid, PAYOUT_ENCRYPTION_KEYS: 'v1:short' }, { isServer: true }),

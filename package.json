@@ -54,6 +54,7 @@
     "mupdf": "1.28.1",
     "next": "16.4.3",
     "next-intl": "4.14.9",
+    "nodemailer": "10.1.7",
     "pdf-lib": "1.17.1",
     "pino": "10.4.0",
     "postgres": "3.4.9",
@@ -106,5 +107,10 @@
     "vite": "8.3.5",
     "vite-tsconfig-paths": "6.1.1",
     "vitest": "5.0.5"
+  },
+  "overrides": {
+    "inngest": {
+      "zod": "$zod"
+    }
   }
 }

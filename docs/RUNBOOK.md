@@ -8,6 +8,8 @@ See README.md.
 
 ## Deploy
 
+First-time setup of every service, step by step: [DEPLOYMENT.md](DEPLOYMENT.md).
+
 - **Preview:** every pull request deploys to Vercel with its own Neon branch (`APP_ENV=preview`, demo seed allowed, `noindex`). CI runs lint, format, typecheck, unit and integration tests, build and e2e; a red pipeline blocks the merge.
 - **Production:** merging to `main` deploys to Vercel production (`APP_ENV=production`). Before merging:
   1. Migrations in the PR are additive (see _Database migrations_); run them against production with `npm run db:migrate` (with the production `DATABASE_URL`) **before** the code that needs them goes live.

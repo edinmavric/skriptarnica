@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
+import { createTransport } from 'nodemailer';
 import { Resend } from 'resend';
 
 import { env } from '@/env';
@@ -24,12 +25,40 @@ export interface DevOutboxEntry extends OutgoingEmail {
 
 const DEV_OUTBOX_KEY = 'dev:outbox';
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
+const smtp =
+  env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASSWORD
+    ? createTransport({
+        host: env.SMTP_HOST,
+        port: env.SMTP_PORT,
+        secure: env.SMTP_PORT === 465,
+        auth: { user: env.SMTP_USER, pass: env.SMTP_PASSWORD },
+      })
+    : null;
 
 /**
- * Sends through Resend when configured; otherwise (local dev/test only — env validation
- * requires Resend on preview/production) stores the email in a Redis-backed dev outbox.
+ * Sends through Resend or SMTP, whichever is configured (env validation allows one, and requires
+ * one on preview/production). Without either (local dev/test) the email goes to a Redis-backed
+ * dev outbox.
  */
 export async function deliver(email: OutgoingEmail): Promise<void> {
+  if (smtp) {
+    try {
+      await smtp.sendMail({
+        from: env.EMAIL_FROM,
+        to: email.to,
+        subject: email.subject,
+        html: email.html,
+        text: email.text,
+        ...(email.headers ? { headers: email.headers } : {}),
+      });
+    } catch (error) {
+      const code = error instanceof Error && 'code' in error ? String(error.code) : 'unknown';
+      logger.error({ category: email.category, smtpError: code }, 'email send failed');
+      throw new Error(`Email delivery failed: ${code}`);
+    }
+    logger.info({ category: email.category }, 'email sent');
+    return;
+  }
   if (resend) {
     const { error } = await resend.emails.send({
       from: env.EMAIL_FROM,
