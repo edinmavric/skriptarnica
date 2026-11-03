@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { FollowButton } from '@/components/features/profile/follow-button';
 import { ReportDialog } from '@/components/features/report-dialog';
+import { SignOutButton } from '@/components/layout/sign-out-button';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -84,9 +85,13 @@ export default async function ProfilePage({ params }: Props) {
         </div>
         <div className="flex flex-wrap gap-2">
           {profile.isSelf ? (
-            <Button asChild variant="secondary">
-              <Link href={routes.settings}>{t('edit')}</Link>
-            </Button>
+            <>
+              <Button asChild variant="secondary">
+                <Link href={routes.settings}>{t('edit')}</Link>
+              </Button>
+              {/* Desktop has it in the account menu; phones have no such menu. */}
+              <SignOutButton className="md:hidden" />
+            </>
           ) : (
             <>
               {profile.isSeller ? (

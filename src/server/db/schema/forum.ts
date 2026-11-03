@@ -74,6 +74,9 @@ export const communities = pgTable(
       .where(sql`program_id IS NOT NULL`),
     index('communities_faculty_idx').on(t.facultyId),
     index('communities_creator_idx').on(t.createdById),
+    index('communities_professor_idx').on(t.professorId),
+    // Popular list: visible communities by size.
+    index('communities_popular_idx').on(t.visibility, t.memberCount),
     index('communities_search_tsv_idx').using('gin', t.searchTsv),
     index('communities_search_trgm_idx').using('gin', sql`${t.searchText} gin_trgm_ops`),
   ],

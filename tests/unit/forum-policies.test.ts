@@ -19,6 +19,7 @@ const user = (overrides: Partial<CurrentUser> = {}): CurrentUser => ({
   role: 'student',
   twoFactorEnabled: false,
   bannedAt: null,
+  deletionScheduledFor: null,
   sessionId: 's',
   impersonatedBy: null,
   ...overrides,

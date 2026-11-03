@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 
 import { CookieConsent } from '@/components/features/consent/cookie-consent';
+import { NavigationProgress } from '@/components/layout/navigation-progress';
 import { ToastProvider } from '@/components/ui/toast';
 import { siteConfig } from '@/config/site';
 import { clientMessages } from '@/i18n/client-messages';
@@ -58,6 +59,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         >
           {t('skipToContent')}
         </a>
+        {/* useSearchParams needs a Suspense boundary; the bar renders nothing until a click. */}
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <NextIntlClientProvider messages={await clientMessages('public')}>
           <ToastProvider>
             {children}

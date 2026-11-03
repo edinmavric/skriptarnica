@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useMemo, useRef, useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 
 import { FormAlert } from '@/components/forms/form-alert';
 import { useActionForm } from '@/components/forms/use-action-form';
@@ -13,6 +13,7 @@ import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { cn } from '@/lib/cn';
+import { matchPrograms } from '@/lib/search/programs';
 import { studentEmailSchema, usernameStepSchema } from '@/lib/validation/onboarding';
 import {
   joinCommunitiesAction,
@@ -20,12 +21,17 @@ import {
   requestStudentEmailAction,
   saveCoursesStepAction,
   saveProgramStepAction,
-  searchProgramsAction,
   setUsernameAction,
   skipStepAction,
 } from '@/server/actions/onboarding';
 
+import {
+  CourseProposalDialog,
+  type CourseProposalTarget,
+} from '@/components/features/courses/course-proposal-dialog';
+
 import { CatalogRequestDialog } from './catalog-request-dialog';
+import { useProgramSearchList } from './use-program-search-list';
 
 type Step = 'username' | 'program' | 'courses' | 'communities' | 'verify';
 
@@ -39,6 +45,8 @@ export interface OnboardingData {
     city: string;
     faculties: { id: string; name: string; shortName: string; city: string }[];
   }[];
+  /** The student's program, for suggesting a missing course (courses step only). */
+  proposal: CourseProposalTarget | null;
   profile: {
     universityId: string | null;
     facultyId: string | null;
@@ -145,33 +153,14 @@ function ProgramStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
     [university],
   );
   const program = programs.find((p) => p.id === programId) ?? null;
-  const [matches, setMatches] = useState<
-    {
-      programId: string;
-      programName: string;
-      durationYears: number;
-      facultyId: string;
-      facultyShortName: string;
-      universityId: string;
-      universityName: string;
-    }[]
-  >([]);
-  const [searching, setSearching] = useState(false);
-  const searchSeq = useRef(0);
-
-  function searchPrograms(query: string) {
-    const seq = ++searchSeq.current;
-    if (query.trim().length < 2) {
-      setMatches([]);
-      return;
-    }
-    setSearching(true);
-    void searchProgramsAction({ query }).then((result) => {
-      if (seq !== searchSeq.current) return;
-      setSearching(false);
-      setMatches(result.ok ? result.value : []);
-    });
-  }
+  const [programQuery, setProgramQuery] = useState('');
+  const searchList = useProgramSearchList();
+  const matches = useMemo(
+    () => (searchList.programs ? matchPrograms(searchList.programs, programQuery) : []),
+    [searchList.programs, programQuery],
+  );
+  const searching =
+    searchList.programs === null && !searchList.failed && programQuery.trim().length > 1;
 
   function pickMatch(match: (typeof matches)[number]) {
     setUniversityId(match.universityId);
@@ -224,7 +213,7 @@ function ProgramStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
           }))}
           value={null}
           placeholder={t('searchPlaceholder')}
-          onQueryChange={searchPrograms}
+          onQueryChange={setProgramQuery}
           loading={searching}
           emptyMessage={t('searchEmpty')}
           onChange={(value) => {
@@ -352,11 +341,15 @@ function CoursesStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
     return (
       <div className="flex max-w-xl flex-col gap-4">
         <p className="text-ink-muted">{t('empty')}</p>
-        <CatalogRequestDialog
-          universityId={data.profile.universityId}
-          facultyId={data.profile.facultyId}
-          defaultType="course"
-        />
+        {data.proposal ? (
+          <CourseProposalDialog target={data.proposal} trigger="button" />
+        ) : (
+          <CatalogRequestDialog
+            universityId={data.profile.universityId}
+            facultyId={data.profile.facultyId}
+            defaultType="course"
+          />
+        )}
         <Button
           onClick={() =>
             startTransition(async () => {
@@ -451,11 +444,15 @@ function CoursesStep({ data, onDone }: { data: OnboardingData; onDone: () => voi
           </ul>
         </section>
       ))}
-      <CatalogRequestDialog
-        universityId={data.profile.universityId}
-        facultyId={data.profile.facultyId}
-        defaultType="course"
-      />
+      {data.proposal ? (
+        <CourseProposalDialog target={data.proposal} />
+      ) : (
+        <CatalogRequestDialog
+          universityId={data.profile.universityId}
+          facultyId={data.profile.facultyId}
+          defaultType="course"
+        />
+      )}
       <Button onClick={submit} loading={pending} className="self-start">
         {t('submit')}
       </Button>

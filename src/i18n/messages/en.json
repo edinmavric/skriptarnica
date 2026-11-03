@@ -42,7 +42,8 @@
       "progress": "Otpremljeno {percent}%",
       "cancel": "Otkaži otpremanje",
       "done": "{name} je otpremljen."
-    }
+    },
+    "searching": "Searching…"
   },
   "notes": {
     "count": "{count, plural, one {# skripta} few {# skripte} other {# skripti}}",
@@ -878,7 +879,9 @@
     "required": "Obavezno polje.",
     "proofTooShort": "Opiši dokaz o pravima u bar 30 znakova.",
     "statementRequired": "Potvrdi izjavu.",
-    "counterTooShort": "Obrazloži prigovor u bar 50 znakova."
+    "counterTooShort": "Obrazloži prigovor u bar 50 znakova.",
+    "courseNameTooLong": "The name can be at most 160 characters.",
+    "yearBeyondProgram": "Your program doesn't have that many years."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -1008,6 +1011,12 @@
     "exportExpired": "Link za preuzimanje je istekao. Zatraži novi izvoz.",
     "copyright": {
       "nothingToCounter": "Za ovu skriptu nema odluke na koju možeš da uložiš prigovor."
+    },
+    "courseProposal": {
+      "noProgram": "Choose your program first, then suggest a course for it.",
+      "exists": "That course is already on your program.",
+      "alreadyProposed": "You've already suggested this course. It's awaiting approval.",
+      "tooMany": "You have 10 suggestions awaiting approval. Wait until an administrator reviews them."
     }
   },
   "onboarding": {
@@ -2012,7 +2021,12 @@
       "reject": "Odbij",
       "reason": "Razlog",
       "confirmReject": "Odbij predlog",
-      "cancel": "Otkaži"
+      "cancel": "Otkaži",
+      "courseContext": "Program: {program} ({faculty}), year {year}, semester {semester}",
+      "similar": "Similar courses already on the faculty:",
+      "linkExisting": "Add this one to the program",
+      "linked": "Course added to the program.",
+      "courseApproveHint": "\"Accept\" creates a new course and adds it to the program and to the student's courses."
     },
     "reports": {
       "title": "Prijave",
@@ -2306,7 +2320,17 @@
     "saved": "Sačuvano. Preporuke su osvežene.",
     "emptyTitle": "Nema predmeta",
     "emptyDescription": "Prvo izaberi fakultet, smer i godinu.",
-    "emptyAction": "Izaberi smer"
+    "emptyAction": "Izaberi smer",
+    "proposals": {
+      "title": "Your course suggestions",
+      "status": {
+        "pending": "Awaiting approval",
+        "approved": "Approved",
+        "rejected": "Declined"
+      },
+      "reason": "Reason: {reason}",
+      "year": "Year {year}"
+    }
   },
   "savedPage": {
     "title": "Sačuvano",
@@ -2768,5 +2792,26 @@
     "courseNotes": "{count, plural, =0 {Skripte i zajednica predmeta} one {# skripta} few {# skripte} other {# skripti}}",
     "members": "{count, plural, one {# član} few {# člana} other {# članova}}",
     "comments": "{count, plural, one {# komentar} few {# komentara} other {# komentara}}"
+  },
+  "courseProposal": {
+    "trigger": "Missing a course? Suggest it",
+    "triggerButton": "Suggest a course",
+    "title": "Suggest a course",
+    "description": "For {program} ({faculty}). Once an administrator approves it, the course appears on the program and in your courses.",
+    "name": "Course name",
+    "year": "Year",
+    "yearOption": "Year {year}",
+    "term": "Semester",
+    "terms": {
+      "winter": "Winter",
+      "summer": "Summer"
+    },
+    "code": "Course code",
+    "codeHint": "Optional. It's in the curriculum, e.g. \"13E011OE1\".",
+    "note": "Note for the administrator",
+    "noteHint": "Optional. E.g. that it's an elective, or a link to the curriculum.",
+    "submit": "Send suggestion",
+    "sent": "Suggestion sent. We'll let you know once an administrator reviews it.",
+    "close": "Close"
   }
 }

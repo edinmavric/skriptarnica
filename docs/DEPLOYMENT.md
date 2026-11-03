@@ -346,6 +346,13 @@ emails and users' sign-ins are tied to the address.
 
 ## Every release after launch
 
+Releases with a new file in `drizzle/` need the migration on Neon (same as step 3). For example
+0010 adds indexes the app relies on for speed:
+
+```bash
+DATABASE_URL='<direct url>' npm run db:migrate
+```
+
 1. Open a PR; CI must be green.
 2. If the PR has a migration: run `npm run db:migrate` against production (direct URL)
    **before** merging. Migrations are additive, so the old code keeps working.

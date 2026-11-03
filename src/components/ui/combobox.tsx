@@ -32,7 +32,7 @@ interface ComboboxProps {
   value: string | null;
   onChange: (value: string | null, option: ComboboxOption | null) => void;
   placeholder?: string;
-  /** If set, filtering happens on the server: called with the raw query (debounced by caller). */
+  /** If set, the caller filters (e.g. a large list or the server): called with the raw query. */
   onQueryChange?: (query: string) => void;
   loading?: boolean;
   emptyMessage?: ReactNode;
@@ -74,12 +74,15 @@ export function Combobox({
 
   const filtered = useMemo(() => {
     if (onQueryChange || !query) return options;
-    const q = normalizeForSearch(query);
-    return options.filter((option) =>
-      normalizeForSearch(
+    // Every typed word must appear somewhere, in any order: "univerzitet beograd" finds
+    // "Univerzitet u Beogradu".
+    const terms = normalizeForSearch(query).split(' ').filter(Boolean);
+    return options.filter((option) => {
+      const text = normalizeForSearch(
         `${option.label} ${option.keywords ?? ''} ${option.description ?? ''}`,
-      ).includes(q),
-    );
+      );
+      return terms.every((term) => text.includes(term));
+    });
   }, [options, query, onQueryChange]);
 
   useEffect(() => {
@@ -139,7 +142,11 @@ export function Combobox({
     }
   }
 
-  const activeOption = open ? filtered[active] : undefined;
+  // Server-side (onQueryChange) search has nothing to show until something is typed, so keep the
+  // popup closed rather than open an empty box.
+  const awaitingQuery = Boolean(onQueryChange) && query.trim().length < 2 && filtered.length === 0;
+  const showPopup = open && !awaitingQuery;
+  const activeOption = showPopup ? filtered[active] : undefined;
   const displayValue = open ? query : (selected?.label ?? '');
 
   return (
@@ -149,7 +156,7 @@ export function Combobox({
         id={inputId}
         type="text"
         role="combobox"
-        aria-expanded={open}
+        aria-expanded={showPopup}
         aria-controls={listId}
         aria-autocomplete="list"
         aria-activedescendant={activeOption ? `${listId}-${activeOption.value}` : undefined}
@@ -183,7 +190,7 @@ export function Combobox({
       <div
         className={cn(
           'absolute z-40 mt-1 w-full overflow-hidden rounded-md border border-rule bg-paper-raised shadow-lift',
-          !open && 'hidden',
+          !showPopup && 'hidden',
         )}
       >
         <ul
@@ -224,9 +231,15 @@ export function Combobox({
             );
           })}
         </ul>
-        {filtered.length === 0 && !loading ? (
-          <p className="px-4 py-3 text-sm text-ink-muted" role="status">
-            {emptyMessage ?? t('noResults')}
+        {filtered.length === 0 ? (
+          <p className="flex items-center gap-2 px-4 py-3 text-sm text-ink-muted" role="status">
+            {loading ? (
+              <>
+                <Spinner /> {t('searching')}
+              </>
+            ) : (
+              (emptyMessage ?? t('noResults'))
+            )}
           </p>
         ) : null}
         {footer ? <div className="border-t border-rule p-1">{footer}</div> : null}

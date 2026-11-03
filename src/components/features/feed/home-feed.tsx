@@ -25,17 +25,19 @@ export async function HomeFeed({
 }) {
   const t = await getTranslations('feed');
   const tPeriods = await getTranslations('examPeriods');
-  const [profile, recommendations, exams, counters, candidates] = await Promise.all([
+  // Popular notes are cached, so load them alongside instead of after the recommendations.
+  const [profile, recommendations, exams, counters, candidates, top] = await Promise.all([
     getStudentProfile(user.id),
     getRecommendations(user.id),
     upcomingExamPeriods(user.id),
     feedCounters(user.id),
     candidateCourses(user.id),
+    listTopNotes(8, user.id),
   ]);
   const firstName = user.name.split(' ')[0] ?? user.name;
   const onboardingDone = profile?.onboardingStep === 'done';
   // With nothing to recommend, show what's popular so the home page is never a dead end.
-  const popular = recommendations.length === 0 ? await listTopNotes(8, user.id) : [];
+  const popular = recommendations.length === 0 ? top : [];
 
   return (
     <div className="flex flex-col gap-10">

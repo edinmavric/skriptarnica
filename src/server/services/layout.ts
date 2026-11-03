@@ -15,7 +15,7 @@ export async function getLayoutUser(user: CurrentUser | null): Promise<LayoutUse
     isAdmin: user.role === 'admin',
     isSeller: counters.isSeller,
     unreadNotifications: counters.unreadNotifications,
-    deletionScheduledFor: counters.deletionScheduledFor,
+    deletionScheduledFor: user.deletionScheduledFor?.toISOString() ?? null,
     impersonating: Boolean(user.impersonatedBy),
   };
 }

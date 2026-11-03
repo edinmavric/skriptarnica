@@ -58,6 +58,7 @@ export function asCurrentUser(
     role: user.role,
     twoFactorEnabled: user.twoFactorEnabled,
     bannedAt: user.bannedAt,
+    deletionScheduledFor: user.deletionScheduledFor,
     sessionId: randomUUID(),
     impersonatedBy: null,
     ...overrides,

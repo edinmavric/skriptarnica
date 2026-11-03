@@ -71,6 +71,13 @@
       "when": 1793477811685,
       "tag": "0009_university_program_communities",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793672451874,
+      "tag": "0010_perf_indexes",
+      "breakpoints": true
     }
   ]
 }

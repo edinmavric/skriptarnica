@@ -7,6 +7,7 @@ import { routes } from '@/config/routes';
 import { ok } from '@/lib/result';
 import {
   catalogRequestSchema,
+  courseProposalSchema,
   coursesStepSchema,
   programStepSchema,
   studentEmailSchema,
@@ -24,7 +25,7 @@ import {
   setUsername,
   skipToStep,
 } from '../services/onboarding';
-import { searchPrograms } from '../services/catalog-pages';
+import { proposeCourse } from '../services/course-proposals';
 import { invalidateRecommendations } from '../services/recommendations-cache';
 
 import { createAction } from './safe-action';
@@ -65,16 +66,6 @@ export const skipStepAction = createAction(
   },
 );
 
-/** Program (smer) search across every university, for the onboarding shortcut. */
-export const searchProgramsAction = createAction(
-  {
-    schema: z.object({ query: z.string().trim().min(2).max(80) }),
-    auth: 'user',
-    rateLimit: { name: 'search', by: 'user' },
-  },
-  async (input) => ok(await searchPrograms(input.query)),
-);
-
 export const joinCommunitiesAction = createAction(
   {
     schema: z.object({ communityIds: z.array(z.uuid()).max(50) }),
@@ -97,6 +88,20 @@ export const confirmStudentEmailAction = createAction(
 export const catalogRequestAction = createAction(
   { schema: catalogRequestSchema, auth: 'user', rateLimit: { name: 'catalogRequest', by: 'user' } },
   async (input, { user }) => createCatalogRequest(user.id, input),
+);
+
+/** A student proposes a course missing from their program; an admin decides. */
+export const proposeCourseAction = createAction(
+  {
+    schema: courseProposalSchema,
+    auth: 'user',
+    rateLimit: { name: 'catalogRequest', by: 'user' },
+  },
+  async (input, { user }) => {
+    const result = await proposeCourse(user.id, input);
+    if (result.ok) revalidatePath('/moji-predmeti');
+    return result;
+  },
 );
 
 export const listProgramsAction = createAction(

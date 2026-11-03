@@ -51,6 +51,8 @@ export const orders = pgTable(
     uniqueIndex('orders_provider_ref_uq').on(t.provider, t.providerRef),
     index('orders_buyer_idx').on(t.buyerId, t.createdAt),
     index('orders_status_idx').on(t.status, t.createdAt),
+    // Sales in the last 30 days (recommendation ranking).
+    index('orders_paid_idx').on(t.status, t.paidAt),
   ],
 );
 

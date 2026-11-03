@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import { getTranslations } from 'next-intl/server';
 
 import { BookmarkButton } from '@/components/features/notes/bookmark-button';
@@ -49,7 +50,9 @@ export default async function NotePage({ params }: Props) {
   const t = await getTranslations('notes.page');
   const tPeriods = await getTranslations('examPeriods');
   const { note } = data;
-  if (note.status === 'published') await recordNoteView(note.id, viewer?.id ?? null, note.sellerId);
+  // Count the view after the response is sent, so the page never waits on the UPDATE.
+  if (note.status === 'published')
+    after(() => recordNoteView(note.id, viewer?.id ?? null, note.sellerId));
   const average = averageRating(note.ratingSum, note.reviewCount);
   const path = routes.note(note.slug);
   const purchase = {

@@ -223,3 +223,33 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
 - **inngest's zod pinned to the app's zod 4 (npm `overrides`).** Every inngest release depends on zod 3, which GHSA-mrhx-c7xc-m3w5 (high, fixed only in zod 4.6.6) affects, so `npm audit` in CI failed. inngest declares zod 4 as a supported peer, and the job tests pass with it. Drop the override once inngest depends on zod 4.
 - **Dependabot cooldown of 14 days** (npm and actions), so its PRs follow the "versions at least two weeks old" rule instead of proposing releases from the last few days.
 - **Unit tests set `LOG_LEVEL`** in `vitest.config.ts`. They skip env validation, so schema defaults don't apply, and pino throws on `level: undefined`. Whether a test file hit it depended on which earlier file in the same worker had loaded `.env`, so CI (no `.env`) failed by test order.
+
+## Performance, sign-out on phones, course proposals (2026-11-03)
+
+- **Functions run in Frankfurt (`vercel.json` → `regions: ["fra1"]`).** Without it Vercel uses `iad1` (US East) while Neon is in Frankfurt, and a logged-in home page makes about 10–12 dependent queries, each crossing the Atlantic.
+- **Fewer and parallel queries per page** (from a query audit):
+  - `cache()` dedupes the loaders that `generateMetadata` and the page both call: `getNotePage`, `getPost`, `hasCurrentConsents`, `getStudentProfile`, `candidateCourses`, `moderatedCommunities`.
+  - Independent queries now run with `Promise.all`: post/comments, community lists, the note page's ownership check, and the app layout and its messages.
+  - The note view counter runs in `after()`, so the page doesn't wait on an UPDATE.
+  - `getCurrentUser` also selects `deletionScheduledFor`, which drops one users query per page.
+- **Indexes (migration 0010):**
+  - a partial index for unread notifications (the header badge on every page);
+  - `orders (status, paid_at)` for the 30-day sales ranking;
+  - `communities.professor_id`;
+  - `communities (visibility, member_count)` for the popular list.
+  - Profile lookup uses `eq` on the citext username, so it can use the unique index instead of `lower()`.
+- **Not done: the Better Auth session cookie cache.** It saves one query per request but delays session revocation ("sign out everywhere", password reset) by its max age. In-region, the query costs a few milliseconds.
+- **Loading states:**
+  - `loading.tsx` skeletons only in the signed-in area and admin. On public pages a streamed fallback commits HTTP 200 before the page runs, so `notFound()` pages would stop returning 404 (bad for search engines; E2E caught it).
+  - Every page gets a thin top progress bar after an internal link click, shown only when the navigation takes over 150 ms (`navigation-progress.tsx`).
+  - The home page's community activity streams in through `Suspense` instead of holding the page.
+- **Program search runs in the browser.**
+  - Before, every keystroke called a server action. Next.js runs server actions one at a time, so fast typing queued requests.
+  - Now `/api/catalog/programs` serves the whole undergraduate list (about 30 KB gzip; CDN-cached for 10 minutes, never cached while empty), and `@/lib/search/programs` matches it locally. The same function backs `searchPrograms` on the server.
+  - Combobox: no empty popup while waiting; a "Tražim…" status instead; every typed word matches independently.
+- **Catalog cache refresh:** admin catalog changes now expire `CATALOG_TAG` (create, edit, delete, placements, professors, CSV import, request approvals). Before, nothing expired it, so public pages could lag up to an hour.
+- **Sign-out on phones:** the header account menu is desktop-only, so the own profile page and the settings pages show "Odjavi se" below `md`.
+- **Course proposals reuse `catalog_requests`** (type `course`). A student proposes a course for their own program, with name, optional code, year and winter/summer term, stored as the absolute semester. This works from onboarding's course step and from "Moji predmeti".
+  - The proposal is refused when it's already on the program, already proposed by the same student, or beyond the program's length. Each student may have at most 10 pending, plus the existing `catalogRequest` rate limit.
+  - The admin either accepts it (creating the course) or links a similar existing course on the faculty (trigram similarity, top 3). Either way the course is placed on the program at that year/semester and added to the proposer's "Slušam".
+  - The decision notification links to "Moji predmeti".

@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { CommunityActivity } from '@/components/features/feed/community-activity';
+import {
+  CommunityActivity,
+  CommunityActivitySkeleton,
+} from '@/components/features/feed/community-activity';
 import { HomeFeed } from '@/components/features/feed/home-feed';
 import { LandingSearch } from '@/components/features/landing/landing-search';
 import { JsonLd } from '@/components/seo/json-ld';
@@ -39,7 +43,17 @@ export default async function HomePage() {
   const user = await getCurrentUser();
   if (user) {
     if (!(await hasCurrentConsents(user.id))) redirect(`${routes.acceptTerms}?next=%2F`);
-    return <HomeFeed user={user} communityActivity={<CommunityActivity user={user} />} />;
+    return (
+      <HomeFeed
+        user={user}
+        communityActivity={
+          // Streams in after the rest of the feed instead of holding the whole page back.
+          <Suspense fallback={<CommunityActivitySkeleton />}>
+            <CommunityActivity user={user} />
+          </Suspense>
+        }
+      />
+    );
   }
   return <Landing />;
 }

@@ -1,7 +1,9 @@
 import { and, asc, eq, sql } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 
-import { normalizeForSearch } from '@/lib/search/normalize';
+import { indexPrograms, matchPrograms, type ProgramEntry } from '@/lib/search/programs';
+
+import { listUniversitiesWithFaculties } from './catalog';
 
 import { db } from '../db/client';
 import {
@@ -196,6 +198,17 @@ export const listFacultiesForPicker = unstable_cache(
   { tags: [CATALOG_TAG], revalidate: 3600 },
 );
 
+const cachedUniversities = unstable_cache(listUniversitiesWithFaculties, ['universities-picker'], {
+  tags: [CATALOG_TAG],
+  revalidate: 3600,
+});
+
+/** Universities with their faculties for the onboarding pickers (empty → not seeded yet, re-read). */
+export async function listUniversitiesForPicker() {
+  const cached = await cachedUniversities();
+  return cached.length > 0 ? cached : listUniversitiesWithFaculties();
+}
+
 /** All catalog URLs for the sitemap. */
 export async function listCatalogSitemapEntries() {
   const [unis, facs, courseRows, professorRows] = await Promise.all([
@@ -222,22 +235,9 @@ export async function countCatalog() {
   return row?.courses ?? 0;
 }
 
-export interface ProgramSearchResult {
-  programId: string;
-  programName: string;
-  level: 'oas' | 'mas' | 'das' | 'oss' | 'ias';
-  durationYears: number;
-  facultyId: string;
-  facultyName: string;
-  facultyShortName: string;
-  universityId: string;
-  universityName: string;
-  city: string;
-}
-
-/** Every undergraduate program with its faculty and university, plus a normalized haystack. */
-async function loadAllPrograms() {
-  const rows = await db
+/** Every undergraduate program with its faculty and university (public catalog data). */
+async function loadAllPrograms(): Promise<ProgramEntry[]> {
+  return db
     .select({
       programId: studyPrograms.id,
       programName: studyPrograms.name,
@@ -255,48 +255,26 @@ async function loadAllPrograms() {
     .innerJoin(faculties, eq(faculties.id, studyPrograms.facultyId))
     .innerJoin(universities, eq(universities.id, faculties.universityId))
     .orderBy(asc(studyPrograms.name));
-  return rows.map(({ universityShortName, ...row }) => ({
-    ...row,
-    haystack: normalizeForSearch(
-      `${row.programName} ${row.facultyName} ${row.facultyShortName} ${row.universityName} ${universityShortName} ${row.city}`.toLowerCase(),
-    ),
-  }));
 }
 
-const cachedPrograms = unstable_cache(loadAllPrograms, ['all-programs'], {
+const cachedPrograms = unstable_cache(loadAllPrograms, ['all-programs-v2'], {
   tags: [CATALOG_TAG],
   revalidate: 3600,
 });
 
 /**
- * An empty list means the catalog hadn't been seeded when it was cached. The seed script runs
- * outside Next.js and can't revalidate the tag, so read the database again rather than serving
- * "no programs" for up to an hour after seeding.
+ * The program list behind the onboarding search; the browser downloads it once and searches
+ * locally. An empty list means the catalog hadn't been seeded when it was cached. The seed script
+ * runs outside Next.js and can't revalidate the tag, so read the database again rather than
+ * serving "no programs" for up to an hour after seeding.
  */
-async function allPrograms() {
+export async function listProgramsForSearch(): Promise<ProgramEntry[]> {
   const cached = await cachedPrograms();
   return cached.length > 0 ? cached : loadAllPrograms();
 }
 
-/**
- * Finds study programs by any mix of program, faculty, university and city words
- * ("softversko etf", "medicina nis"), so a student doesn't need to know where to look first.
- */
-export async function searchPrograms(query: string, limit = 20): Promise<ProgramSearchResult[]> {
-  // Serbian inflects word endings (informatika / informaciono, matematika / matematički), so
-  // longer words match on their stem: everything but the last four letters, at least five.
-  const terms = normalizeForSearch(query.toLowerCase())
-    .split(' ')
-    .filter(Boolean)
-    .map((term) => (term.length > 8 ? term.slice(0, Math.max(5, term.length - 4)) : term));
-  if (terms.length === 0) return [];
-  const programs = await allPrograms();
-  const words = (text: string) => text.split(' ');
-  return programs
-    .filter((program) => {
-      const haystackWords = words(program.haystack);
-      return terms.every((term) => haystackWords.some((word) => word.startsWith(term)));
-    })
-    .slice(0, limit)
-    .map(({ haystack: _haystack, ...program }) => program);
+/** Server-side program search (same matching as the browser, see `@/lib/search/programs`). */
+export async function searchPrograms(query: string, limit = 20): Promise<ProgramEntry[]> {
+  const found = matchPrograms(indexPrograms(await listProgramsForSearch()), query, limit);
+  return found.map(({ words: _words, ...program }) => program);
 }

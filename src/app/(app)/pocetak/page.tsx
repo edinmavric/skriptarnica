@@ -12,11 +12,9 @@ import { db } from '@/server/db/client';
 import { userCourseStatus } from '@/server/db/schema';
 import { getStudentProfile, requireAppUser } from '@/server/auth/session';
 import { suggestedCommunities } from '@/server/services/onboarding';
-import {
-  listProgramCoursesUpToYear,
-  listProgramsForFaculty,
-  listUniversitiesWithFaculties,
-} from '@/server/services/catalog';
+import { listProgramCoursesUpToYear, listProgramsForFaculty } from '@/server/services/catalog';
+import { listUniversitiesForPicker } from '@/server/services/catalog-pages';
+import { proposalContext } from '@/server/services/course-proposals';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('onboarding');
@@ -33,8 +31,8 @@ export default async function OnboardingPage() {
   const stored = (profile?.onboardingStep ?? 'program') as OnboardingData['step'];
   const step: OnboardingData['step'] = needsUsername ? 'username' : stored;
 
-  const [universities, programs, courses, statuses, communities] = await Promise.all([
-    listUniversitiesWithFaculties(),
+  const [universities, programs, courses, statuses, communities, proposal] = await Promise.all([
+    listUniversitiesForPicker(),
     profile?.facultyId ? listProgramsForFaculty(profile.facultyId) : Promise.resolve([]),
     profile?.programId && profile.year
       ? listProgramCoursesUpToYear(profile.programId, Math.min(profile.year + 1, 6))
@@ -48,12 +46,21 @@ export default async function OnboardingPage() {
       .from(userCourseStatus)
       .where(eq(userCourseStatus.userId, user.id)),
     step === 'communities' ? suggestedCommunities(user.id) : Promise.resolve([]),
+    step === 'courses' ? proposalContext(user.id) : Promise.resolve(null),
   ]);
 
   const data: OnboardingData = {
     step,
     needsUsername,
     universities,
+    proposal: proposal
+      ? {
+          programName: proposal.programName,
+          facultyShortName: proposal.facultyShortName,
+          durationYears: proposal.durationYears,
+          year: proposal.year,
+        }
+      : null,
     profile: {
       universityId: profile?.universityId ?? null,
       facultyId: profile?.facultyId ?? null,

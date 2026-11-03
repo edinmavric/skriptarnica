@@ -362,66 +362,71 @@ export async function createCommunity(
 
 /** Communities list (SPEC §4.7): the viewer's own, suggested for their faculty, popular public ones. */
 export async function listCommunitiesForViewer(viewer: CurrentUser | null) {
-  const profile = viewer
-    ? (
-        await db
+  const [[profile], mine] = viewer
+    ? await Promise.all([
+        db
           .select({
             facultyId: studentProfiles.facultyId,
             programId: studentProfiles.programId,
             universityId: studentProfiles.universityId,
           })
           .from(studentProfiles)
-          .where(eq(studentProfiles.userId, viewer.id))
-      )[0]
-    : undefined;
-  const mine = viewer
-    ? await db
-        .select({ community: communities, role: communityMembers.role })
-        .from(communityMembers)
-        .innerJoin(communities, eq(communities.id, communityMembers.communityId))
-        .where(
-          and(
-            eq(communityMembers.userId, viewer.id),
-            or(isNull(communityMembers.bannedUntil), sql`${communityMembers.bannedUntil} < now()`),
-          ),
-        )
-        .orderBy(desc(communities.memberCount))
-    : [];
+          .where(eq(studentProfiles.userId, viewer.id)),
+        db
+          .select({ community: communities, role: communityMembers.role })
+          .from(communityMembers)
+          .innerJoin(communities, eq(communities.id, communityMembers.communityId))
+          .where(
+            and(
+              eq(communityMembers.userId, viewer.id),
+              or(
+                isNull(communityMembers.bannedUntil),
+                sql`${communityMembers.bannedUntil} < now()`,
+              ),
+            ),
+          )
+          .orderBy(desc(communities.memberCount)),
+      ])
+    : [[], []];
   const mineIds = mine.map((row) => row.community.id);
   const visible = profile?.facultyId
     ? or(eq(communities.visibility, 'public'), eq(communities.facultyId, profile.facultyId))
     : eq(communities.visibility, 'public');
-  const suggested = profile?.facultyId
-    ? await db
-        .select()
-        .from(communities)
-        .where(
-          and(
-            or(
-              // The viewer's faculty, minus other programs' communities (only their own smer)…
-              and(
-                eq(communities.facultyId, profile.facultyId),
-                or(
-                  ne(communities.type, 'program'),
-                  profile.programId ? eq(communities.programId, profile.programId) : undefined,
+  const [suggested, popular] = await Promise.all([
+    profile?.facultyId
+      ? db
+          .select()
+          .from(communities)
+          .where(
+            and(
+              or(
+                // The viewer's faculty, minus other programs' communities (only their own smer)…
+                and(
+                  eq(communities.facultyId, profile.facultyId),
+                  or(
+                    ne(communities.type, 'program'),
+                    profile.programId ? eq(communities.programId, profile.programId) : undefined,
+                  ),
                 ),
+                // …and their university.
+                profile.universityId
+                  ? eq(communities.universityId, profile.universityId)
+                  : undefined,
               ),
-              // …and their university.
-              profile.universityId ? eq(communities.universityId, profile.universityId) : undefined,
+              visible,
+              mineIds.length ? sql`${communities.id} NOT IN ${mineIds}` : undefined,
             ),
-            visible,
-            mineIds.length ? sql`${communities.id} NOT IN ${mineIds}` : undefined,
-          ),
-        )
-        .orderBy(asc(communities.type), desc(communities.memberCount))
-        .limit(12)
-    : [];
-  const popular = await db
-    .select()
-    .from(communities)
-    .where(and(visible, mineIds.length ? sql`${communities.id} NOT IN ${mineIds}` : undefined))
-    .orderBy(desc(communities.memberCount), desc(communities.postCount))
-    .limit(12);
+          )
+          .orderBy(asc(communities.type), desc(communities.memberCount))
+          .limit(12)
+      : Promise.resolve([]),
+    db
+      .select()
+      .from(communities)
+      .where(and(visible, mineIds.length ? sql`${communities.id} NOT IN ${mineIds}` : undefined))
+      .orderBy(desc(communities.memberCount), desc(communities.postCount))
+      .limit(12),
+  ]);
   return { mine, suggested, popular: popular.filter((c) => !suggested.some((s) => s.id === c.id)) };
 }
 

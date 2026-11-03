@@ -68,7 +68,8 @@ export async function getPublicProfile(
     .leftJoin(universities, eq(universities.id, faculties.universityId))
     .leftJoin(studyPrograms, eq(studyPrograms.id, studentProfiles.programId))
     .leftJoin(sellerProfiles, eq(sellerProfiles.userId, users.id))
-    .where(sql`lower(${users.username}) = ${username.toLowerCase()}`);
+    // citext compares case-insensitively and can use users_username_uq.
+    .where(eq(users.username, username));
   if (!row || !row.user.username || row.user.deletedAt || row.user.bannedAt) return null;
   const userId = row.user.id;
   const [[sold], [followers], [following]] = await Promise.all([

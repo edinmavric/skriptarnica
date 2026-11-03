@@ -37,3 +37,18 @@ export const catalogRequestSchema = z.object({
   city: z.string().trim().max(80).optional(),
 });
 export type CatalogRequestInput = z.input<typeof catalogRequestSchema>;
+
+/** A student proposes a course for their own program (year + winter/summer term). */
+export const courseProposalSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, { error: 'validation.nameTooShort' })
+    .max(160, { error: 'validation.courseNameTooLong' }),
+  code: z.string().trim().max(30).optional(),
+  year: z.coerce.number().int().min(1).max(6),
+  term: z.enum(['winter', 'summer']),
+  note: z.string().trim().max(500).optional(),
+});
+export type CourseProposalInput = z.output<typeof courseProposalSchema>;
+export type CourseProposalFormInput = z.input<typeof courseProposalSchema>;

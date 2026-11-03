@@ -2,7 +2,7 @@
 
 import { APIError } from 'better-auth/api';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -33,6 +33,7 @@ import {
   setCoursePlacement,
   setCourseProfessor,
   updateCatalogItem,
+  approveCourseRequestWithExisting,
 } from '../services/admin/catalog-admin';
 import { adjustSellerBalance } from '../services/admin/finance';
 import {
@@ -50,6 +51,7 @@ import {
   startImpersonation,
   unbanUser,
 } from '../services/admin/users';
+import { CATALOG_TAG } from '../services/catalog-pages';
 import { settingsSchema } from '../services/settings';
 import { createAction, zodFieldErrors } from './safe-action';
 
@@ -152,6 +154,11 @@ export async function stopImpersonationAction(): Promise<void> {
 
 // --- Catalog ----------------------------------------------------------------------------------
 
+/** Public catalog pages and the program search are cached under CATALOG_TAG; refresh them now. */
+function catalogChanged() {
+  revalidateTag(CATALOG_TAG, { expire: 0 });
+}
+
 const catalogInput = z.object({
   type: z.enum(catalogEntityTypes),
   id: z.uuid().optional(),
@@ -171,10 +178,14 @@ export const saveCatalogItemAction = createAction(
       const result = await updateCatalogItem(user.id, type, input.id, parsed.data as never, ipHash);
       if (!result.ok) return result;
       revalidatePath('/admin/katalog');
+      catalogChanged();
       return ok({ id: input.id });
     }
     const created = await createCatalogItem(user.id, type, parsed.data as never, ipHash);
-    if (created.ok) revalidatePath('/admin/katalog');
+    if (created.ok) {
+      revalidatePath('/admin/katalog');
+      catalogChanged();
+    }
     return created;
   },
 );
@@ -187,7 +198,10 @@ export const deleteCatalogItemAction = createAction(
   },
   async (input, { user, ipHash }) => {
     const result = await deleteCatalogItem(user.id, input.type, input.id, ipHash);
-    if (result.ok) revalidatePath('/admin/katalog');
+    if (result.ok) {
+      revalidatePath('/admin/katalog');
+      catalogChanged();
+    }
     return result;
   },
 );
@@ -207,6 +221,7 @@ export const setCoursePlacementAction = createAction(
   async (input, { user, ipHash }) => {
     const result = await setCoursePlacement(user.id, input, ipHash);
     revalidatePath(`/admin/katalog/course/${input.courseId}`);
+    catalogChanged();
     return result;
   },
 );
@@ -219,6 +234,7 @@ export const setCourseProfessorAction = createAction(
   async (input, { user, ipHash }) => {
     const result = await setCourseProfessor(user.id, input, ipHash);
     revalidatePath(`/admin/katalog/course/${input.courseId}`);
+    catalogChanged();
     return result;
   },
 );
@@ -232,7 +248,11 @@ export const importCoursesAction = createAction(
     auth: 'admin',
     reauth: true,
   },
-  async (input, { user, ipHash }) => importCoursesCsv(user.id, input.csv, input.dryRun, ipHash),
+  async (input, { user, ipHash }) => {
+    const result = await importCoursesCsv(user.id, input.csv, input.dryRun, ipHash);
+    if (!input.dryRun) catalogChanged();
+    return result;
+  },
 );
 
 export const approveCatalogRequestAction = createAction(
@@ -255,7 +275,27 @@ export const approveCatalogRequestAction = createAction(
       parsed.data as never,
       ipHash,
     );
-    if (result.ok) revalidatePath('/admin/katalog/zahtevi');
+    if (result.ok) {
+      revalidatePath('/admin/katalog/zahtevi');
+      catalogChanged();
+    }
+    return result;
+  },
+);
+
+export const approveCourseRequestWithExistingAction = createAction(
+  { schema: z.object({ requestId: z.uuid(), courseId: z.uuid() }), auth: 'admin' },
+  async (input, { user, ipHash }) => {
+    const result = await approveCourseRequestWithExisting(
+      user.id,
+      input.requestId,
+      input.courseId,
+      ipHash,
+    );
+    if (result.ok) {
+      revalidatePath('/admin/katalog/zahtevi');
+      catalogChanged();
+    }
     return result;
   },
 );
@@ -270,7 +310,10 @@ export const rejectCatalogRequestAction = createAction(
   },
   async (input, { user, ipHash }) => {
     const result = await rejectCatalogRequest(user.id, input.requestId, input.reason, ipHash);
-    if (result.ok) revalidatePath('/admin/katalog/zahtevi');
+    if (result.ok) {
+      revalidatePath('/admin/katalog/zahtevi');
+      catalogChanged();
+    }
     return result;
   },
 );

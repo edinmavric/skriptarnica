@@ -12,6 +12,7 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
+import { cache } from 'react';
 import { v7 as uuidv7 } from 'uuid';
 
 import { markdownExcerpt } from '@/lib/markdown';
@@ -207,7 +208,8 @@ async function viewerVotes(
   return new Map(rows.map((row) => [row.targetId, row.value]));
 }
 
-async function moderatedCommunities(viewer: CurrentUser | null): Promise<Set<string>> {
+/** Memoized per request (post, comments and lists all ask). */
+const moderatedCommunities = cache(async (viewer: CurrentUser | null): Promise<Set<string>> => {
   if (!viewer) return new Set();
   const rows = await db
     .select({ communityId: communityMembers.communityId })
@@ -219,7 +221,7 @@ async function moderatedCommunities(viewer: CurrentUser | null): Promise<Set<str
       ),
     );
   return new Set(rows.map((row) => row.communityId));
-}
+});
 
 function postsQuery() {
   return db
@@ -314,18 +316,21 @@ export async function listPosts(input: {
   };
 }
 
-export async function getPost(
+/** Memoized per request: generateMetadata and the page both load it. */
+export const getPost = cache(async function getPost(
   postId: string,
   viewer: CurrentUser | null,
 ): Promise<{ post: PostView; community: LoadedCommunity } | null> {
-  const [row] = await postsQuery().where(eq(posts.id, postId));
+  const [[row], moderatorOf, myVotes] = await Promise.all([
+    postsQuery().where(eq(posts.id, postId)),
+    moderatedCommunities(viewer),
+    viewerVotes(viewer?.id ?? null, 'post', [postId]),
+  ]);
   if (!row) return null;
   const community = await loadCommunityById(row.post.communityId, viewer);
   if (!community || !canReadCommunity(viewer, community.access).allowed) return null;
-  const moderatorOf = await moderatedCommunities(viewer);
-  const myVotes = await viewerVotes(viewer?.id ?? null, 'post', [postId]);
   return { post: toPostView(row, viewer, moderatorOf, myVotes), community };
-}
+});
 
 export async function getPollResults(postId: string, viewerId: string | null) {
   const [options, mine] = await Promise.all([
@@ -791,29 +796,31 @@ export async function getCommentTree(
   sort: CommentSort,
   rootId?: string,
 ): Promise<CommentView[]> {
-  const [post] = await db
-    .select({
-      authorId: posts.authorId,
-      communityId: posts.communityId,
-      isAnonymous: posts.isAnonymous,
-    })
-    .from(posts)
-    .where(eq(posts.id, postId));
+  const [[post], moderatorOf, rows] = await Promise.all([
+    db
+      .select({
+        authorId: posts.authorId,
+        communityId: posts.communityId,
+        isAnonymous: posts.isAnonymous,
+      })
+      .from(posts)
+      .where(eq(posts.id, postId)),
+    moderatedCommunities(viewer),
+    db
+      .select({
+        comment: comments,
+        authorName: users.name,
+        authorUsername: users.username,
+        authorDeletedAt: users.deletedAt,
+      })
+      .from(comments)
+      .innerJoin(users, eq(users.id, comments.authorId))
+      .where(eq(comments.postId, postId))
+      .orderBy(asc(comments.createdAt))
+      .limit(2000),
+  ]);
   if (!post) return [];
-  const moderatorOf = await moderatedCommunities(viewer);
   const reveal = viewer?.role === 'admin' || moderatorOf.has(post.communityId);
-  const rows = await db
-    .select({
-      comment: comments,
-      authorName: users.name,
-      authorUsername: users.username,
-      authorDeletedAt: users.deletedAt,
-    })
-    .from(comments)
-    .innerJoin(users, eq(users.id, comments.authorId))
-    .where(eq(comments.postId, postId))
-    .orderBy(asc(comments.createdAt))
-    .limit(2000);
   const myVotes = await viewerVotes(
     viewer?.id ?? null,
     'comment',

@@ -1,4 +1,5 @@
 import { and, eq, gte, inArray, isNull, ne, sql } from 'drizzle-orm';
+import { cache } from 'react';
 
 import { RECOMMENDATION_CACHE_SECONDS, RECOMMENDATION_LIMIT } from '@/config/recommendations';
 import { rankRecommendations, type Candidate, type CandidateReason } from '@/lib/recommendations';
@@ -24,15 +25,18 @@ import { recommendationsKey } from './recommendations-cache';
  * Candidate courses for a user (SPEC §4.5): enrolled courses first, then the program's courses
  * for the current year, then next year's. Passed courses are not candidates.
  */
-export async function candidateCourses(userId: string): Promise<Map<string, CandidateReason>> {
-  const [profile] = await db
-    .select()
-    .from(studentProfiles)
-    .where(eq(studentProfiles.userId, userId));
-  const statuses = await db
-    .select()
-    .from(userCourseStatus)
-    .where(eq(userCourseStatus.userId, userId));
+export const candidateCourses = cache(async (userId: string) => {
+  // Memoized per request: the feed, the exam-period box and the ranking all ask for it.
+  const [[profile], statuses] = await Promise.all([
+    db
+      .select({ programId: studentProfiles.programId, year: studentProfiles.year })
+      .from(studentProfiles)
+      .where(eq(studentProfiles.userId, userId)),
+    db
+      .select({ courseId: userCourseStatus.courseId, status: userCourseStatus.status })
+      .from(userCourseStatus)
+      .where(eq(userCourseStatus.userId, userId)),
+  ]);
   const passed = new Set(statuses.filter((s) => s.status === 'passed').map((s) => s.courseId));
   const reasons = new Map<string, CandidateReason>();
   for (const status of statuses)
@@ -52,8 +56,8 @@ export async function candidateCourses(userId: string): Promise<Map<string, Cand
       reasons.set(row.courseId, row.year === profile.year ? 'currentYear' : 'nextYear');
     }
   }
-  return reasons;
-}
+  return reasons as ReadonlyMap<string, CandidateReason>;
+});
 
 async function computeRanking(userId: string): Promise<{ noteId: string; score: number }[]> {
   const reasons = await candidateCourses(userId);

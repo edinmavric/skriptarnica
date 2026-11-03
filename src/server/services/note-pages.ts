@@ -12,6 +12,7 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
+import { cache } from 'react';
 import { revalidateTag, unstable_cache } from 'next/cache';
 
 import type { NoteCardData } from '@/components/ui/note-card';
@@ -269,18 +270,21 @@ export interface NotePageData {
   viewer: { isOwner: boolean; bookmarked: boolean; owned: boolean };
 }
 
-/** Note page read model; access is checked with canViewNote (drafts are 404 for others). */
-export async function getNotePage(
+/**
+ * Note page read model; access is checked with canViewNote (drafts are 404 for others).
+ * Memoized per request: generateMetadata and the page both load it.
+ */
+export const getNotePage = cache(async function getNotePage(
   slug: string,
   viewer: CurrentUser | null,
 ): Promise<NotePageData | null> {
   const [row] = await db
     .select({
       note: notes,
-      course: courses,
-      faculty: faculties,
-      professor: professors,
-      seller: users,
+      course: { name: courses.name, slug: courses.slug, code: courses.code },
+      faculty: { name: faculties.name, shortName: faculties.shortName, slug: faculties.slug },
+      professor: { name: professors.name, title: professors.title, slug: professors.slug },
+      seller: { id: users.id, name: users.name, username: users.username, image: users.image },
     })
     .from(notes)
     .innerJoin(users, eq(users.id, notes.sellerId))
@@ -291,7 +295,7 @@ export async function getNotePage(
   if (!row || !canViewNote(viewer, row.note).allowed) return null;
   const { note } = row;
 
-  const [previews, versions, [sellerStats], passed, bookmark] = await Promise.all([
+  const [previews, versions, [sellerStats], passed, bookmark, owned] = await Promise.all([
     note.currentVersionId
       ? db
           .select()
@@ -326,21 +330,14 @@ export async function getNotePage(
           .from(bookmarks)
           .where(and(eq(bookmarks.userId, viewer.id), eq(bookmarks.noteId, note.id)))
       : Promise.resolve([]),
+    viewer ? viewerOwnsNote(viewer.id, note.id) : Promise.resolve(false),
   ]);
-
-  const owned = viewer ? await viewerOwnsNote(viewer.id, note.id) : false;
 
   return {
     note,
-    course: row.course
-      ? { name: row.course.name, slug: row.course.slug, code: row.course.code }
-      : null,
-    faculty: row.faculty
-      ? { name: row.faculty.name, shortName: row.faculty.shortName, slug: row.faculty.slug }
-      : null,
-    professor: row.professor
-      ? { name: row.professor.name, title: row.professor.title, slug: row.professor.slug }
-      : null,
+    course: row.course,
+    faculty: row.faculty,
+    professor: row.professor,
     seller: {
       id: row.seller.id,
       name: row.seller.name,
@@ -362,7 +359,7 @@ export async function getNotePage(
     lastUpdated: versions[0]?.publishedAt ?? note.publishedAt,
     viewer: { isOwner: viewer?.id === note.sellerId, bookmarked: bookmark.length > 0, owned },
   };
-}
+});
 
 /** Whether the user has an active entitlement for the note. */
 export async function viewerOwnsNote(userId: string, noteId: string): Promise<boolean> {

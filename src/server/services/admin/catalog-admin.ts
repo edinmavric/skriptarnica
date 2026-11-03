@@ -29,6 +29,7 @@ import {
   upsertProgram,
   upsertUniversity,
 } from '../catalog';
+import { placeApprovedCourse } from '../course-proposals';
 import { audit } from './audit';
 
 type FormInput<T extends CatalogEntityType> = z.output<(typeof catalogFormSchemas)[T]>;
@@ -511,6 +512,8 @@ export async function approveCatalogRequest<T extends CatalogEntityType>(
   const created = await createCatalogItem(adminId, type, input, ipHash);
   if (!created.ok) return created;
   await db.transaction(async (tx) => {
+    // A student's course proposal also names the program, year and semester.
+    if (type === 'course') await placeApprovedCourse(tx, request, created.value.id);
     await tx
       .update(catalogRequests)
       .set({
@@ -531,6 +534,51 @@ export async function approveCatalogRequest<T extends CatalogEntityType>(
   });
   await trySendEvent('catalog/request.decided', { requestId }, `catalog-request-${requestId}`);
   return created;
+}
+
+/**
+ * Approve a course proposal by linking a course that already exists on the faculty (instead of
+ * creating a duplicate): it's placed on the proposed program and the proposer is notified.
+ */
+export async function approveCourseRequestWithExisting(
+  adminId: string,
+  requestId: string,
+  courseId: string,
+  ipHash: string,
+): Promise<Result<{ id: string }>> {
+  const [[request], [course]] = await Promise.all([
+    db.select().from(catalogRequests).where(eq(catalogRequests.id, requestId)),
+    db
+      .select({ id: courses.id, facultyId: courses.facultyId })
+      .from(courses)
+      .where(eq(courses.id, courseId)),
+  ]);
+  if (!request || request.status !== 'pending' || request.type !== 'course')
+    return err(appError('CONFLICT', 'errors.admin.requestDecided'));
+  if (!course || course.facultyId !== request.payload.facultyId)
+    return err(appError('NOT_FOUND', 'errors.notFound'));
+  await db.transaction(async (tx) => {
+    await placeApprovedCourse(tx, request, course.id);
+    await tx
+      .update(catalogRequests)
+      .set({
+        status: 'approved',
+        reviewedById: adminId,
+        reviewedAt: new Date(),
+        createdEntityId: course.id,
+      })
+      .where(eq(catalogRequests.id, requestId));
+    await audit(tx, {
+      actorId: adminId,
+      action: 'catalog.request_approved',
+      targetType: 'catalog_request',
+      targetId: requestId,
+      details: { entityId: course.id, linkedExisting: true },
+      ipHash,
+    });
+  });
+  await trySendEvent('catalog/request.decided', { requestId }, `catalog-request-${requestId}`);
+  return ok({ id: course.id });
 }
 
 export async function rejectCatalogRequest(

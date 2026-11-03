@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { CommunityList } from '@/components/features/forum/community-list';
 import { PostList } from '@/components/features/forum/post-list';
 import { Button } from '@/components/ui/button';
+import { PostCardSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { routes } from '@/config/routes';
 import type { CurrentUser } from '@/server/auth/session';
 import { listCommunitiesForViewer } from '@/server/services/communities';
@@ -48,6 +49,17 @@ export async function CommunityActivity({ user }: { user: CurrentUser }) {
           emptyDescription={t('emptyDescription')}
         />
       )}
+    </section>
+  );
+}
+
+export function CommunityActivitySkeleton() {
+  return (
+    <section aria-hidden="true">
+      <Skeleton className="mb-3 h-7 w-56" />
+      {Array.from({ length: 3 }, (_, i) => (
+        <PostCardSkeleton key={i} />
+      ))}
     </section>
   );
 }

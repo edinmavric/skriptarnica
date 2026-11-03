@@ -42,7 +42,8 @@
       "progress": "Otpremljeno {percent}%",
       "cancel": "Otkaži otpremanje",
       "done": "{name} je otpremljen."
-    }
+    },
+    "searching": "Tražim…"
   },
   "notes": {
     "count": "{count, plural, one {# skripta} few {# skripte} other {# skripti}}",
@@ -878,7 +879,9 @@
     "required": "Obavezno polje.",
     "proofTooShort": "Opiši dokaz o pravima u bar 30 znakova.",
     "statementRequired": "Potvrdi izjavu.",
-    "counterTooShort": "Obrazloži prigovor u bar 50 znakova."
+    "counterTooShort": "Obrazloži prigovor u bar 50 znakova.",
+    "courseNameTooLong": "Naziv može imati najviše 160 znakova.",
+    "yearBeyondProgram": "Tvoj smer nema toliko godina."
   },
   "errors": {
     "validation": "Proveri označena polja.",
@@ -1008,6 +1011,12 @@
     "exportExpired": "Link za preuzimanje je istekao. Zatraži novi izvoz.",
     "copyright": {
       "nothingToCounter": "Za ovu skriptu nema odluke na koju možeš da uložiš prigovor."
+    },
+    "courseProposal": {
+      "noProgram": "Prvo izaberi smer, pa predloži predmet za njega.",
+      "exists": "Taj predmet već postoji na tvom smeru.",
+      "alreadyProposed": "Već si predložio ovaj predmet. Čeka odobrenje.",
+      "tooMany": "Imaš 10 predloga koji čekaju odobrenje. Sačekaj da ih administrator pregleda."
     }
   },
   "onboarding": {
@@ -2012,7 +2021,12 @@
       "reject": "Odbij",
       "reason": "Razlog",
       "confirmReject": "Odbij predlog",
-      "cancel": "Otkaži"
+      "cancel": "Otkaži",
+      "courseContext": "Smer: {program} ({faculty}), {year}. godina, {semester}. semestar",
+      "similar": "Slični predmeti koji već postoje na fakultetu:",
+      "linkExisting": "Dodaj ovaj na smer",
+      "linked": "Predmet je dodat na smer.",
+      "courseApproveHint": "„Prihvati“ pravi novi predmet i dodaje ga na smer i studentu u predmete."
     },
     "reports": {
       "title": "Prijave",
@@ -2306,7 +2320,17 @@
     "saved": "Sačuvano. Preporuke su osvežene.",
     "emptyTitle": "Nema predmeta",
     "emptyDescription": "Prvo izaberi fakultet, smer i godinu.",
-    "emptyAction": "Izaberi smer"
+    "emptyAction": "Izaberi smer",
+    "proposals": {
+      "title": "Tvoji predlozi predmeta",
+      "status": {
+        "pending": "Čeka odobrenje",
+        "approved": "Odobren",
+        "rejected": "Odbijen"
+      },
+      "reason": "Razlog: {reason}",
+      "year": "{year}. godina"
+    }
   },
   "savedPage": {
     "title": "Sačuvano",
@@ -2768,5 +2792,26 @@
     "courseNotes": "{count, plural, =0 {Skripte i zajednica predmeta} one {# skripta} few {# skripte} other {# skripti}}",
     "members": "{count, plural, one {# član} few {# člana} other {# članova}}",
     "comments": "{count, plural, one {# komentar} few {# komentara} other {# komentara}}"
+  },
+  "courseProposal": {
+    "trigger": "Ne vidiš predmet? Predloži ga",
+    "triggerButton": "Predloži predmet",
+    "title": "Predloži predmet",
+    "description": "Za smer {program} ({faculty}). Kad ga administrator odobri, predmet se pojavljuje na smeru i u tvojim predmetima.",
+    "name": "Naziv predmeta",
+    "year": "Godina",
+    "yearOption": "{year}. godina",
+    "term": "Semestar",
+    "terms": {
+      "winter": "Zimski",
+      "summer": "Letnji"
+    },
+    "code": "Šifra predmeta",
+    "codeHint": "Nije obavezno. Piše u planu studija, npr. „13E011OE1“.",
+    "note": "Napomena za administratora",
+    "noteHint": "Nije obavezno. Npr. da je izborni ili link ka planu studija.",
+    "submit": "Pošalji predlog",
+    "sent": "Predlog je poslat. Javićemo ti kad ga administrator pregleda.",
+    "close": "Zatvori"
   }
 }

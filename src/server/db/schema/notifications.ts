@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   boolean,
   integer,
@@ -43,6 +44,10 @@ export const notifications = pgTable(
   (t) => [
     uniqueIndex('notifications_dedupe_uq').on(t.userId, t.dedupeKey),
     index('notifications_user_idx').on(t.userId, t.createdAt),
+    // The unread badge on every page counts these.
+    index('notifications_unread_idx')
+      .on(t.userId)
+      .where(sql`read_at IS NULL`),
   ],
 );
 

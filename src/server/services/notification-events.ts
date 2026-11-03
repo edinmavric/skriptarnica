@@ -340,7 +340,8 @@ export async function onCatalogRequestDecided({
     type: 'catalog_request',
     dedupeKey: `catalog-request:${requestId}`,
     payload: {
-      href: routes.onboarding,
+      // A proposed course lands in the student's course list; other requests in onboarding.
+      href: request.type === 'course' ? '/moji-predmeti' : routes.onboarding,
       name: request.payload.name,
       decision: request.status,
       reason: request.rejectionReason ?? '—',

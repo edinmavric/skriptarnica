@@ -13,11 +13,13 @@ import { getLayoutUser } from '@/server/services/layout';
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
-  const user = await requireAppUser();
-  const layoutUser = await getLayoutUser(user);
+  const [layoutUser, messages] = await Promise.all([
+    requireAppUser().then(getLayoutUser),
+    clientMessages('app'),
+  ]);
   return (
     // Settings and seller tools need their own messages (see i18n/client-messages).
-    <NextIntlClientProvider messages={await clientMessages('app')}>
+    <NextIntlClientProvider messages={messages}>
       <AppShell
         user={layoutUser}
         signOutAction={signOutAction}

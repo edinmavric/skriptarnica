@@ -6,7 +6,7 @@ const SERVER_ONLY = ['legal', 'info', 'email', 'imprint', 'og'];
 
 /** Namespaces only client components of one area use. */
 const AREA_ONLY = {
-  app: ['seller', 'settings'],
+  app: ['seller', 'settings', 'courseProposal'],
   admin: ['admin'],
   dev: ['devUi', 'devOutbox', 'devCheckout'],
 } as const;

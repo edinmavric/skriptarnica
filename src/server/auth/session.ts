@@ -21,6 +21,8 @@ export interface CurrentUser {
   role: 'student' | 'admin';
   twoFactorEnabled: boolean;
   bannedAt: Date | null;
+  /** Set while an account deletion is pending (the banner in every layout shows it). */
+  deletionScheduledFor: Date | null;
   sessionId: string;
   /** Set when an admin is viewing as this user (read-only impersonation). */
   impersonatedBy: string | null;
@@ -44,6 +46,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
       twoFactorEnabled: users.twoFactorEnabled,
       bannedAt: users.bannedAt,
       deletedAt: users.deletedAt,
+      deletionScheduledFor: users.deletionScheduledFor,
     })
     .from(users)
     .where(eq(users.id, session.user.id));
@@ -60,6 +63,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     role: row.role,
     twoFactorEnabled: row.twoFactorEnabled,
     bannedAt: row.bannedAt,
+    deletionScheduledFor: row.deletionScheduledFor,
     sessionId: session.session.id,
     impersonatedBy,
   };
@@ -78,8 +82,11 @@ export async function requireUser(): Promise<CurrentUser> {
   return user;
 }
 
-/** Whether the user has accepted the current Terms and Privacy Policy versions (SPEC §7.4). */
-export async function hasCurrentConsents(userId: string): Promise<boolean> {
+/**
+ * Whether the user has accepted the current Terms and Privacy Policy versions (SPEC §7.4).
+ * Memoized per request: the layout and the page both check it.
+ */
+export const hasCurrentConsents = cache(async (userId: string): Promise<boolean> => {
   const rows = await db
     .select({ type: consents.type, version: consents.documentVersion, value: consents.value })
     .from(consents)
@@ -97,7 +104,7 @@ export async function hasCurrentConsents(userId: string): Promise<boolean> {
     privacy.version === legalVersions.privacy &&
     age?.value,
   );
-}
+});
 
 /**
  * Guard for the logged-in area: signed in, current terms accepted (e.g. Google sign-ups and
@@ -111,10 +118,11 @@ export async function requireAppUser(): Promise<CurrentUser> {
   return user;
 }
 
-export async function getStudentProfile(userId: string) {
+/** Memoized per request (layouts, pages and the feed all read it). */
+export const getStudentProfile = cache(async (userId: string) => {
   const [profile] = await db
     .select()
     .from(studentProfiles)
     .where(eq(studentProfiles.userId, userId));
   return profile ?? null;
-}
+});

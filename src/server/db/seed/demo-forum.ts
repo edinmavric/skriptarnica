@@ -83,6 +83,7 @@ export function asCurrentUser(row: typeof users.$inferSelect): CurrentUser {
     role: row.role,
     twoFactorEnabled: row.twoFactorEnabled,
     bannedAt: row.bannedAt,
+    deletionScheduledFor: row.deletionScheduledFor,
     sessionId: randomUUID(),
     impersonatedBy: null,
   };
