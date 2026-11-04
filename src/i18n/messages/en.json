@@ -1261,7 +1261,9 @@
       "more": "Detalji o proviziji"
     },
     "faculties": {
-      "title": "Fakulteti"
+      "title": "Fakulteti",
+      "showAll": "Show all faculties ({count})",
+      "showLess": "Show fewer"
     },
     "topNotes": {
       "title": "Notes students recommend most",

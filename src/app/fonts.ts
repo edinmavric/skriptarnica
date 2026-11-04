@@ -1,4 +1,4 @@
-import { JetBrains_Mono } from 'next/font/google';
+import { Caveat, JetBrains_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 
 /**
@@ -27,5 +27,13 @@ export const jetbrains = JetBrains_Mono({
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   variable: '--font-jetbrains',
+  preload: false,
+});
+
+/** Handwriting for short pen notes only (step numbers, empty-state titles), never running text. */
+export const caveat = Caveat({
+  subsets: ['latin', 'latin-ext'],
+  display: 'swap',
+  variable: '--font-caveat',
   preload: false,
 });

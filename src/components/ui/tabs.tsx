@@ -30,7 +30,8 @@ export function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsP
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        'relative -mb-px min-h-11 border-b-[2.5px] border-transparent px-3 text-[0.95rem] whitespace-nowrap text-ink-muted hover:text-ink data-[state=active]:border-ink data-[state=active]:font-medium data-[state=active]:text-ink',
+        // Register tabs: the open one is coloured with the highlighter.
+        'relative -mb-px min-h-11 rounded-t-md border-b-[2.5px] border-transparent px-3 text-[0.95rem] whitespace-nowrap text-ink-muted hover:bg-paper-sunk hover:text-ink data-[state=active]:border-ink data-[state=active]:bg-marker data-[state=active]:font-semibold data-[state=active]:text-marker-ink',
         className,
       )}
       {...props}

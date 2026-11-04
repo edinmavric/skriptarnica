@@ -44,7 +44,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label={t('label')}
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-paper pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="on-cover fixed inset-x-0 bottom-0 z-30 border-t border-cover-deep bg-cover pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_14px_-12px_rgb(0_0_0/0.6)] md:hidden"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {items.map(({ href, key, Icon, match }) => {

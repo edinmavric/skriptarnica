@@ -17,13 +17,13 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-start gap-3 rounded-lg border border-dashed border-rule-strong px-5 py-8 sm:items-center sm:text-center',
+        'flex flex-col items-start gap-3 rounded-sm border-2 border-dashed border-rule-strong bg-paper-raised/70 px-5 py-8 sm:items-center sm:text-center',
         className,
       )}
     >
       <svg
         viewBox="0 0 120 64"
-        className="h-14 w-auto text-ink-faint"
+        className="h-14 w-auto text-pen"
         aria-hidden="true"
         fill="none"
         stroke="currentColor"
@@ -36,7 +36,7 @@ export function EmptyState({
         <path d="m83 46 22-22 6 6-22 22-8 2z" />
         <path d="m101 28 6 6" />
       </svg>
-      <h3 className="font-display text-lg font-semibold">{title}</h3>
+      <h3 className="hand text-[1.75rem] leading-tight text-pen">{title}</h3>
       {description ? <p className="max-w-prose text-ink-muted">{description}</p> : null}
       {action ? <div className="mt-1">{action}</div> : null}
     </div>

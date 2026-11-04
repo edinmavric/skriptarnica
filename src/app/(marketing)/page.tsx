@@ -18,6 +18,7 @@ import { siteConfig } from '@/config/site';
 import { env } from '@/env';
 import { formatPrice } from '@/lib/format';
 import { calculateCommission } from '@/lib/money';
+import { cn } from '@/lib/cn';
 import { pageMetadata } from '@/lib/seo/metadata';
 import { redirect } from 'next/navigation';
 
@@ -38,6 +39,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const EXAMPLE_PRICE_PARA = 800 * PARA_PER_RSD;
+/** Faculties listed before "show all" (four rows of three on wide screens). */
+const FACULTIES_SHOWN = 12;
 
 export default async function HomePage() {
   const user = await getCurrentUser();
@@ -125,25 +128,6 @@ async function Landing() {
         </section>
       ) : null}
 
-      <section aria-labelledby="faculties-title">
-        <h2 id="faculties-title" className="text-display-sm font-semibold">
-          {t('faculties.title')}
-        </h2>
-        <ul className="mt-4 grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
-          {faculties.map((faculty) => (
-            <li key={faculty.slug}>
-              <Link
-                href={routes.faculty(faculty.slug)}
-                className="flex min-h-11 items-center justify-between gap-3 border-b border-rule py-2 hover:bg-paper-sunk"
-              >
-                <span>{faculty.name}</span>
-                <span className="text-sm whitespace-nowrap text-ink-muted">{faculty.city}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       <section
         aria-labelledby="paths-title"
         className="grid gap-8 border-t border-rule pt-10 md:grid-cols-2"
@@ -156,7 +140,7 @@ async function Landing() {
           <ol className="mt-4 flex flex-col gap-3">
             {(['buy1', 'buy2', 'buy3', 'buy4'] as const).map((key, index) => (
               <li key={key} className="flex gap-3">
-                <span className="tabular mt-0.5 grid size-7 shrink-0 place-items-center rounded-full border-[1.5px] border-ink text-sm font-semibold">
+                <span className="hand -mt-1 w-6 shrink-0 text-center text-[1.75rem] leading-none text-redpen">
                   {index + 1}
                 </span>
                 <span>{t(`paths.${key}`)}</span>
@@ -169,7 +153,7 @@ async function Landing() {
           <ol className="mt-4 flex flex-col gap-3">
             {(['sell1', 'sell2', 'sell3', 'sell4'] as const).map((key, index) => (
               <li key={key} className="flex gap-3">
-                <span className="tabular mt-0.5 grid size-7 shrink-0 place-items-center rounded-full border-[1.5px] border-ink text-sm font-semibold">
+                <span className="hand -mt-1 w-6 shrink-0 text-center text-[1.75rem] leading-none text-redpen">
                   {index + 1}
                 </span>
                 <span>{t(`paths.${key}`)}</span>
@@ -179,7 +163,10 @@ async function Landing() {
         </div>
       </section>
 
-      <section aria-labelledby="sell-title" className="rounded-lg bg-paper-sunk px-5 py-8 sm:px-8">
+      <section
+        aria-labelledby="sell-title"
+        className="-rotate-[0.4deg] rounded-[2px] bg-pink px-5 py-8 shadow-paper motion-reduce:rotate-0 sm:px-8"
+      >
         <h2 id="sell-title" className="text-display font-bold">
           {t('sell.title')}
         </h2>
@@ -206,6 +193,49 @@ async function Landing() {
           </Button>
         </div>
       </section>
+
+      <section aria-labelledby="faculties-title">
+        <h2 id="faculties-title" className="text-display-sm font-semibold">
+          {t('faculties.title')}
+        </h2>
+        <FacultyLinks faculties={faculties.slice(0, FACULTIES_SHOWN)} className="mt-4" />
+        {faculties.length > FACULTIES_SHOWN ? (
+          // Native disclosure: no JS, and every faculty link stays in the HTML for crawlers.
+          <details className="group">
+            <summary className="mt-4 inline-flex min-h-11 cursor-pointer list-none items-center font-medium text-pen underline underline-offset-2 hover:text-pen-hover [&::-webkit-details-marker]:hidden">
+              <span className="group-open:hidden">
+                {t('faculties.showAll', { count: faculties.length })}
+              </span>
+              <span className="hidden group-open:inline">{t('faculties.showLess')}</span>
+            </summary>
+            <FacultyLinks faculties={faculties.slice(FACULTIES_SHOWN)} />
+          </details>
+        ) : null}
+      </section>
     </div>
+  );
+}
+
+function FacultyLinks({
+  faculties,
+  className,
+}: {
+  faculties: { slug: string; name: string; city: string }[];
+  className?: string;
+}) {
+  return (
+    <ul className={cn('grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3', className)}>
+      {faculties.map((faculty) => (
+        <li key={faculty.slug}>
+          <Link
+            href={routes.faculty(faculty.slug)}
+            className="flex min-h-11 items-center justify-between gap-3 border-b border-rule py-2 hover:bg-paper-sunk"
+          >
+            <span>{faculty.name}</span>
+            <span className="text-sm whitespace-nowrap text-ink-muted">{faculty.city}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -11,6 +11,8 @@ test.describe('public catalog pages and search (Phase 3)', () => {
     await expect(page.getByText(/Prodaš skriptu za 800 RSD → dobijaš 640 RSD/)).toBeVisible();
     await expectNoSeriousA11yViolations(page);
 
+    // The landing lists the first faculties; the rest open under "show all".
+    await page.getByText(/Prikaži sve fakultete/).click();
     await page
       .getByRole('link', { name: /Elektrotehnički fakultet/ })
       .first()

@@ -53,7 +53,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               onOpenChange={(open) => {
                 if (!open) setItems((current) => current.filter((x) => x.id !== item.id));
               }}
-              className="flex items-start gap-3 rounded-md border border-rule bg-paper-raised p-3 pr-1 shadow-lift data-[state=open]:animate-pop-in data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)]"
+              className="flex items-start gap-3 rounded-[2px] border-b-2 border-b-marker bg-marker-soft p-3 pr-1 text-ink shadow-lift data-[state=open]:animate-pop-in data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)]"
             >
               <Icon
                 className={cn(

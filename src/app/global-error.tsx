@@ -22,8 +22,8 @@ export default function GlobalError({
       <body
         style={{
           fontFamily: 'system-ui, sans-serif',
-          background: '#fbfaf5',
-          color: '#1b1d22',
+          background: '#fbfcff',
+          color: '#151b33',
           padding: '4rem 1rem',
         }}
       >

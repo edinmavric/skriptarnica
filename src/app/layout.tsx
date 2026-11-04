@@ -14,7 +14,7 @@ import { cn } from '@/lib/cn';
 import { CONSENT_COOKIE, parseConsent } from '@/lib/consent';
 import { parseTheme, THEME_COOKIE } from '@/lib/theme';
 
-import { golos, jetbrains, piazzolla } from './fonts';
+import { caveat, golos, jetbrains, piazzolla } from './fonts';
 
 import './globals.css';
 
@@ -33,8 +33,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fbfaf5' },
-    { media: '(prefers-color-scheme: dark)', color: '#1e1d1a' },
+    { media: '(prefers-color-scheme: light)', color: '#1f3fbf' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a1129' },
   ],
 };
 
@@ -49,7 +49,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html
       lang={locale}
       data-theme={theme}
-      className={cn(piazzolla.variable, golos.variable, jetbrains.variable)}
+      className={cn(piazzolla.variable, golos.variable, jetbrains.variable, caveat.variable)}
       suppressHydrationWarning
     >
       <body className="min-h-dvh antialiased">

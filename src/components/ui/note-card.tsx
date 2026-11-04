@@ -28,7 +28,7 @@ export interface NoteCardData {
   owned?: boolean;
 }
 
-/** A note as a sheet of paper: first page as the cover, folded corner (SPEC §6.1). */
+/** A note as an index card taped into the notebook: first page as the cover, folded corner. */
 export function NoteCard({
   note,
   priority,
@@ -40,8 +40,10 @@ export function NoteCard({
 }) {
   const t = useTranslations('notes.card');
   return (
-    <article className={cn('group relative flex flex-col', className)}>
-      <div className="paper-sheet aspect-[3/4] overflow-hidden rounded-sm">
+    <article className={cn('note-card group relative flex flex-col', className)}>
+      {/* An index card taped into the notebook. */}
+      <span aria-hidden="true" className="tape" />
+      <div className="paper-sheet aspect-[3/4] overflow-hidden rounded-sm border-t-[3px] border-margin">
         {note.coverUrl ? (
           <Image
             src={note.coverUrl}

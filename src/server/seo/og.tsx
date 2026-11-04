@@ -8,12 +8,12 @@ import { siteConfig } from '@/config/site';
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
 export const colors = {
-  paper: '#fbfaf5',
-  ink: '#1b1d22',
-  muted: '#51565f',
-  pen: '#1e3a9e',
-  marker: '#e4f35a',
-  rule: '#d6dde7',
+  paper: '#fbfcff',
+  ink: '#151b33',
+  muted: '#465075',
+  pen: '#1f3fbf',
+  marker: '#ffe84d',
+  rule: '#cbd9f0',
 };
 
 let fonts: Promise<

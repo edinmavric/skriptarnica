@@ -7,7 +7,8 @@ import { cn } from '@/lib/cn';
 import { useField } from './field';
 
 export const controlClasses =
-  'w-full rounded-md border border-field bg-paper-raised px-3 text-[0.95rem] text-ink placeholder:text-ink-faint transition-colors hover:border-ink focus-visible:border-pen focus-visible:outline-2 focus-visible:outline-offset-0 disabled:cursor-not-allowed disabled:bg-paper-sunk disabled:opacity-70 aria-invalid:border-danger';
+  // A line to write on: a light box with a heavier ink underline.
+  'w-full rounded-sm border border-rule-strong border-b-2 border-b-ink/70 bg-paper-raised px-3 text-[0.95rem] text-ink placeholder:text-ink-faint transition-colors hover:border-ink focus-visible:border-pen focus-visible:outline-2 focus-visible:outline-offset-0 disabled:cursor-not-allowed disabled:bg-paper-sunk disabled:opacity-70 aria-invalid:border-danger';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> };
 

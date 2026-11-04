@@ -21,7 +21,8 @@ export function AdminNavLink({ href, children }: { href: string; children: React
       aria-current={current ? 'page' : undefined}
       className={cn(
         'block min-h-11 rounded-md px-3 py-2.5 text-sm whitespace-nowrap hover:bg-paper-sunk',
-        current && 'bg-paper-sunk font-semibold',
+        current &&
+          'bg-paper-sunk font-semibold underline decoration-marker decoration-[3px] underline-offset-[6px]',
       )}
     >
       {children}

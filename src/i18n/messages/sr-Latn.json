@@ -1261,7 +1261,9 @@
       "more": "Detalji o proviziji"
     },
     "faculties": {
-      "title": "Fakulteti"
+      "title": "Fakulteti",
+      "showAll": "Prikaži sve fakultete ({count})",
+      "showLess": "Prikaži manje"
     },
     "topNotes": {
       "title": "Skripte koje studenti najviše preporučuju",

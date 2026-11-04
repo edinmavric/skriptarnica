@@ -5,11 +5,15 @@ import { GlobalSearch } from '@/components/features/search/global-search';
 import { parseTheme, THEME_COOKIE } from '@/lib/theme';
 
 import { BottomNav } from './bottom-nav';
+import { NotebookSheet } from './notebook-sheet';
 import { SiteFooter } from './site-footer';
 import { SiteHeader } from './site-header';
 import type { LayoutUser } from './types';
 
-/** Public/app chrome: sticky header (desktop nav), mobile bottom nav, footer with legal links. */
+/**
+ * Public/app chrome drawn as a notebook: the header is the front cover, every page a sheet on
+ * the desk, the footer the back cover. Sticky header (desktop nav), mobile bottom nav.
+ */
 export async function AppShell({
   user,
   children,
@@ -29,7 +33,7 @@ export async function AppShell({
 }) {
   const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
   return (
-    <>
+    <div className="desk flex min-h-dvh flex-col">
       {banner}
       <SiteHeader
         user={user}
@@ -40,12 +44,14 @@ export async function AppShell({
       <main
         id="main"
         tabIndex={-1}
-        className="mx-auto w-full max-w-6xl px-4 pt-6 pb-8 outline-none sm:px-6"
+        className="mx-auto w-full max-w-6xl flex-1 px-2 pt-3 outline-none sm:px-6 sm:pt-6"
       >
-        {children}
+        <NotebookSheet className="min-h-[60vh] px-4 pt-6 pb-10 sm:pr-8 md:pl-16">
+          {children}
+        </NotebookSheet>
       </main>
       <SiteFooter cookieSettings={cookieSettings} paymentNotice={paymentNotice} />
       <BottomNav />
-    </>
+    </div>
   );
 }

@@ -26,27 +26,27 @@ export async function SiteHeader({
 }) {
   const t = await getTranslations('layout');
   return (
-    <header className="sticky top-0 z-30 border-b border-rule bg-paper/95 backdrop-blur-[2px] supports-[backdrop-filter]:bg-paper/85">
+    <header className="on-cover sticky top-0 z-30 border-b border-cover-deep/60 bg-cover shadow-[0_6px_14px_-12px_rgb(0_0_0/0.6)]">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 sm:px-6">
         <Wordmark />
         <nav aria-label={t('mainNav')} className="ml-4 hidden items-center gap-1 md:flex">
           <Link
             href={routes.communities}
-            className="rounded-md px-3 py-2 text-[0.95rem] hover:bg-paper-sunk"
+            className="rounded-md px-3 py-2 text-[0.95rem] underline-offset-[6px] hover:bg-paper-sunk hover:underline hover:decoration-marker hover:decoration-[3px]"
           >
             {t('nav.communities')}
           </Link>
           {user ? (
             <Link
               href={routes.library}
-              className="rounded-md px-3 py-2 text-[0.95rem] hover:bg-paper-sunk"
+              className="rounded-md px-3 py-2 text-[0.95rem] underline-offset-[6px] hover:bg-paper-sunk hover:underline hover:decoration-marker hover:decoration-[3px]"
             >
               {t('nav.library')}
             </Link>
           ) : null}
           <Link
             href={user?.isSeller ? routes.sell : routes.becomeSeller}
-            className="rounded-md px-3 py-2 text-[0.95rem] hover:bg-paper-sunk"
+            className="rounded-md px-3 py-2 text-[0.95rem] underline-offset-[6px] hover:bg-paper-sunk hover:underline hover:decoration-marker hover:decoration-[3px]"
           >
             {user?.isSeller ? t('nav.sell') : t('nav.startSelling')}
           </Link>

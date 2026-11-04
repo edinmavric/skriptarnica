@@ -240,7 +240,7 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
   - Profile lookup uses `eq` on the citext username, so it can use the unique index instead of `lower()`.
 - **Not done: the Better Auth session cookie cache.** It saves one query per request but delays session revocation ("sign out everywhere", password reset) by its max age. In-region, the query costs a few milliseconds.
 - **Loading states:**
-  - `loading.tsx` skeletons only in the signed-in area and admin. On public pages a streamed fallback commits HTTP 200 before the page runs, so `notFound()` pages would stop returning 404 (bad for search engines; E2E caught it).
+  - `loading.tsx` skeletons only in the signed-in area and admin. On public pages a streamed fallback commits HTTP 200 before the page runs, so `notFound()` pages would stop returning 404 (bad for search engines; E2E caught it). Not at the root of the signed-in area either: with a boundary there, client navigation from a public page into `/kupovina/...` sometimes left the page with no `<title>` (streamed metadata never hoisted; flaky axe failure in CI). Skeletons stay on the library, saved and admin sections; the top progress bar covers the rest.
   - Every page gets a thin top progress bar after an internal link click, shown only when the navigation takes over 150 ms (`navigation-progress.tsx`).
   - The home page's community activity streams in through `Suspense` instead of holding the page.
 - **Program search runs in the browser.**
@@ -253,3 +253,24 @@ Small decisions not covered by SPEC.md, newest last. Expensive-to-change decisio
   - The proposal is refused when it's already on the program, already proposed by the same student, or beyond the program's length. Each student may have at most 10 pending, plus the existing `catalogRequest` rate limit.
   - The admin either accepts it (creating the course) or links a similar existing course on the faculty (trigram similarity, top 3). Either way the course is placed on the program at that year/semester and added to the proposer's "Slušam".
   - The decision notification links to "Moji predmeti".
+
+## Notebook redesign (2026-11-04)
+
+- **The site is drawn as one student notebook.** Visual only: no logic, routes or copy changed.
+  - The header, the footer and the desk around the page are the cobalt cover. The footer is laid out like the table on the back of a school exercise book.
+  - Every page sits on a sheet (`components/layout/notebook-sheet.tsx`) with a red margin and a spiral binding. Highlighter register tabs on the right are decorative and `aria-hidden`.
+  - The paper follows the page: squared paper for the seller area and admin, plain for settings, checkout and onboarding, ruled everywhere else.
+  - Sign-in pages are a sheet torn out of the notebook (`.torn-top`).
+  - The admin is a separate grey-covered notebook (`.admin-desk`, via `light-dark()`).
+- **Tokens.** The existing token names are kept, so every page picked up the palette without edits:
+  - cobalt `--pen`, a yellow `--marker`, and pink, mint and orange highlighters;
+  - `--redpen` for corrections;
+  - cover tokens.
+  - `.on-cover` re-inks the same components (search, buttons, menus) for the dark cover. Overlays are portalled out, so they keep paper tokens.
+  - `tests/unit/contrast.test.ts` still checks every pair.
+- **Components.**
+  - Buttons are ink-stamped, with a hard offset shadow (`--shadow-ink`, `--edge`).
+  - Inputs are a box with a heavier ink underline. Active tabs are highlighted with the yellow marker.
+  - Note cards are index cards held by tape, slightly tilted (flat with reduced motion).
+  - Toasts and the cookie banner are sticky notes. Dialogs have a torn top edge.
+- **Handwriting (Caveat, Google font, not preloaded)** is used only for very short notes: step numbers, empty-state titles, the 404. It is never used for running text, buttons or navigation.

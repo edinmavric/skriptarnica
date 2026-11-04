@@ -7,6 +7,7 @@ import { routes } from '@/config/routes';
 import { ReauthProvider } from '@/components/features/admin/reauth';
 
 import { AdminNavLink } from './admin-nav-link';
+import { NotebookSheet } from './notebook-sheet';
 import { Wordmark } from './wordmark';
 
 export const adminNav = [
@@ -25,7 +26,10 @@ export const adminNav = [
   { href: '/admin/dnevnik', key: 'audit' },
 ] as const;
 
-/** Admin chrome: same design system, denser layout, no marketing elements (SPEC §4.10). */
+/**
+ * Admin chrome: same design system, denser layout, no marketing elements (SPEC §4.10). A
+ * separate grey-covered notebook on squared paper.
+ */
 export async function AdminShell({
   children,
   nav = adminNav,
@@ -35,8 +39,8 @@ export async function AdminShell({
 }) {
   const t = await getTranslations('admin.nav');
   return (
-    <div className="min-h-dvh">
-      <header className="border-b border-rule bg-paper-sunk">
+    <div className="admin-desk desk min-h-dvh">
+      <header className="on-cover border-b border-cover-deep">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
           <Wordmark />
           <span className="text-sm font-semibold text-ink-muted">{t('title')}</span>
@@ -46,7 +50,7 @@ export async function AdminShell({
         </div>
       </header>
       <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[13rem_1fr]">
-        <nav aria-label={t('label')} className="-mx-4 min-w-0 px-4 md:mx-0 md:px-0">
+        <nav aria-label={t('label')} className="on-cover -mx-4 min-w-0 px-4 md:mx-0 md:px-0">
           <ul className="flex gap-1 overflow-x-auto md:flex-col">
             {nav.map((item) => (
               <li key={item.href}>
@@ -56,7 +60,9 @@ export async function AdminShell({
           </ul>
         </nav>
         <main id="main" tabIndex={-1} className="min-w-0 outline-none">
-          <ReauthProvider>{children}</ReauthProvider>
+          <NotebookSheet paper="grid" registers={false} className="px-4 pt-5 pb-8 md:pl-16">
+            <ReauthProvider>{children}</ReauthProvider>
+          </NotebookSheet>
         </main>
       </div>
     </div>

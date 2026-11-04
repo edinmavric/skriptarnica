@@ -7,15 +7,18 @@ import { cn } from '@/lib/cn';
 import { Spinner } from './spinner';
 
 export const buttonVariants = cva(
-  'inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-[0.95rem] font-medium whitespace-nowrap transition-colors select-none disabled:pointer-events-none disabled:opacity-55 aria-disabled:pointer-events-none aria-disabled:opacity-55 [&_svg]:size-[1.15em] [&_svg]:shrink-0',
+  'inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-[0.95rem] font-semibold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,translate] select-none disabled:pointer-events-none disabled:opacity-55 aria-disabled:pointer-events-none aria-disabled:opacity-55 [&_svg]:size-[1.15em] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        primary: 'bg-pen text-pen-ink hover:bg-pen-hover',
+        // Ink-stamped: a hard offset shadow that the button presses into when clicked.
+        primary:
+          'border-[1.5px] border-edge bg-pen text-pen-ink shadow-ink hover:bg-pen-hover active:translate-x-px active:translate-y-px active:shadow-none',
         secondary:
-          'border border-field bg-paper-raised text-ink hover:border-ink hover:bg-paper-sunk',
+          'border-[1.5px] border-edge bg-paper-raised text-ink shadow-ink hover:bg-paper-sunk active:translate-x-px active:translate-y-px active:shadow-none',
         ghost: 'text-ink hover:bg-paper-sunk',
-        danger: 'bg-danger text-danger-ink hover:opacity-90',
+        danger:
+          'border-[1.5px] border-edge bg-danger text-danger-ink shadow-ink hover:opacity-90 active:translate-x-px active:translate-y-px active:shadow-none',
         link: 'min-h-0 px-0 text-pen underline underline-offset-4',
       },
       size: {

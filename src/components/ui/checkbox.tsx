@@ -32,7 +32,7 @@ export function Checkbox({
           id={id}
           aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
           aria-invalid={error ? true : undefined}
-          className="peer mt-0.5 grid size-6 shrink-0 place-items-center rounded-xs border-[1.5px] border-field bg-paper-raised text-pen-ink transition-colors hover:border-ink aria-invalid:border-danger data-[state=checked]:border-pen data-[state=checked]:bg-pen"
+          className="peer mt-0.5 grid size-6 shrink-0 place-items-center rounded-xs border-2 border-ink/80 bg-paper-raised text-pen-ink transition-colors hover:border-ink aria-invalid:border-danger data-[state=checked]:border-pen data-[state=checked]:bg-pen"
           {...props}
         >
           <CheckboxPrimitive.Indicator>

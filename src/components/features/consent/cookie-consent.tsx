@@ -69,7 +69,7 @@ export function CookieConsent({ initial }: { initial: ConsentState | null }) {
       {consent === null ? (
         <section
           aria-labelledby="cookie-banner-title"
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-rule-strong bg-paper-raised px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgb(0_0_0/0.08)] sm:inset-x-auto sm:right-4 sm:bottom-4 sm:max-w-md sm:rounded-lg sm:border"
+          className="fixed inset-x-0 bottom-0 z-40 border-t-4 border-marker bg-paper-raised px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-4px_16px_rgb(0_0_0/0.08)] sm:inset-x-auto sm:right-4 sm:bottom-4 sm:max-w-md sm:rounded-[2px] sm:border sm:border-t-4 sm:border-rule-strong sm:border-t-marker"
         >
           <h2 id="cookie-banner-title" className="font-sans text-base font-semibold">
             {t('title')}
