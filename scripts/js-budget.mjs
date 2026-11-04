@@ -95,7 +95,16 @@ try {
     const kb = total / 1024;
     const over = kb > budget;
     failed ||= over;
-    if (over) report(`${page}: ${kb.toFixed(1)} KB gzip is over the ${budget} KB budget`);
+    if (over) {
+      const sizes = await Promise.all(srcs.map(async (src) => [src, await gzipSize(src)]));
+      const list = sizes
+        .sort((a, b) => b[1] - a[1])
+        .map(([src, size]) => `${(size / 1024).toFixed(1)} KB ${src}`)
+        .join('\n');
+      report(
+        `${page}: ${kb.toFixed(1)} KB gzip is over the ${budget} KB budget (${srcs.length} scripts)\n${list}`,
+      );
+    }
     console.log(
       `${over ? '✗' : '✓'} ${page}: ${kb.toFixed(1)} KB gzip in ${srcs.length} scripts (budget ${budget} KB)`,
     );
