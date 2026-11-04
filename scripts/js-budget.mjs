@@ -30,6 +30,14 @@ const pages = [
 const givenBase = process.argv[2];
 const base = givenBase ?? 'http://localhost:3100';
 let server;
+// Last lines of the server's output, shown when the check fails (CI logs aren't always at hand).
+const serverLog = [];
+/** Prints a failure; on GitHub Actions also as an annotation, so it shows on the run page. */
+function report(message) {
+  console.error(message);
+  if (process.env.GITHUB_ACTIONS)
+    console.log(`::error title=JS budget::${message.replaceAll('\n', '%0A')}`);
+}
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -45,7 +53,16 @@ async function waitForServer() {
 }
 
 if (!givenBase) {
-  server = spawn('npx', ['next', 'start', '-p', '3100'], { stdio: 'ignore', detached: true });
+  server = spawn('npx', ['next', 'start', '-p', '3100'], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: true,
+  });
+  for (const stream of [server.stdout, server.stderr]) {
+    stream.on('data', (chunk) => {
+      serverLog.push(...String(chunk).split('\n').filter(Boolean));
+      serverLog.splice(0, Math.max(0, serverLog.length - 30));
+    });
+  }
 }
 
 const sizes = new Map();
@@ -78,12 +95,15 @@ try {
     const kb = total / 1024;
     const over = kb > budget;
     failed ||= over;
+    if (over) report(`${page}: ${kb.toFixed(1)} KB gzip is over the ${budget} KB budget`);
     console.log(
       `${over ? '✗' : '✓'} ${page}: ${kb.toFixed(1)} KB gzip in ${srcs.length} scripts (budget ${budget} KB)`,
     );
   }
 } catch (error) {
-  console.error(error instanceof Error ? error.message : error);
+  report(
+    `${error instanceof Error ? error.message : String(error)}\nServer output:\n${serverLog.join('\n')}`,
+  );
   failed = true;
 } finally {
   if (server?.pid) process.kill(-server.pid, 'SIGTERM');
